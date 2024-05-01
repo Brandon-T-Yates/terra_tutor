@@ -1,16 +1,11 @@
 # terra_tutor
 
-A new Flutter project.
+A Flutter app designed and developed to help cater to both new and older plant lovers. This app is developed to help guide and aid users on taking care of plants.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Install Android Studios JellyFish
+Install VSCode Latest version 
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Then follow the steps proved in the following link:
+https://docs.flutter.dev/get-started/install/windows/desktop
