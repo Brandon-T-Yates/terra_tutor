@@ -1,0 +1,3 @@
+This folder will be used to store functions created. These functions
+should be name similar to the following:
+home_button_nav, nav_button_press, back_button_press
