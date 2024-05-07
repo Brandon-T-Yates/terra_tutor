@@ -1,0 +1,3 @@
+This folder will be used to store each UI element created.
+When creating elements please keep to similar naming schemes such as:
+rounded_text_box, squared_text_box, top_down_text_box
