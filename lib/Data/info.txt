@@ -1,0 +1,3 @@
+All data will be located in this folder. 
+This should include user authentication, stroing user data, 
+calling user data, and usuage of API and database
