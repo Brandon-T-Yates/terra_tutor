@@ -1,0 +1,3 @@
+This folder will be used to store the screen files for each screen.
+DO NOT create your own UI elements unless you add them into them 
+Global_Elements folder. Then feel free to call them on the pages created.
