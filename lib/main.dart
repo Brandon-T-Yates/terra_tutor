@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // This is the theme of your application.
         //
+
         // TRY THIS: Try running your application with "flutter run". You'll see
         // the application has a purple toolbar. Then, without quitting the app,
         // try changing the seedColor in the colorScheme below to Colors.green
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Color(0xFFADC2AF),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -56,6 +57,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _selectedIndex = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -78,14 +80,33 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+          // TRY THIS: Try changing the color here to a specific color (to
+          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+          // change color while the other colors stay the same.
+
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(
+            "Terra Tutor",
+            style: TextStyle(
+              fontWeight: FontWeight.bold, // Make text bold
+              fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! *
+                  1.2, // Increase font size by 20%
+            ),
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          centerTitle: true,
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()),
+                  );
+                })
+          ]),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -120,6 +141,95 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Settings",
+          style: TextStyle(
+            fontWeight: FontWeight.bold, // Make text bold
+            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! *
+                1.2, // Increase font size by 20%
+          ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+        centerTitle: true,
+      ),
+      body: Container(
+        color: Color(0xFFADC2AF), // Set the background color
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ListTile(
+                title: const Text('Profile',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                title: const Text('Notifications',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                title: const Text('Themes',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () => {},
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Default',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Tropical Garden',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Woodland Forest',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('High Desert',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Redwood Forest',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Arctic Garden',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
