@@ -21,7 +21,7 @@ class UiTile extends StatelessWidget {
   final TextAlignOption textAlignment;
 
   UiTile({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.name,
     required this.description,
@@ -45,7 +45,7 @@ class UiTile extends StatelessWidget {
       color: Colors.black,
     ),
     this.imageFit = BoxFit.cover,
-  }) : super(key: key) {
+  }) {
     assert(textAlignment == TextAlignOption.center ||
         textAlignment == TextAlignOption.topLeft);
   }
