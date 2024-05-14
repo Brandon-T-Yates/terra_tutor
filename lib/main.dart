@@ -79,45 +79,6 @@ class _MyHomePageState extends State<MyHomePage>
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const CustomTextField
-            (
-              text: "Test for textbox code.\n" 
-              "Lorem ipsum dolor sit amet, in omnis viderer\naccommodare nec, cibo officiis deseruisse ad nec.\n"
-              "Qui albucius suscipit voluptaria in, sea cu putant\ncopiosae moderatius, sed admodum minimum\nmolestiae ne. "
-              "Mei persius vivendum in, probo\nvoluptaria no nam. Est te stet vero, eu nostrud\ninermis eam. "
-              "Duo wisi percipitur an, ei platonem\nrecteque sed. At fugit decore est. "
-              "Ad regione\nantiopam duo, vix quidam dictas postulant ei. \nElitr quando eum ea. "
-              "Duo ei epicurei constituto\nhonestatis, qualisque urbanitas sed et.\n"
-              "Mel ei dicat populo accusam, et dolores\ninimicus vis.",
-              height: 360.0,
-              width: 400.0,
-              fontColor: Colors.black,
-              boxColor: Color.fromARGB(0, 224, 224, 224),
-            ),
-            UserInputTextBox
-            (
-              hint: 'Enter you name',
-              fontColor: Colors.black,
-              boxColor: const Color.fromARGB(0, 224, 224, 224),
-              inputOption: UserInputOption.name,
-              controller: nameController,
-            ),
-            UserInputTextBox
-            (
-              hint: 'Enter you email',
-              fontColor: Colors.black,
-              boxColor: const Color.fromARGB(0, 224, 224, 224),
-              inputOption: UserInputOption.name,
-              controller: emailController,
-            ),
-            UserInputTextBox
-            (
-              hint: 'Enter you password',
-              fontColor: Colors.black,
-              boxColor: const Color.fromARGB(0, 224, 224, 224),
-              inputOption: UserInputOption.name,
-              controller: passwordController,
-            )
           ],
         ),
       ),
@@ -130,5 +91,3 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 }
-
-
