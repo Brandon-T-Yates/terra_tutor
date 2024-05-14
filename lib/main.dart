@@ -41,10 +41,6 @@ class _MyHomePageState extends State<MyHomePage>
 {
   int _counter = 0;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
   void _incrementCounter() 
   {
     setState(() 
