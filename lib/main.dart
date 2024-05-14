@@ -41,6 +41,10 @@ class _MyHomePageState extends State<MyHomePage>
 {
   int _counter = 0;
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   void _incrementCounter() 
   {
     setState(() 
@@ -90,6 +94,30 @@ class _MyHomePageState extends State<MyHomePage>
               fontColor: Colors.black,
               boxColor: Color.fromARGB(0, 224, 224, 224),
             ),
+            UserInputTextBox
+            (
+              hint: 'Enter you name',
+              fontColor: Colors.black,
+              boxColor: const Color.fromARGB(0, 224, 224, 224),
+              inputOption: UserInputOption.name,
+              controller: nameController,
+            ),
+            UserInputTextBox
+            (
+              hint: 'Enter you email',
+              fontColor: Colors.black,
+              boxColor: const Color.fromARGB(0, 224, 224, 224),
+              inputOption: UserInputOption.name,
+              controller: emailController,
+            ),
+            UserInputTextBox
+            (
+              hint: 'Enter you password',
+              fontColor: Colors.black,
+              boxColor: const Color.fromARGB(0, 224, 224, 224),
+              inputOption: UserInputOption.name,
+              controller: passwordController,
+            )
           ],
         ),
       ),
