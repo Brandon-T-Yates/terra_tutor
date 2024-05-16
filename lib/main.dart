@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+// ignore: unnecessary_import
+import 'package:flutter/rendering.dart';
 
+//import 'Global_Elements/bottom_navigation.dart';
+//import 'Global_Elements/top_navigation.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -7,47 +11,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        primaryColor: Color(0xFFADC2AF),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Terra Tutor'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -57,30 +35,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int _selectedIndex = 0;
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    final List<Widget> _pages = [
-      const Text('Flower'), // Placeholder
-      Center(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -94,160 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      const Text('Search'), // Placeholder widget for Search tab
-    ];
-    return Scaffold(
-      appBar: AppBar(
-          // TRY THIS: Try changing the color here to a specific color (to
-          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-          // change color while the other colors stay the same.
-
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(
-            "Terra Tutor",
-            style: TextStyle(
-              fontWeight: FontWeight.bold, // Make text bold
-              fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! *
-                  1.2, // Increase font size by 20%
-            ),
-          ),
-          backgroundColor: Theme.of(context).primaryColor,
-          centerTitle: true,
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsPage()),
-                  );
-                })
-          ]),
-      body: _pages.elementAt(
-          _selectedIndex), // New - Display the selected page based on the current index
-      bottomNavigationBar: BottomNavigationBar(
-        // New - BottomNavigationBar added
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_florist),
-            label: 'Flower Box',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        //Change as needed. Wasn't sure on color preferences for this.
-        selectedItemColor: Color.fromARGB(255, 242, 233, 216),
-        onTap: (index) {
-          // New - Update state on item tap
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        backgroundColor: Color(0xFFADC2AF),
-      ),
-      backgroundColor: Color.fromARGB(255, 242, 233, 216),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Settings",
-          style: TextStyle(
-            fontWeight: FontWeight.bold, // Make text bold
-            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! *
-                1.2, // Increase font size by 20%
-          ),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        centerTitle: true,
-      ),
-      body: Container(
-        color: Color(0xFFADC2AF), // Set the background color
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              ListTile(
-                title: const Text('Profile',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                title: const Text('Notifications',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                title: const Text('Themes',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                onTap: () => {},
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Default',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Tropical Garden',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Woodland Forest',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('High Desert',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Redwood Forest',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Arctic Garden',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14)),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
