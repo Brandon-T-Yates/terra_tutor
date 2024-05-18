@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/rendering.dart';
 import 'Global_Elements/textbox.dart';
-import 'package:terra_tutor/Global_Elements/ui_tiles.dart';
+import 'Global_Elements/ui_tiles.dart';
+import 'Screens/sign_up_screen.dart';
 
 void main() 
 {
