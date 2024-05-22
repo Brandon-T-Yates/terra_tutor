@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Global_Elements/user_input_text_field.dart';
+import '/Global_Elements/colors.dart';
 
 class SignUpPage extends StatelessWidget {
   final TextEditingController firstNameController = TextEditingController();
@@ -13,9 +14,9 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFADC2AF),
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFADC2AF),
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),

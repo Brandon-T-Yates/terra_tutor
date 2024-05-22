@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'colors.dart';
 
 enum TextAlignOption { center, topLeft }
 
@@ -30,7 +31,7 @@ class UiTile extends StatelessWidget {
     this.height = 180,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
-    this.backgroundColor = const Color(0xFFADC2AF),
+    this.backgroundColor = AppColors.uiTile,
     this.shadowColor = Colors.grey,
     this.spreadRadius = 1,
     this.blurRadius = 7,

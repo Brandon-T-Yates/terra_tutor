@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'colors.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -14,11 +15,11 @@ class SettingsPage extends StatelessWidget {
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! * 1.2,
           ),
         ),
-        backgroundColor: const Color(0xFFADC2AF),
+        backgroundColor: AppColors.primaryColor,
         centerTitle: true,
       ),
       body: Container(
-        color: const Color(0xFFADC2AF),
+        color: const Color(0xFFADC2AF), // Change color after color from palette is decided
         child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

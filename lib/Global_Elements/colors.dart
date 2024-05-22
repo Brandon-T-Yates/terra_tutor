@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 class AppColors
 {
   // Background color
-  static const Color primaryColor = Color(0x00e2d9c7);
+  static const Color primaryColor = Color.fromARGB(255, 226, 217, 199);
 
   // Widget tile color
-  static const Color uiTile = Color(0x00FBF26C);
+  static const Color uiTile = Color.fromARGB(255, 251, 241, 108);
 
   // Top and bottom Nav bar color
-  static const Color navBar = Color(0x00C3D161);
+  static const Color navBar = Color.fromARGB(255, 194, 209, 97);
 
   // Menu icon highlight box color
-  static const Color menuIconHighLight = Color(0x00FFFFFF); // Transparency will be ajusted upon icon tsting
+  static const Color menuIconHighLight = Color.fromARGB(255, 255, 255, 255); // Transparency will be ajusted upon icon tsting
 
   // Menu icon colors
-  static const Color menuIconClicked = Color(0x00000000);
-  static const Color menuIconUnclicked = Color(0x007F7F7F);
+  static const Color menuIconClicked = Color.fromARGB(255, 0, 0, 0);
+  static const Color menuIconUnclicked = Color.fromARGB(255, 127, 127, 127);
 
   // Font color
-  static const Color fontColor = Color(0x00000000);
+  static const Color fontColor = Color.fromARGB(255, 0, 0, 0);
 }

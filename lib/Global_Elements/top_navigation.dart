@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'settings_page.dart';
+import 'colors.dart';
 
 class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final Color iconColor;
 
   const TopNavigation({
-    this.backgroundColor = const Color(0xFFADC2AF),
+    this.backgroundColor = AppColors.navBar,
     this.iconColor = Colors.black,
     super.key,
   });
