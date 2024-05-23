@@ -6,6 +6,7 @@ import 'Global_Elements/ui_tiles.dart';
 import 'Screens/sign_up_screen.dart';
 import 'package:terra_tutor/Screens/login_screen.dart';
 import 'Global_Elements/colors.dart';
+import 'Global_Elements/app_permission_prompts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+  }
+
+  void _showCameraPermission(){
+    PermissionHandler.showCameraPermissionPrompt(context);
   }
 
   @override
