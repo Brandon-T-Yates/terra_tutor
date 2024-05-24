@@ -64,7 +64,7 @@ class PermissionHandler {
   }
 
   // Location permission code added. When "Allow" button pressed, location permission denied.
-  // Further test is requeired on non-emulator device.
+  // Further test is requeired on non-emulated device.
 
   static Future<void> showLocationPermissionPrompt(BuildContext context) async {
     return showModalBottomSheet(
