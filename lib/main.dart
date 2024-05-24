@@ -50,6 +50,10 @@ class _MyHomePageState extends State<MyHomePage> {
     PermissionHandler.showCameraPermissionPrompt(context);
   }
 
+  void _showLocationPermission(){
+    PermissionHandler.showLocationPermissionPrompt(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +63,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center
       (
-        child: UiTile
-        (
-          imagePath: 'lib/Assets/images/image.png',
-          name: 'Example Tile',
-          description: 'Example Tile',
-          textAlignment: TextAlignOption.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            UiTile(
+              imagePath: 'lib/Assets/images/image.png', 
+              name: 'Example text', 
+              description: 'Example Text', 
+              textAlignment:TextAlignOption.center, 
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _showCameraPermission, 
+              child: const Text('Request Camera Permission'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _showLocationPermission, 
+              child: const Text('Request Location Permission'),
+            ),
+          ],
         ),
       ),
       // body: Center(
