@@ -1,17 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../Data/plant_database.dart';
 
 class TrefleApi {
   static String get apiKey {
-    return _getApiKey(); // Retrieve API key from .env file
+    return dotenv.env['TREFLE_API_KEY'] ?? '';
   }
 
-  static String _getApiKey() {
-    final Map<String, String> env = Platform.environment;
-    return env['TREFLE_API_KEY'] ?? '';
-  }
   static const String baseUrl = 'https://trefle.io/api/v1';
 
   Future<List<Plant>> searchPlants(String query) async {
