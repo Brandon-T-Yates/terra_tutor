@@ -61,44 +61,20 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center
-      (
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            UiTile(
-              imagePath: 'lib/Assets/images/image.png', 
-              name: 'Example text', 
-              description: 'Example Text', 
-              textAlignment:TextAlignOption.center, 
+            const Text(
+              'You have pushed the button this many times:',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _showCameraPermission, 
-              child: const Text('Request Camera Permission'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _showLocationPermission, 
-              child: const Text('Request Location Permission'),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       const Text(
-      //         'You have pushed the button this many times:',
-      //       ),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.headlineMedium,
-      //       ),
-      //     ],
-      //   ),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
