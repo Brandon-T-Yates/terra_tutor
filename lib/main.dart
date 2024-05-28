@@ -5,6 +5,7 @@ import 'Global_Elements/textbox.dart';
 import 'Global_Elements/ui_tiles.dart';
 import 'Screens/sign_up_screen.dart';
 import 'package:terra_tutor/Screens/login_screen.dart';
+import 'package:terra_tutor/Screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const SplashScreen(), //Sends user to splash screen first.
     );
   }
 }
