@@ -5,7 +5,6 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SplashScreenState createState() => _SplashScreenState();
 }
 
@@ -65,47 +64,59 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFADC2AF),
-      body: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SlideTransition(
-              position: _textAnimation,
-              child: const Padding(
-                padding: EdgeInsets.only(
-                    bottom: 435.0), // Adjust to match entrance screen position
-                child: Text(
-                  'Terra Tutor',
-                  style: TextStyle(
-                    fontSize: 50.0, // Match the EntranceScreen font size
-                    fontWeight: FontWeight.bold,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          double logoHeight =
+              constraints.maxHeight * 0.2; // 20% of the screen height
+          double fontSizeTitle =
+              constraints.maxWidth * 0.1; // 10% of the screen width
+
+          return Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SlideTransition(
+                  position: _textAnimation,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: constraints.maxHeight * 0.466,
+                    ), // Adjust to match entrance screen position
+                    child: Text(
+                      'Terra Tutor',
+                      style: TextStyle(
+                        fontSize:
+                            fontSizeTitle, // Match the EntranceScreen font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 125.0), // Lower the logo slightly
-              child: ScaleTransition(
-                scale: _logoAnimation,
-                child: Container(
-                  padding: const EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEFEFEF),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Image.asset(
-                    'lib/Assets/images/placeholderlogo.png',
-                    height: 200.0,
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: constraints.maxHeight *
+                          0.2), // Lower the logo slightly
+                  child: ScaleTransition(
+                    scale: _logoAnimation,
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFEFEF),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Image.asset(
+                        'lib/Assets/images/placeholderlogo.png',
+                        height: logoHeight,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
