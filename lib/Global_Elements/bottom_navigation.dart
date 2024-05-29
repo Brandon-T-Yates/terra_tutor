@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'colors.dart';
 
 class BottomNavigation extends StatelessWidget {
   final int selectedIndex;
@@ -10,7 +11,7 @@ class BottomNavigation extends StatelessWidget {
     required this.selectedIndex,
     required this.onTap,
     this.selectedItemColor = const Color.fromARGB(255, 242, 233, 216),
-    this.backgroundColor = const Color(0xFFADC2AF),
+    this.backgroundColor = AppColors.navBar,
     super.key,
   });
 

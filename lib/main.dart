@@ -5,6 +5,7 @@ import 'Global_Elements/textbox.dart';
 import 'Global_Elements/ui_tiles.dart';
 import 'Screens/sign_up_screen.dart';
 import 'package:terra_tutor/Screens/login_screen.dart';
+import 'Global_Elements/colors.dart';
 import 'package:terra_tutor/Screens/splash_screen.dart';
 
 void main() {
@@ -43,6 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+  }
+
+  void _showCameraPermission(){
+    PermissionHandler.showCameraPermissionPrompt(context);
+  }
+
+  void _showLocationPermission(){
+    PermissionHandler.showLocationPermissionPrompt(context);
   }
 
   @override
