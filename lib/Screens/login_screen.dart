@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Global_Elements/user_input_text_field.dart';
+import '/Global_Elements/colors.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -12,7 +13,7 @@ class LoginScreen extends StatelessWidget {
     //Top nav bar
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFADC2AF),
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
         title:
             const Text('signin', style: TextStyle(color: Colors.transparent)),
@@ -99,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 32.0),
                 Stack(
                   children: [
-                    Container(
+                    const SizedBox(
                       width: 300,
                       height: 60,
                     ),
