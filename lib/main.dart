@@ -46,14 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _showCameraPermission(){
-    PermissionHandler.showCameraPermissionPrompt(context);
-  }
-
-  void _showLocationPermission(){
-    PermissionHandler.showLocationPermissionPrompt(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
