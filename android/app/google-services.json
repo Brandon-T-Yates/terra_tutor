@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918297631908",
+    "project_id": "terra-tutor",
+    "storage_bucket": "terra-tutor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918297631908:android:a35564f80ecd5483b89a31",
+        "android_client_info": {
+          "package_name": "com.example.terra_tutor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUsgvaVROFEi0L6Bw1TLwj_7CjMn5dkis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

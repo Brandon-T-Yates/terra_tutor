@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/rendering.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Global_Elements/textbox.dart';
 import 'Global_Elements/ui_tiles.dart';
 import 'Screens/sign_up_screen.dart';
@@ -8,7 +10,9 @@ import 'package:terra_tutor/Screens/login_screen.dart';
 import 'Global_Elements/colors.dart';
 import 'package:terra_tutor/Screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
