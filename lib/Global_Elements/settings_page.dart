@@ -15,11 +15,11 @@ class SettingsPage extends StatelessWidget {
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! * 1.2,
           ),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.navBar,
         centerTitle: true,
       ),
       body: Container(
-        color: const Color(0xFFADC2AF), // Change color after color from palette is decided
+        color: AppColors.primaryColor, // Change color after color from palette is decided
         child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +29,7 @@ class SettingsPage extends StatelessWidget {
                 title: Text(
                   'Profile',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 onTap: null, // Implement navigation or function here
               ),
@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
                 title: Text(
                   'Notifications',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 onTap: null, // Implement navigation or function here
               ),
@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
                 title: Text(
                   'Themes',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 onTap: null, // Implement navigation or function here
               ),
@@ -54,7 +54,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'Default',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Padding(
@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'Tropical Garden',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Padding(
@@ -70,7 +70,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'Woodland Forest',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Padding(
@@ -78,7 +78,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'High Desert',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Padding(
@@ -86,7 +86,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'Redwood Forest',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Padding(
@@ -94,7 +94,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   'Arctic Garden',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
             ],

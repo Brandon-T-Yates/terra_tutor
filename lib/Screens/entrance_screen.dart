@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'login_screen.dart';
 import 'sign_up_screen.dart';
 
 class EntranceScreen extends StatelessWidget {
-  const EntranceScreen({super.key});
+  const EntranceScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFADC2AF),
+      backgroundColor: AppColors.navBar,
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {
             double logoHeight =
-                constraints.maxHeight * 0.2; // 20% of the screen height
+                constraints.maxHeight * 0.25; // 25% of the screen height
             double fontSizeTitle =
                 constraints.maxWidth * 0.1; // 10% of the screen width
             double fontSizeSubtitle =
                 constraints.maxWidth * 0.05; // 5% of the screen width
             double buttonWidth =
-                constraints.maxWidth * 0.3; // 40% of the screen width
+                constraints.maxWidth * 0.3; // 30% of the screen width
             double buttonHeight =
-                constraints.maxHeight * 0.05; // 6% of the screen height
+                constraints.maxHeight * 0.05; // 5% of the screen height
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -30,12 +31,15 @@ class EntranceScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEFEFEF),
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  child: Image.asset(
-                    'lib/Assets/images/placeholderlogo.png',
-                    height: logoHeight,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Image.asset(
+                      'lib/Assets/images/placeholderlogo.png',
+                      height: logoHeight,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -69,7 +73,7 @@ class EntranceScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: const Color(0xFFF2E9D8),
+                      backgroundColor: AppColors.uiTile,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17.0),
                       ),
@@ -97,7 +101,7 @@ class EntranceScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
-                      backgroundColor: const Color(0xFFF2E9D8),
+                      backgroundColor: AppColors.uiTile,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17.0),
                       ),

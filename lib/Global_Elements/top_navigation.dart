@@ -20,10 +20,12 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24.0,
+
         ),
       ),
       backgroundColor: backgroundColor,
       centerTitle: true,
+      automaticallyImplyLeading: false, // Change to true if need back button
       actions: [
         IconButton(
           icon: const Icon(Icons.menu),
