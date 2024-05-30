@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'colors.dart';
+import 'package:terra_tutor/Screens/profile_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -20,20 +21,30 @@ class SettingsPage extends StatelessWidget {
       ),
       body: Container(
         color: AppColors.primaryColor, // Change color after color from palette is decided
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ListTile(
-                title: Text(
+               TextButton(
+                onPressed: () {
+                   Navigator.pushNamed(context, '/profile');
+                },
+                child: const Text(
                   'Profile',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
-                onTap: null, // Implement navigation or function here
               ),
-              ListTile(
+              // ListTile(
+              //   title: Text(
+              //     'Profile',
+              //     textAlign: TextAlign.center,
+              //     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              //   ),
+              //   onTap: null, // Implement navigation or function here
+              // ),
+              const ListTile(
                 title: Text(
                   'Notifications',
                   textAlign: TextAlign.center,
@@ -41,7 +52,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 onTap: null, // Implement navigation or function here
               ),
-              ListTile(
+              const ListTile(
                 title: Text(
                   'Themes',
                   textAlign: TextAlign.center,
@@ -49,7 +60,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 onTap: null, // Implement navigation or function here
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Default',
@@ -57,7 +68,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Tropical Garden',
@@ -65,7 +76,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Woodland Forest',
@@ -73,7 +84,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'High Desert',
@@ -81,7 +92,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Redwood Forest',
@@ -89,7 +100,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Arctic Garden',
