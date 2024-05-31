@@ -20,4 +20,7 @@ class AppColors
 
   // Font color
   static const Color fontColor = Color.fromARGB(255, 0, 0, 0);
+
+  // Delete button color
+  static const Color deleteButton = Color.fromARGB(127, 255, 0, 0);
 }

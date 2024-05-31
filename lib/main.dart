@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:terra_tutor/Screens/profile_page.dart';
 import 'Global_Elements/textbox.dart';
 import 'Global_Elements/ui_tiles.dart';
 import 'Screens/sign_up_screen.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(), //Sends user to splash screen first.
+      routes: {
+        '/profile': (context) => const ProfilePage(),
+      }
     );
   }
 }
