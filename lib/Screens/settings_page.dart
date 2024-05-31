@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
-import 'package:terra_tutor/Screens/profile_page.dart';
+import '../Global_Elements/colors.dart';
+import '/Screens/profile_page.dart';
+import '/Global_Elements/top_navigation.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -8,16 +9,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Settings",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize! * 1.2,
-          ),
-        ),
-        backgroundColor: AppColors.navBar,
-        centerTitle: true,
+      appBar: const TopNavigation(
+        title: 'Settings', // Pass the required title here
+        backButton: true,
+        showMenuIcon: false,
       ),
       body: Container(
         color: AppColors.primaryColor, // Change color after color from palette is decided
@@ -26,9 +21,12 @@ class SettingsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-               TextButton(
+              TextButton(
                 onPressed: () {
-                   Navigator.pushNamed(context, '/profile');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfilePage()),
+                  );
                 },
                 child: const Text(
                   'Profile',

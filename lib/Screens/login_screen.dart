@@ -5,25 +5,20 @@ import '/Global_Elements/colors.dart';
 import 'home_page.dart'; 
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    void _signIn(BuildContext context) async {
+    void signIn(BuildContext context) async {
       try {
         final String email = emailController.text.trim();
         final String password = passwordController.text.trim();
         
         // Check if email and password are not empty
         if (email.isNotEmpty && password.isNotEmpty) {
-          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
           // Navigate to the home page
           Navigator.pushReplacement(
             context,
@@ -139,7 +134,7 @@ class LoginScreen extends StatelessWidget {
                     Positioned(
                       right: 0,
                       child: ElevatedButton(
-                        onPressed: () => _signIn(context),
+                        onPressed: () => signIn(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.uiTile,
                           shape: RoundedRectangleBorder(

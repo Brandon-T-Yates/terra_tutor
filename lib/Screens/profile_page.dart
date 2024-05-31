@@ -1,21 +1,88 @@
-// ignore_for_file: avoid_types_as_parameter_names
-
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '/Global_Elements/colors.dart';
-import 'package:terra_tutor/Global_Elements/top_navigation.dart';
-import 'package:terra_tutor/Global_Elements/bottom_navigation.dart';
+import '/Global_Elements/top_navigation.dart';
+import 'entrance_screen.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late BuildContext _dialogContext;
+  String _firstName = 'Placeholder';
+  String _lastName = 'Placeholder';
+  String _userEmail = 'Placeholder';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _dialogContext = context;
+    // Fetch user data when the widget is built
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Fetch user document from Firestore
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      // Check if user document exists
+      if (userSnapshot.exists) {
+        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+        // Fetch user's first name, last name, and email from Firestore
+        _firstName = userData['firstName'] ?? 'First Name not available';
+        _lastName = userData['lastName'] ?? 'Last Name not available';
+        _userEmail = userData['email'] ?? 'Email not available';
+
+        // Update the UI with fetched data
+        setState(() {});
+      }
+    }
+  }
+
+
+
+
+  void _deleteAccount() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+        await user.delete();
+
+        ScaffoldMessenger.of(_dialogContext).showSnackBar(
+          const SnackBar(
+            content: Text('Account deleted successfully'),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const EntranceScreen()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(_dialogContext).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.message}'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TopNavigation(),
-      bottomNavigationBar: BottomNavigation(
-        selectedIndex: 0,
-        onTap: (int) {}, // Waiting on Graham to give me guidance on what this function is for.
+      appBar: const TopNavigation(
+        title: 'Profile Page',
+        backButton: true,
+        showMenuIcon: false,
       ),
       backgroundColor: AppColors.primaryColor,
       body: Center(
@@ -40,9 +107,9 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 60),
-            const Text(
-              'Name: Placeholder', // Logic will be changed to pull in users name inputted at sign up.
-              style: TextStyle(fontSize: 18, color: AppColors.fontColor),
+            Text(
+              '$_firstName $_lastName',
+              style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
             ),
             const SizedBox(height: 20),
             const Text(
@@ -50,9 +117,9 @@ class ProfilePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, color: AppColors.fontColor),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Email: Placeholder', // Logic will be changed to pull users inputted email at sign up.
-              style: TextStyle(fontSize: 18, color: AppColors.fontColor),
+            Text(
+              '$_userEmail',
+              style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
             ),
             const SizedBox(height: 130),
             ElevatedButton(
@@ -87,7 +154,6 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                // Delete Profile logic will be added later
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -99,26 +165,25 @@ class ProfilePage extends StatelessWidget {
                       ),
                       content: const Text(
                         'Are you sure you want to delete your profile? '
-                        'This action is irreverable.\n'
-                        'All of your garden data will be deleted and not recoverable.',
+                        'This action is irreversible.\n'
+                        'All of your data will be deleted and cannot be recovered.',
                         textAlign: TextAlign.center,
-                        
-                        ),
-                      actions: [                        
-                        Row( 
-                          mainAxisAlignment: MainAxisAlignment.center,                     
+                      ),
+                      actions: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton(                              
+                            TextButton(
                               style: TextButton.styleFrom(
                                 backgroundColor: AppColors.deleteButton,
-                                foregroundColor: Colors.white, 
+                                foregroundColor: Colors.white,
                                 side: const BorderSide(color: Colors.black),
-                                fixedSize: const Size(100, 25), 
+                                fixedSize: const Size(100, 25),
                               ),
                               onPressed: () {
-                                // Actual profile delete funtion will be added later.
+                                _deleteAccount();
                                 Navigator.of(context).pop();
-                              },                              
+                              },
                               child: const Text('Confirm', style: TextStyle(fontSize: 16)),
                             ),
                             const SizedBox(width: 30),
@@ -128,7 +193,7 @@ class ProfilePage extends StatelessWidget {
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: AppColors.uiTile,
-                                foregroundColor: Colors.black, 
+                                foregroundColor: Colors.black,
                                 side: const BorderSide(color: Colors.black),
                                 fixedSize: const Size(100, 25),
                               ),

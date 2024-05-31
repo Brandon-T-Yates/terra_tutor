@@ -28,7 +28,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TopNavigation(),
+      appBar: const TopNavigation(
+        title: 'Terra Tutor',
+        showMenuIcon: true,
+      ),
       body: Container(
         color: AppColors.primaryColor,
         child: _pages[_selectedIndex],

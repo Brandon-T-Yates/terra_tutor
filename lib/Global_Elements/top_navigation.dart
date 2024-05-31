@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import 'settings_page.dart';
+import '../Screens/settings_page.dart';
 import 'colors.dart';
 
 class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final Color iconColor;
+  final bool backButton;
+  final bool showMenuIcon;
+  final String title;
 
   const TopNavigation({
+    required this.title,
     this.backgroundColor = AppColors.navBar,
     this.iconColor = Colors.black,
+    this.backButton = false,
+    required this.showMenuIcon,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text(
-        "Terra Tutor",
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24.0,
 
@@ -25,21 +31,23 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: backgroundColor,
       centerTitle: true,
-      automaticallyImplyLeading: false, // Change to true if need back button
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.menu),
-          color: iconColor,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SettingsPage(),
+      automaticallyImplyLeading: backButton,
+      actions: showMenuIcon
+          ? [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                color: iconColor,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ],
+            ]
+          : null,
     );
   }
 
