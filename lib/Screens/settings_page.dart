@@ -42,6 +42,7 @@ class SettingsPage extends StatelessWidget {
               //   ),
               //   onTap: null, // Implement navigation or function here
               // ),
+              // TODO: convert the rest of these to be text buttons
               const ListTile(
                 title: Text(
                   'Notifications',
