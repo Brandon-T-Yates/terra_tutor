@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
             Text(
-              '$_userEmail',
+              _userEmail,
               style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
             ),
             const SizedBox(height: 130),

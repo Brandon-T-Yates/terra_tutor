@@ -10,9 +10,10 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  SignUpPage({Key? key});
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +165,8 @@ class SignUpPage extends StatelessWidget {
                       final String lastName = lastNameController.text;
                       final String email = emailController.text;
                       final String password = passwordController.text;
-                      final String confirmPassword = confirmPasswordController.text;
+                      final String confirmPassword =
+                          confirmPasswordController.text;
 
                       if (password != confirmPassword) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -176,34 +178,37 @@ class SignUpPage extends StatelessWidget {
                       }
 
                       try {
-                          UserCredential userCredential = await FirebaseAuth.instance
+                        UserCredential userCredential = await FirebaseAuth
+                            .instance
                             .createUserWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                          );
+                          email: email,
+                          password: password,
+                        );
 
-                          // Store additional user details in Firestore
-                          await FirebaseFirestore.instance
+                        // Store additional user details in Firestore
+                        await FirebaseFirestore.instance
                             .collection('users')
                             .doc(userCredential.user?.uid)
                             .set({
-                              'firstName': firstName,
-                              'lastName': lastName,
-                              'email': email,
-                            });
+                          'firstName': firstName,
+                          'lastName': lastName,
+                          'email': email,
+                        });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Successfully signed up!'),
-                            ),
-                          );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Successfully signed up!'),
+                          ),
+                        );
 
-                          // Navigate to the home page
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()), // Assuming HomePage is the name of your home page class
-                          );
-                        } on FirebaseAuthException catch (e) {
+                        // Navigate to the home page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const HomePage()), // Assuming HomePage is the name of your home page class
+                        );
+                      } on FirebaseAuthException catch (e) {
                         String message;
                         switch (e.code) {
                           case 'email-already-in-use':
