@@ -28,18 +28,47 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
 
   void onBackButtonPressed() {
     // Placeholder for back button functionality
+    fetchFromAPI("back");
   }
 
   void onShuffleButtonPressed() {
     // Placeholder for shuffle button functionality
+    fetchFromAPI("shuffle");
   }
 
   void onForwardButtonPressed() {
     // Placeholder for forward button functionality
+    fetchFromAPI("forward");
   }
 
   void onCameraButtonPressed() {
     // Placeholder for camera button functionality
+  }
+  void fetchFromAPI(String type) {
+    setState(() {
+      if (type == "shuffle") {
+        //API Calls here for random plant
+        updatePlant(
+          'Random Plant', // Example name
+          'Description of a random plant.', // Example description
+          'lib/Assets/images/random_plant.jpg', // Example image path
+        );
+      } else if (type == "back") {
+        //API Calls here for previous plant
+        updatePlant(
+          'Previous Plant', // Example name
+          'Description of the previous plant.', // Example description
+          'lib/Assets/images/previous_plant.jpg', // Example image path
+        );
+      } else if (type == "forward") {
+        //API Calls here for random plant
+        updatePlant(
+          'Next Plant', // Example name
+          'Description of the next plant.', // Example description
+          'lib/Assets/images/next_plant.jpg', // Example image path
+        );
+      }
+    });
   }
 
   void updatePlant(String name, String description, String image) {
@@ -81,8 +110,12 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                       prefixIcon:
                           const Icon(Icons.search, color: AppColors.fontColor),
                       suffixIcon: IconButton(
-                        icon: const Icon(Icons.camera_alt,
-                            color: AppColors.fontColor),
+                        icon: SizedBox(
+                          width: 40.0,
+                          height: 40.0,
+                          child:
+                              Image.asset('lib/Assets/images/camera_100.png'),
+                        ),
                         onPressed: onCameraButtonPressed, // Empty functionality
                       ),
                       hintText: 'Search',
@@ -118,15 +151,9 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                   ),
                   child: IconButton(
                     //TODO: Switch out Icons.arrow_back with custom image.
-                    icon: const Icon(Icons.arrow_back,
-                        color: AppColors.fontColor),
-                    onPressed: () {
-                      updatePlant(
-                        'Previous Plant', // Example name
-                        'Description of the previous plant.', // Example description
-                        'lib/Assets/images/previous_plant.jpg', // Example image path
-                      );
-                    },
+                    icon:
+                        Image.asset('lib/Assets/images/reverse_arrow_100.png'),
+                    onPressed: onBackButtonPressed,
                   ),
                 ),
                 const SizedBox(width: 8.0),
@@ -140,14 +167,8 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                   ),
                   child: IconButton(
                     //TODO: Switch out Icons.shuffle with custom image.
-                    icon: const Icon(Icons.shuffle, color: AppColors.fontColor),
-                    onPressed: () {
-                      updatePlant(
-                        'Random Plant', // Example name
-                        'Description of a random plant.', // Example description
-                        'lib/Assets/images/random_plant.jpg', // Example image path
-                      );
-                    },
+                    icon: Image.asset('lib/Assets/images/shuffle_final.png'),
+                    onPressed: onShuffleButtonPressed,
                   ),
                 ),
                 const SizedBox(width: 8.0),
@@ -161,15 +182,9 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                   ),
                   child: IconButton(
                     //TODO: Switch out Icons.forward with custom image.
-                    icon: const Icon(Icons.arrow_forward,
-                        color: AppColors.fontColor),
-                    onPressed: () {
-                      updatePlant(
-                        'Next Plant', // Example name
-                        'Description of the next plant.', // Example description
-                        'lib/Assets/images/next_plant.jpg', // Example image path
-                      );
-                    },
+                    icon:
+                        Image.asset('lib/Assets/images/forward_arrow_100.png'),
+                    onPressed: onForwardButtonPressed,
                   ),
                 ),
               ],

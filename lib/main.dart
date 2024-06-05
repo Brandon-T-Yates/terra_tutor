@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplashScreen(), //Sends user to splash screen first.
+      home: const SplashScreen(),
+      // home: const SplashScreen(), //Sends user to splash screen first.
     );
   }
 }
