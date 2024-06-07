@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:terra_tutor/Screens/splash_screen.dart';
+import 'package:terra_tutor/Screens/plant_finder_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplashScreen(), //Sends user to splash screen first.
+      home: const SplashScreen(),
+      // home: const SplashScreen(), //Sends user to splash screen first.
     );
   }
 }
@@ -62,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
