@@ -15,8 +15,8 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
     this.iconColor = Colors.black,
     this.backButton = false,
     required this.showMenuIcon,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,6 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24.0,
-
         ),
       ),
       backgroundColor: backgroundColor,

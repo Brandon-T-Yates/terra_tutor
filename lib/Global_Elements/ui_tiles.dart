@@ -6,7 +6,7 @@ enum TextAlignOption { center, topLeft }
 class UiTile extends StatelessWidget {
   final String imagePath;
   final String name;
-  final String description;
+  final String? description;
   final double width;
   final double height;
   final EdgeInsetsGeometry margin;
@@ -25,7 +25,7 @@ class UiTile extends StatelessWidget {
     super.key,
     required this.imagePath,
     required this.name,
-    required this.description,
+    this.description,
     required this.textAlignment,
     this.width = 160,
     this.height = 180,
@@ -54,7 +54,7 @@ class UiTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(20.0),
       child: Container(
         width: width,
         height: height,
@@ -105,14 +105,16 @@ class UiTile extends StatelessWidget {
                           ? TextAlign.center
                           : TextAlign.start,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: descriptionTextStyle,
-                      textAlign: textAlignment == TextAlignOption.center
-                          ? TextAlign.center
-                          : TextAlign.start,
-                    ),
+                    if (description != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        description!,
+                        style: descriptionTextStyle,
+                        textAlign: textAlignment == TextAlignOption.center
+                            ? TextAlign.center
+                            : TextAlign.start,
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '/Global_Elements/bottom_navigation.dart';
 import '/Global_Elements/top_navigation.dart';
 import '/Global_Elements/colors.dart';
+import '/Global_Elements/ui_tiles.dart';
+import '/Screens/plant_finder_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,17 +14,58 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1; // Default to 'Home' tab
+  final List<Widget> _addedWidgets = []; // List to store added widgets
 
   static const List<Widget> _pages = <Widget>[
     Center(child: Text('Flower Box Page')),
-    Center(child: Text('Home Page')),
-    Center(child: Text('Search Page')),
+    Center(child: Text('')),
+    PlantFinderScreen(),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _onAddButtonPressed() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.navBar,
+          title: const Center(child: Text('Add Widgets')),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: List.generate(5, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _addedWidgets.add(UiTile(
+                        imagePath: 'lib/Assets/images/image.png',
+                        name: 'Widget $index',
+                        description: null,
+                        textAlignment: TextAlignOption.topLeft,
+                      ));
+                    });
+                  },
+                  child: UiTile(
+                    imagePath: 'lib/Assets/images/image.png',
+                    name: 'Widget $index',
+                    description: null, // No description
+                    textAlignment: TextAlignOption.topLeft,
+                  ),
+                );
+              }),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -34,12 +77,38 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         color: AppColors.primaryColor,
-        child: _pages[_selectedIndex],
+        child: Stack(
+          children: [
+            IndexedStack(
+              index: _selectedIndex,
+              children: _pages,
+            ),
+            if (_selectedIndex == 1)
+              SingleChildScrollView(
+                child: Container(
+                  color: AppColors.primaryColor,
+                  child: Wrap(
+                    children: _addedWidgets,
+                  ),
+                ),
+              ),
+          ],
         ),
+      ),
       bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: _onAddButtonPressed,
+              tooltip: 'Add',
+              backgroundColor: AppColors.addButton, // Ensure this color is defined in AppColors
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

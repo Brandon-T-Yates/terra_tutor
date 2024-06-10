@@ -11,8 +11,11 @@ class AppColors
   // Top and bottom Nav bar color
   static const Color navBar = Color.fromARGB(255, 194, 209, 97);
 
+  // Add button color on home page
+  static const Color addButton = Color.fromARGB(255, 194, 209, 97);
+
   // Menu icon highlight box color
-  static const Color menuIconHighLight = Color.fromARGB(255, 255, 255, 255); // Transparency will be ajusted upon icon tsting
+  static const Color menuIconHighLight = Color.fromARGB(255, 255, 255, 255); // Transparency will be ajusted upon icon testing
 
   // Menu icon colors
   static const Color menuIconClicked = Color.fromARGB(255, 0, 0, 0);

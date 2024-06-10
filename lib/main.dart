@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/rendering.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:terra_tutor/Screens/splash_screen.dart';
-import 'package:terra_tutor/Screens/plant_finder_screen.dart';
+import '/Screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
