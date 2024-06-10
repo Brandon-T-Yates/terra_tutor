@@ -17,6 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _firstName = 'Placeholder';
   String _lastName = 'Placeholder';
   String _userEmail = 'Placeholder';
+  String _username = 'Placeholder';
   bool _userNameChanged = false;
 
   @override
@@ -41,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _firstName = userData['firstName'] ?? 'First Name not available';
         _lastName = userData['lastName'] ?? 'Last Name not available';
         _userEmail = userData['email'] ?? 'Email not available';
+        _username = userData['username'] ?? 'Username not available';
 
         // Update the UI with fetched data
         setState(() {});
@@ -79,6 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    var username = _username;
     return Scaffold(
       appBar: const TopNavigation(
         title: 'Profile Page',
@@ -178,6 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           });
                                           setState(() {
                                             _userNameChanged = true;
+                                            _username = usernameController.text; // Update the local username variable
                                           });
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             const SnackBar(content: Text('Username updated successfully')),
@@ -194,11 +198,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       );
                     },
-              child: const Text(
-                'Username: Placeholder', // Logic will be changed to pull user's inputted Username at sign up.
-                style: TextStyle(fontSize: 18, color: AppColors.fontColor),
+              child: Text(
+                'Username: $_username', // Display the current username
+                style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
               ),
-            ), 
+            ),
             const SizedBox(height: 20),
             Text(
               '$_userEmail',
