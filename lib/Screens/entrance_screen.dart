@@ -4,7 +4,7 @@ import 'login_screen.dart';
 import 'sign_up_screen.dart';
 
 class EntranceScreen extends StatelessWidget {
-  const EntranceScreen({Key? key});
+  const EntranceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

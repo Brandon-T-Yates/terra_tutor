@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'entrance_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -63,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFADC2AF),
+      backgroundColor: AppColors.navBar,
       body: LayoutBuilder(
         builder: (context, constraints) {
           double logoHeight =
@@ -79,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
                   position: _textAnimation,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: constraints.maxHeight * 0.466,
+                      bottom: constraints.maxHeight * 0.44,
                     ), // Adjust to match entrance screen position
                     child: Text(
                       'Terra Tutor',
@@ -103,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: Container(
                       padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEFEFEF),
+                        color: AppColors.uiTile,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Image.asset(
