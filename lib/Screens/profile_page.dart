@@ -17,6 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String _firstName = 'Placeholder';
   String _lastName = 'Placeholder';
   String _userEmail = 'Placeholder';
+  String _username = 'Placeholder';
+  bool _userNameChanged = false;
 
   @override
   void didChangeDependencies() {
@@ -40,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _firstName = userData['firstName'] ?? 'First Name not available';
         _lastName = userData['lastName'] ?? 'Last Name not available';
         _userEmail = userData['email'] ?? 'Email not available';
+        _username = userData['username'] ?? 'Username not available';
 
         // Update the UI with fetched data
         setState(() {});
@@ -78,6 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    var username = _username;
     return Scaffold(
       appBar: const TopNavigation(
         title: 'Profile Page',
@@ -91,8 +95,8 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 200, // Radius 40 + border width 4
-              height: 200, // Radius 40 + border width 4
+              width: 200, 
+              height: 200, 
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -112,9 +116,92 @@ class _ProfilePageState extends State<ProfilePage> {
               style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Username: Placeholder', // Logic will be changed to pull users inputted Username at sign up.
-              style: TextStyle(fontSize: 18, color: AppColors.fontColor),
+            TextButton(
+              onPressed: _userNameChanged
+                  ? null
+                  : () {
+                      TextEditingController usernameController = TextEditingController();
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: AppColors.navBar,
+                            title: const Text('Change Username', textAlign: TextAlign.center),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'Would you like to change your username?\n'
+                                  '*Note you can only do this once.*',
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 20),
+                                TextField(
+                                  controller: usernameController,
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter new username",
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: AppColors.deleteButton,
+                                      foregroundColor: Colors.white,
+                                      side: const BorderSide(color: Colors.black),
+                                      fixedSize: const Size(100, 25),
+                                    ),
+                                    child: const Text('Cancel', style: TextStyle(color: AppColors.fontColor)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 30),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: AppColors.uiTile,
+                                      foregroundColor: Colors.black,
+                                      side: const BorderSide(color: Colors.black),
+                                      fixedSize: const Size(100, 25),
+                                    ),
+                                    child: const Text('Save', style: TextStyle(color: AppColors.fontColor)),
+                                    onPressed: () async {
+                                      if (usernameController.text.isNotEmpty) {
+                                        User? user = FirebaseAuth.instance.currentUser;
+                                        if (user != null) {
+                                          await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+                                            'username': usernameController.text,
+                                          });
+                                          setState(() {
+                                            _userNameChanged = true;
+                                            _username = usernameController.text; // Update the local username variable
+                                          });
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Username updated successfully')),
+                                          );
+                                        }
+                                      }
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+              child: Text(
+                'Username: $_username', // Display the current username
+                style: const TextStyle(fontSize: 18, color: AppColors.fontColor),
+              ),
             ),
             const SizedBox(height: 20),
             Text(
