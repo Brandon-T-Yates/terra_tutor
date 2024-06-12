@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-// ignore: unnecessary_import
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:flutter/rendering.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:terra_tutor/Screens/splash_screen.dart';
+import 'package:terra_tutor/Screens/settings_page.dart';
 import 'package:terra_tutor/Screens/plant_finder_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //Loads env file for trefle api key
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -23,7 +28,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(),
-      // home: const SplashScreen(), //Sends user to splash screen first.
     );
   }
 }
