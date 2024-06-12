@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import '/Global_Elements/colors.dart';
 import '/Global_Elements/top_navigation.dart';
 import 'entrance_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import '/Global_Elements/app_permission_prompts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -50,9 +54,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-
-
-
   void _deleteAccount() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -82,6 +83,30 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     var username = _username;
+
+    Future<void> _pickImage() async {
+        final ImagePicker _picker = ImagePicker();
+        final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+        if (image != null) {
+            // Handle the selected image file
+            File imageFile = File(image.path);
+            // Update the profile picture logic goes here
+            // For example, upload the image to Firebase Storage and update the user's profile picture URL in Firestore
+        }
+    }
+
+    Future<void> _handleAvatarTap() async {
+        bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
+        if (permissionGranted) {
+            _pickImage();
+        } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Media file access denied')),
+            );
+        }
+    }
+
     return Scaffold(
       appBar: const TopNavigation(
         title: 'Profile Page',
@@ -94,20 +119,23 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 200, 
-              height: 200, 
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black, // Border color
-                  width: 1.5, // Border width
+            GestureDetector(
+              onTap: /*_handleAvatarTap*/_pickImage,  // _handleAvatarTap menbtos is not openingmedia file. Revise later.
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.5,
+                  ),
                 ),
-              ),
-              child: const CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.camera_alt, size: 70, color: Colors.black),
+                child: const CircleAvatar(
+                  radius: 100,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.camera_alt, size: 70, color: Colors.black),
+                ),
               ),
             ),
             const SizedBox(height: 60),
