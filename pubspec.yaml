@@ -30,8 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^3.1.0
-  firebase_auth: ^5.1.0
+  firebase_core: ^2.13.0
+  firebase_auth: ^4.6.1
   http: ^1.0.0
   flutter_dotenv: ^5.0.2
   retry: ^3.0.0
@@ -42,7 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   accessibility_tools: ^2.0.0
   permission_handler: ^11.3.1
-  cloud_firestore: ^5.0.1
+  cloud_firestore: ^4.17.5
 
 dev_dependencies:
   flutter_test:
@@ -53,7 +53,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
