@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:retry/retry.dart';
-import 'dart:async';
-import 'dart:math';
 import '/Global_Elements/colors.dart';
 import '/Global_Elements/top_navigation.dart';
-import '/Global_Elements/bottom_navigation.dart';
+import '/Global_Elements/bottom_navigation.dart'; // Ensure this import points to the correct location
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -18,22 +12,14 @@ class PlantFinderScreen extends StatefulWidget {
 
 class _PlantFinderPageState extends State<PlantFinderScreen> {
   int _selectedIndex = 2; // Index for BottomNavigationBar
-  //Plant list
-  List plants = [];
-  int currentPlantIndex = 0;
+
   // State default variables for plant name, description, and image
   String plantName = 'Rose';
   String plantDescription =
       'Roses are one of the oldest flowers on Earth. Fossil evidence suggests that roses are at least 35 million years old!';
   String plantImage = 'lib/Assets/images/rose_placeholder.jpg';
 
-  @override
-  void initState() {
-    super.initState();
-    fetchRandomPlant();
-  }
-
-  void onItemTapped(int index) {
+  void _onItemTapped(int index) {
     // Handle navigation based on selected index
     setState(() {
       _selectedIndex = index;
@@ -41,84 +27,61 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
   }
 
   void onBackButtonPressed() {
-    if (currentPlantIndex > 0) {
-      currentPlantIndex--;
-      updatePlantFromIndex();
-    }
+    // Placeholder for back button functionality
+    fetchFromAPI("back");
   }
 
   void onShuffleButtonPressed() {
-    fetchRandomPlant();
+    // Placeholder for shuffle button functionality
+    fetchFromAPI("shuffle");
   }
 
   void onForwardButtonPressed() {
-    if (currentPlantIndex < plants.length - 1) {
-      currentPlantIndex++;
-      updatePlantFromIndex();
-    }
+    // Placeholder for forward button functionality
+    fetchFromAPI("forward");
   }
 
   void onCameraButtonPressed() {
     // Placeholder for camera button functionality
   }
-
-  Future<void> fetchRandomPlant() async {
-    final String? apiKey = dotenv.env['TREFLE_API_KEY'];
-    if (apiKey == null) {
-      print('Error: API key is missing');
-      return;
-    }
-
-    // Use a random page number to get random results from the API
-    final randomPage = Random().nextInt(100) + 1;
-    final String apiUrl =
-        'https://trefle.io/api/v1/plants?token=$apiKey&page=$randomPage';
-
-    try {
-      print('Fetching data from API...');
-      final response = await retry(
-        () => http.get(Uri.parse(apiUrl)).timeout(Duration(seconds: 5)),
-        retryIf: (e) => e is http.ClientException || e is TimeoutException,
-        maxAttempts: 3,
-      );
-
-      if (response.statusCode == 200) {
-        print('API call successful');
-        final data = json.decode(response.body);
-        setState(() {
-          plants = data['data'] as List;
-          plants.shuffle();
-          currentPlantIndex = 0;
-          updatePlantFromIndex();
-        });
-      } else {
-        print('Failed to load plant data: ${response.statusCode}');
+  void fetchFromAPI(String type) {
+    setState(() {
+      if (type == "shuffle") {
+        //API Calls here for random plant
+        updatePlant(
+          'Random Plant', // Example name
+          'Description of a random plant.', // Example description
+          'lib/Assets/images/random_plant.jpg', // Example image path
+        );
+      } else if (type == "back") {
+        //API Calls here for previous plant
+        updatePlant(
+          'Previous Plant', // Example name
+          'Description of the previous plant.', // Example description
+          'lib/Assets/images/previous_plant.jpg', // Example image path
+        );
+      } else if (type == "forward") {
+        //API Calls here for random plant
+        updatePlant(
+          'Next Plant', // Example name
+          'Description of the next plant.', // Example description
+          'lib/Assets/images/next_plant.jpg', // Example image path
+        );
       }
-    } catch (e) {
-      print('Error fetching plant data: $e');
-    }
+    });
   }
 
-  void updatePlantFromIndex() {
-    if (plants.isNotEmpty) {
-      final selectedPlant = plants[currentPlantIndex];
-      String imageUrl = selectedPlant['image_url'] ?? '';
-      if (imageUrl.isEmpty || !Uri.parse(imageUrl).isAbsolute) {
-        imageUrl = 'lib/Assets/images/rose_placeholder.jpg'; // Fallback image
-      }
-
-      setState(() {
-        plantName = selectedPlant['common_name'] ?? 'Unknown Plant';
-        plantDescription =
-            selectedPlant['scientific_name'] ?? 'No description available';
-        plantImage = imageUrl;
-      });
-    }
+  void updatePlant(String name, String description, String image) {
+    setState(() {
+      plantName = name;
+      plantDescription = description;
+      plantImage = image;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Get current screen size for later
+    //Get current screen size for later
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -187,6 +150,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
+                    //TODO: Switch out Icons.arrow_back with custom image.
                     icon:
                         Image.asset('lib/Assets/images/reverse_arrow_100.png'),
                     onPressed: onBackButtonPressed,
@@ -202,6 +166,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
+                    //TODO: Switch out Icons.shuffle with custom image.
                     icon: Image.asset('lib/Assets/images/shuffle_final.png'),
                     onPressed: onShuffleButtonPressed,
                   ),
@@ -216,6 +181,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
+                    //TODO: Switch out Icons.forward with custom image.
                     icon:
                         Image.asset('lib/Assets/images/forward_arrow_100.png'),
                     onPressed: onForwardButtonPressed,
@@ -250,22 +216,10 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20.0),
-                                  child: plantImage.startsWith('http')
-                                      ? Image.network(
-                                          plantImage,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.asset(
-                                              'lib/Assets/images/default_plant.jpg',
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        )
-                                      : Image.asset(
-                                          plantImage,
-                                          fit: BoxFit.cover,
-                                        ),
+                                  child: Image.asset(
+                                    plantImage,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               const Positioned(
@@ -284,16 +238,19 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                         Text(
                           plantName,
                           style: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.fontColor),
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.fontColor,
+                          ),
                         ),
                         const SizedBox(height: 8.0),
                         Text(
                           plantDescription,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 16.0, color: AppColors.fontColor),
+                            fontSize: 16.0,
+                            color: AppColors.fontColor,
+                          ),
                         ),
                       ],
                     ),
@@ -306,7 +263,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
       ),
       bottomNavigationBar: BottomNavigation(
         selectedIndex: _selectedIndex,
-        onTap: onItemTapped,
+        onTap: _onItemTapped,
       ),
     );
   }
