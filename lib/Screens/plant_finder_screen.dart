@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Global_Elements/colors.dart';
-import '/Global_Elements/top_navigation.dart';
-import '/Global_Elements/bottom_navigation.dart'; // Ensure this import points to the correct location
+import '/Screens/home_page.dart'; // Add this import for HomePage
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -11,7 +10,6 @@ class PlantFinderScreen extends StatefulWidget {
 }
 
 class _PlantFinderPageState extends State<PlantFinderScreen> {
-  int _selectedIndex = 2; // Index for BottomNavigationBar
 
   // State default variables for plant name, description, and image
   String plantName = 'Rose';
@@ -20,10 +18,16 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
   String plantImage = 'lib/Assets/images/rose_placeholder.jpg';
 
   void _onItemTapped(int index) {
-    // Handle navigation based on selected index
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 1) {
+      // Navigate to home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      setState(() {
+      });
+    }
   }
 
   void onBackButtonPressed() {
@@ -44,28 +48,29 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
   void onCameraButtonPressed() {
     // Placeholder for camera button functionality
   }
+
   void fetchFromAPI(String type) {
     setState(() {
       if (type == "shuffle") {
-        //API Calls here for random plant
+        // API Calls here for random plant
         updatePlant(
-          'Random Plant', // Example name
-          'Description of a random plant.', // Example description
-          'lib/Assets/images/random_plant.jpg', // Example image path
+          'Random Plant', 
+          'Description of a random plant.', 
+          'lib/Assets/images/rose_placeholder.jpg',
         );
       } else if (type == "back") {
-        //API Calls here for previous plant
+        // API Calls here for previous plant
         updatePlant(
-          'Previous Plant', // Example name
-          'Description of the previous plant.', // Example description
-          'lib/Assets/images/previous_plant.jpg', // Example image path
+          'Previous Plant', 
+          'Description of the previous plant.', 
+          'lib/Assets/images/rose_placeholder.jpg',
         );
       } else if (type == "forward") {
-        //API Calls here for random plant
+        // API Calls here for next plant
         updatePlant(
-          'Next Plant', // Example name
-          'Description of the next plant.', // Example description
-          'lib/Assets/images/next_plant.jpg', // Example image path
+          'Next Plant', 
+          'Description of the next plant.',
+          'lib/Assets/images/rose_placeholder.jpg',
         );
       }
     });
@@ -81,16 +86,12 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Get current screen size for later
+    // Get current screen size for later
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: const TopNavigation(
-        title: 'Plant Finder',
-        backButton: false,
-        showMenuIcon: true,
-      ),
+
       backgroundColor: AppColors.primaryColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -107,14 +108,12 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                   ),
                   child: TextField(
                     decoration: InputDecoration(
-                      prefixIcon:
-                          const Icon(Icons.search, color: AppColors.fontColor),
+                      prefixIcon: const Icon(Icons.search, color: AppColors.fontColor),
                       suffixIcon: IconButton(
                         icon: SizedBox(
                           width: 40.0,
                           height: 40.0,
-                          child:
-                              Image.asset('lib/Assets/images/camera_100.png'),
+                          child: Image.asset('lib/Assets/images/camera_100.png'),
                         ),
                         onPressed: onCameraButtonPressed, // Empty functionality
                       ),
@@ -150,9 +149,8 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
-                    //TODO: Switch out Icons.arrow_back with custom image.
-                    icon:
-                        Image.asset('lib/Assets/images/reverse_arrow_100.png'),
+                    // TODO: Switch out Icons.arrow_back with custom image.
+                    icon: Image.asset('lib/Assets/images/reverse_arrow_100.png'),
                     onPressed: onBackButtonPressed,
                   ),
                 ),
@@ -166,7 +164,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
-                    //TODO: Switch out Icons.shuffle with custom image.
+                    // TODO: Switch out Icons.shuffle with custom image.
                     icon: Image.asset('lib/Assets/images/shuffle_final.png'),
                     onPressed: onShuffleButtonPressed,
                   ),
@@ -181,9 +179,8 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                     color: AppColors.uiTile,
                   ),
                   child: IconButton(
-                    //TODO: Switch out Icons.forward with custom image.
-                    icon:
-                        Image.asset('lib/Assets/images/forward_arrow_100.png'),
+                    // TODO: Switch out Icons.forward with custom image.
+                    icon: Image.asset('lib/Assets/images/forward_arrow_100.png'),
                     onPressed: onForwardButtonPressed,
                   ),
                 ),
@@ -210,8 +207,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
                                 height: screenHeight * 0.4,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: AppColors.fontColor),
+                                  border: Border.all(color: AppColors.fontColor),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: ClipRRect(
@@ -260,10 +256,6 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigation(
-        selectedIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }
