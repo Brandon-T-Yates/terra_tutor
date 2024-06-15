@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:retry/retry.dart';
 import 'dart:async';
 import 'dart:math';
+import 'dart:io';
+import 'package:http/io_client.dart';
 import '/Global_Elements/colors.dart';
 import '/Global_Elements/top_navigation.dart';
 import '/Global_Elements/bottom_navigation.dart';
@@ -62,6 +64,15 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
     // Placeholder for camera button functionality
   }
 
+// Create an HttpClient that ignores bad certificates
+// This is for dev version only. And needs to be reverted once trefle.io updates their certificates
+  HttpClient httpClient(SecurityContext? context) {
+    final HttpClient client = HttpClient(context: context);
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    return client;
+  }
+
   Future<void> fetchRandomPlant() async {
     final String? apiKey = dotenv.env['TREFLE_API_KEY'];
     if (apiKey == null) {
@@ -74,10 +85,15 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
     final String apiUrl =
         'https://trefle.io/api/v1/plants?token=$apiKey&page=$randomPage';
 
+    final ioClient = IOClient(httpClient(null));
+
     try {
       print('Fetching data from API...');
       final response = await retry(
-        () => http.get(Uri.parse(apiUrl)).timeout(Duration(seconds: 5)),
+        () => ioClient
+            .get(Uri.parse(apiUrl))
+            //Increased timeout duration
+            .timeout(const Duration(seconds: 20)),
         retryIf: (e) => e is http.ClientException || e is TimeoutException,
         maxAttempts: 3,
       );
@@ -96,6 +112,8 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
       }
     } catch (e) {
       print('Error fetching plant data: $e');
+    } finally {
+      ioClient.close();
     }
   }
 
