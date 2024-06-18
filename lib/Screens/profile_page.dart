@@ -120,7 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: /*_handleAvatarTap*/_pickImage,  // _handleAvatarTap menbtos is not openingmedia file. Revise later.
+              onTap: //_handleAvatarTap,
+                      _pickImage,  // _handleAvatarTap menbtos is not opening media file.
               child: Container(
                 width: 200,
                 height: 200,
