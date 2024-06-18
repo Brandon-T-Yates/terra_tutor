@@ -4,9 +4,9 @@ import 'colors.dart';
 enum TextAlignOption { center, topLeft }
 
 class UiTile extends StatelessWidget {
-  final String imagePath;
+  final String image;
   final String name;
-  final String? description; // Make description nullable
+  final String? description;
   final double width;
   final double height;
   final EdgeInsetsGeometry margin;
@@ -23,9 +23,9 @@ class UiTile extends StatelessWidget {
 
   UiTile({
     super.key,
-    required this.imagePath,
+    required this.image,
     required this.name,
-    this.description, // Description is now optional
+    this.description,
     required this.textAlignment,
     this.width = 160,
     this.height = 180,
@@ -83,7 +83,7 @@ class UiTile extends StatelessWidget {
                     topRight: Radius.circular(12),
                   ),
                   child: Image.asset(
-                    imagePath,
+                    image,
                     fit: imageFit,
                   ),
                 ),

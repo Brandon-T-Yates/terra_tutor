@@ -69,14 +69,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/Assets/images/image.png 
+    - lib/Assets/images/
     - .env
-    - lib/Assets/images/placeholderlogo.png
-    - lib/Assets/images/rose_placeholder.jpg
-    - lib/Assets/images/camera_100.png
-    - lib/Assets/images/shuffle_final.png
-    - lib/Assets/images/forward_arrow_100.png
-    - lib/Assets/images/reverse_arrow_100.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
