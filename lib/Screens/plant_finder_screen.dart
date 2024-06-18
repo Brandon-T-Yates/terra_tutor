@@ -6,10 +6,10 @@ class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
 
   @override
-  _PlantFinderPageState createState() => _PlantFinderPageState();
+  PlantFinderPageState createState() => PlantFinderPageState();
 }
 
-class _PlantFinderPageState extends State<PlantFinderScreen> {
+class PlantFinderPageState extends State<PlantFinderScreen> {
 
   // State default variables for plant name, description, and image
   String plantName = 'Rose';
@@ -22,7 +22,7 @@ class _PlantFinderPageState extends State<PlantFinderScreen> {
       // Navigate to home page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } else {
       setState(() {
