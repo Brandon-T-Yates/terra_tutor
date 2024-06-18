@@ -122,6 +122,70 @@ class PermissionHandler {
       },
     );
   }
+
+  // Media file permission code added. When "Allow" button pressed, location permission denied.
+  // Further test is requeired on non-emulated device.
+  // Allow denies access. Deny allows and denies access. Possible issue with emulated device.
+
+  static Future<bool> showMediaFilePermissionPrompt(BuildContext context) async {
+    bool permissionGranted = false;
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20.0),
+          height: 200,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text (
+                'Media File Permission',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text('This app needs access to your media files to change your profile picture.'),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Deny'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      PermissionStatus status = await Permission.mediaLibrary.request();
+                      if (status.isGranted) {
+                        permissionGranted = true;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Media file permission granted')),
+                        );
+                      } else if (status.isDenied) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Media file permission denied')),
+                        );
+                      } else if (status.isPermanentlyDenied) {
+                        openAppSettings();
+                      }
+                    },
+                    child: const Text('Allow'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    return permissionGranted;
+  }
 }
 
 
