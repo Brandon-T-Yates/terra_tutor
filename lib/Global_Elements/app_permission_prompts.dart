@@ -154,6 +154,9 @@ class PermissionHandler {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Media file permission denied')),
+                      );
                     },
                     child: const Text('Deny'),
                   ),
