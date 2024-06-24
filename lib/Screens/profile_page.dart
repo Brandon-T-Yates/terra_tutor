@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import '/Global_Elements/colors.dart';
 import '/Global_Elements/top_navigation.dart';
@@ -22,7 +23,11 @@ class ProfilePageState extends State<ProfilePage> {
   String _lastName = 'Placeholder';
   String _userEmail = 'Placeholder';
   String _username = 'Placeholder';
+  String? _profileImageURL;
   bool _userNameChanged = false;
+  final picker = ImagePicker();
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   void didChangeDependencies() {
@@ -47,12 +52,42 @@ class ProfilePageState extends State<ProfilePage> {
         _lastName = userData['lastName'] ?? 'Last Name not available';
         _userEmail = userData['email'] ?? 'Email not available';
         _username = userData['username'] ?? 'Username not available';
+        _profileImageURL = userData['profilePicture'];
 
         // Update the UI with fetched data
         setState(() {});
       }
     }
   }
+  
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+            _profileImageURL = null;
+          });
+          File imageFile = File(pickedFile.path);
+
+          try {
+            User? user = FirebaseAuth.instance.currentUser;
+            if (user == null) return;
+
+            String fileName = 'profile_pictures/${user.uid}_${DateTime.now().millisecondsSinceEpoch}.png';
+            TaskSnapshot snapshot = await storage.ref(fileName).putFile(imageFile);
+            String downloadURL = await snapshot.ref.getDownloadURL();
+
+            await firestore.collection('users').doc(user.uid).update({'profilePicture': downloadURL});
+
+            setState(() {
+              _profileImageURL = downloadURL;
+            });
+          } catch (e) {
+            print('Failed to upload Image: $e');
+          }
+      }
+  }
+
 
   void _deleteAccount() async {
     try {
@@ -82,19 +117,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    var username = _username;
-
-    Future<void> _pickImage() async {
-        final ImagePicker _picker = ImagePicker();
-        final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-        if (image != null) {
-            // Handle the selected image file
-            File imageFile = File(image.path);
-            // Update the profile picture logic goes here
-            // For example, upload the image to Firebase Storage and update the user's profile picture URL in Firestore
-        }
-    }
+    var username = _username;    
 
     Future<void> _handleAvatarTap() async {
         bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
@@ -121,7 +144,7 @@ class ProfilePageState extends State<ProfilePage> {
           children: [
             GestureDetector(
               onTap: //_handleAvatarTap,
-                      _pickImage,  // _handleAvatarTap menbtos is not opening media file.
+                      _pickImage,  // _handleAvatarTap method is not opening media file.
               child: Container(
                 width: 200,
                 height: 200,
@@ -132,10 +155,15 @@ class ProfilePageState extends State<ProfilePage> {
                     width: 1.5,
                   ),
                 ),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 100,
+                  backgroundImage: _profileImageURL != null
+                      ? NetworkImage(_profileImageURL!)
+                      : null,
                   backgroundColor: Colors.grey,
-                  child: Icon(Icons.camera_alt, size: 70, color: Colors.black),
+                  child: _profileImageURL == null
+                      ? const Icon(Icons.camera_alt, size: 70, color: Colors.black)
+                      : null,
                 ),
               ),
             ),
