@@ -119,16 +119,16 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     var username = _username;    
 
-    Future<void> _handleAvatarTap() async {
-        bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
-        if (permissionGranted) {
-            _pickImage();
-        } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Media file access denied')),
-            );
-        }
-    }
+    // Future<void> _handleAvatarTap() async {
+    //     bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
+    //     if (permissionGranted) {
+    //         _pickImage();
+    //     } else {
+    //         ScaffoldMessenger.of(context).showSnackBar(
+    //           const SnackBar(content: Text('Media file access denied')),
+    //         );
+    //     }
+    // }
 
     return Scaffold(
       appBar: const TopNavigation(
