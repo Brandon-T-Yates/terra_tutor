@@ -8,7 +8,7 @@ class DailyFactsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return UiTile(
       name: 'Daily Facts',
-      image: 'lib/Assets/images/facts.png',
+      imagePath: 'lib/Assets/images/facts.png',
       description: '',
       textAlignment: TextAlignOption.center,
     );

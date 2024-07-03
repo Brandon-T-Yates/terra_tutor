@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'colors.dart';
 
 enum TextAlignOption { center, topLeft }
 
 class UiTile extends StatelessWidget {
-  final String image;
+  final String? imagePath;
+  final File? image;
+  final NetworkImage? networkImage;
   final String name;
   final String? description;
   final double width;
@@ -20,10 +23,13 @@ class UiTile extends StatelessWidget {
   final TextStyle descriptionTextStyle;
   final BoxFit imageFit;
   final TextAlignOption textAlignment;
+  final bool hasPhotos;
 
   UiTile({
     super.key,
-    required this.image,
+    this.imagePath,
+    this.image,
+    this.networkImage,
     required this.name,
     this.description,
     required this.textAlignment,
@@ -46,6 +52,7 @@ class UiTile extends StatelessWidget {
       color: Colors.black,
     ),
     this.imageFit = BoxFit.cover,
+    this.hasPhotos = false,
   }) {
     assert(textAlignment == TextAlignOption.center ||
         textAlignment == TextAlignOption.topLeft);
@@ -70,57 +77,57 @@ class UiTile extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: SizedBox(
-                height: height * 0.35,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                  child: Image.asset(
-                    image,
-                    fit: imageFit,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: textAlignment == TextAlignOption.center
-                      ? CrossAxisAlignment.center
-                      : CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: nameTextStyle,
-                      textAlign: textAlignment == TextAlignOption.center
-                          ? TextAlign.center
-                          : TextAlign.start,
-                    ),
-                    if (description != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        description!,
-                        style: descriptionTextStyle,
-                        textAlign: textAlignment == TextAlignOption.center
-                            ? TextAlign.center
-                            : TextAlign.start,
+        child: hasPhotos && (image != null || networkImage != null)
+            ? ClipRRect(
+                borderRadius: borderRadius,
+                child: image != null
+                    ? Image.file(image!, fit: imageFit)
+                    : Image(image: networkImage!, fit: imageFit),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      height: height * 0.35,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                        child: Image.asset(
+                          imagePath ?? 'lib/Assets/images/camera.png',
+                          fit: imageFit,
+                        ),
                       ),
-                    ],
-                  ],
-                ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment:
+                            textAlignment == TextAlignOption.center
+                                ? CrossAxisAlignment.center
+                                : CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: nameTextStyle,
+                          ),
+                          if (description != null)
+                            Text(
+                              description!,
+                              style: descriptionTextStyle,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -238,7 +238,7 @@ class ProfilePageState extends State<ProfilePage> {
                                           });
                                           setState(() {
                                             _userNameChanged = true;
-                                            _username = usernameController.text; // Update the local username variable
+                                            _username = usernameController.text;
                                           });
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             const SnackBar(content: Text('Username updated successfully')),

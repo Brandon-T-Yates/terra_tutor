@@ -8,7 +8,7 @@ class WaterReminderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return UiTile(
       name: 'Water Reminder',
-      image: 'lib/Assets/images/watering.png',
+      imagePath: 'lib/Assets/images/watering.png',
       textAlignment: TextAlignOption.center,
       description: '',
     );
