@@ -8,6 +8,7 @@ import '/Assets/Home_Page_Widgets/fertilizer_reminder.dart';
 import '/Assets/Home_Page_Widgets/plant_photos.dart';
 import '/Assets/Home_Page_Widgets/water_reminder.dart';
 import '/Assets/Home_Page_Widgets/weather_alerts.dart';
+import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,21 +39,56 @@ class HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.navBar,
-          title: const Center(child: Text('Add Widgets')),
+          title: const Center(
+            child: Text(
+              'Add Widgets',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           content: SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             width: MediaQuery.of(context).size.width * 0.8,
             child: GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
-              mainAxisSpacing: 1.0,
-              crossAxisSpacing: 1.0,
+              mainAxisSpacing: 16.0,
+              crossAxisSpacing: 16.0,
               children: [
-                _buildWidgetButton(const DailyFactsWidget()),
-                _buildWidgetButton(const FertilizerReminderWidget()),
-                _buildWidgetButton(const PlantPhotosWidget()),
-                _buildWidgetButton(const WaterReminderWidget()),
-                _buildWidgetButton(const WeatherAlertsWidget()),
+                AddWidgetButton(
+                  name: 'Daily Facts',
+                  imagePath: 'lib/Assets/images/facts.png',
+                  onTap: () {
+                    _addWidgetToHome(DailyFactsWidget());
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Fertilizer Reminder',
+                  imagePath: 'lib/Assets/images/fertilizer.png',
+                  onTap: () {
+                    _addWidgetToHome(FertilizerReminderWidget());
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Plant Photos',
+                  imagePath: 'lib/Assets/images/camera.png',
+                  onTap: () {
+                    _addWidgetToHome(PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png'));
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Water Reminder',
+                  imagePath: 'lib/Assets/images/watering.png',
+                  onTap: () {
+                    _addWidgetToHome(WaterReminderWidget());
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Weather Alerts',
+                  imagePath: 'lib/Assets/images/weather.png',
+                  onTap: () {
+                    _addWidgetToHome(WeatherAlertsWidget());
+                  },
+                ),
               ],
             ),
           ),
@@ -61,16 +97,11 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildWidgetButton(Widget widget) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-        setState(() {
-          _addedWidgets.add(widget);
-        });
-      },
-      child: widget,
-    );
+  void _addWidgetToHome(Widget widget) {
+    Navigator.of(context).pop();
+    setState(() {
+      _addedWidgets.add(widget);
+    });
   }
 
   @override
@@ -97,7 +128,7 @@ class HomePageState extends State<HomePage> {
                     runSpacing: 8.0,
                     children: _addedWidgets.map((widget) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 16.0,
+                        width: MediaQuery.of(context).size.width / 2 - 32.0,
                         child: widget,
                       );
                     }).toList(),

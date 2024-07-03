@@ -8,7 +8,7 @@ class FertilizerReminderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return UiTile(
       name: 'Fertilizer Reminder',
-      image: 'lib/Assets/images/fertilizer.png',
+      imagePath: 'lib/Assets/images/fertilizer.png',
       textAlignment: TextAlignOption.center,
       description: '',
     );

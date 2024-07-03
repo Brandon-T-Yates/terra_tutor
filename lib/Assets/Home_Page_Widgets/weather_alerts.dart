@@ -8,7 +8,7 @@ class WeatherAlertsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return UiTile(
       name: 'Weather Alerts',
-      image: 'lib/Assets/images/weather.png',
+      imagePath: 'lib/Assets/images/weather.png',
       textAlignment: TextAlignOption.center,
       description: '',
     );
