@@ -189,8 +189,8 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
           _imageUrl = downloadURL;
           hasPhotos = true;
         });
-      } catch (e) {
-        print('Failed to upload Image: $e');
+        // ignore: empty_catches
+        } catch (e) {
       }
     }
   }
