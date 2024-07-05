@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import '/Global_Elements/bottom_navigation.dart';
 import '/Global_Elements/top_navigation.dart';
 import '/Global_Elements/colors.dart';
-import '/Global_Elements/ui_tiles.dart';
 import '/Screens/plant_finder_screen.dart';
+import '/Assets/Home_Page_Widgets/daily_facts.dart';
+import '/Assets/Home_Page_Widgets/fertilizer_reminder.dart';
+import '/Assets/Home_Page_Widgets/plant_photos.dart';
+import '/Assets/Home_Page_Widgets/water_reminder.dart';
+import '/Assets/Home_Page_Widgets/weather_alerts.dart';
+import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 1; 
-  final List<Widget> _addedWidgets = []; 
+class HomePageState extends State<HomePage> {
+  int _selectedIndex = 1;
+  final List<Widget> _addedWidgets = [];
 
   static const List<Widget> _pages = <Widget>[
     Center(child: Text('Flower Box Page')),
@@ -34,38 +39,69 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.navBar,
-          title: const Center(child: Text('Add Widgets')),
+          title: const Center(
+            child: Text(
+              'Add Widgets',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           content: SizedBox(
-            width: double.maxFinite,
+            height: MediaQuery.of(context).size.height * 0.6,
+            width: MediaQuery.of(context).size.width * 0.8,
             child: GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
-              children: List.generate(5, (index) {
-                return GestureDetector(
+              mainAxisSpacing: 16.0,
+              crossAxisSpacing: 16.0,
+              children: [
+                AddWidgetButton(
+                  name: 'Daily Facts',
+                  imagePath: 'lib/Assets/images/facts.png',
                   onTap: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      _addedWidgets.add(UiTile(
-                        imagePath: 'lib/Assets/images/image.png',
-                        name: 'Widget $index',
-                        description: '',
-                        textAlignment: TextAlignOption.topLeft,
-                      ));
-                    });
+                    _addWidgetToHome(DailyFactsWidget());
                   },
-                  child: UiTile(
-                    imagePath: 'lib/Assets/images/image.png',
-                    name: 'Widget $index',
-                    description: '', 
-                    textAlignment: TextAlignOption.topLeft,
-                  ),
-                );
-              }),
+                ),
+                AddWidgetButton(
+                  name: 'Fertilizer Reminder',
+                  imagePath: 'lib/Assets/images/fertilizer.png',
+                  onTap: () {
+                    _addWidgetToHome(FertilizerReminderWidget());
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Plant Photos',
+                  imagePath: 'lib/Assets/images/camera.png',
+                  onTap: () {
+                    _addWidgetToHome(PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png'));
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Water Reminder',
+                  imagePath: 'lib/Assets/images/watering.png',
+                  onTap: () {
+                    _addWidgetToHome(WaterReminderWidget());
+                  },
+                ),
+                AddWidgetButton(
+                  name: 'Weather Alerts',
+                  imagePath: 'lib/Assets/images/weather.png',
+                  onTap: () {
+                    _addWidgetToHome(WeatherAlertsWidget());
+                  },
+                ),
+              ],
             ),
           ),
         );
       },
     );
+  }
+
+  void _addWidgetToHome(Widget widget) {
+    Navigator.of(context).pop();
+    setState(() {
+      _addedWidgets.add(widget);
+    });
   }
 
   @override
@@ -88,7 +124,14 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   color: AppColors.primaryColor,
                   child: Wrap(
-                    children: _addedWidgets,
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: _addedWidgets.map((widget) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 - 32.0,
+                        child: widget,
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
