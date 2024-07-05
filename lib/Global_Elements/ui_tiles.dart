@@ -24,6 +24,7 @@ class UiTile extends StatelessWidget {
   final BoxFit imageFit;
   final TextAlignOption textAlignment;
   final bool hasPhotos;
+  final double imageHeightRatio;
 
   UiTile({
     super.key,
@@ -33,8 +34,8 @@ class UiTile extends StatelessWidget {
     required this.name,
     this.description,
     required this.textAlignment,
-    this.width = 160,
-    this.height = 180,
+    this.width = 300,
+    this.height = 200,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.backgroundColor = AppColors.uiTile,
@@ -53,6 +54,7 @@ class UiTile extends StatelessWidget {
     ),
     this.imageFit = BoxFit.cover,
     this.hasPhotos = false,
+    this.imageHeightRatio = .37,
   }) {
     assert(textAlignment == TextAlignOption.center ||
         textAlignment == TextAlignOption.topLeft);
@@ -61,7 +63,7 @@ class UiTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Container(
         width: width,
         height: height,
@@ -77,57 +79,62 @@ class UiTile extends StatelessWidget {
             ),
           ],
         ),
-        child: hasPhotos && (image != null || networkImage != null)
-            ? ClipRRect(
-                borderRadius: borderRadius,
-                child: image != null
-                    ? Image.file(image!, fit: imageFit)
-                    : Image(image: networkImage!, fit: imageFit),
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (imagePath != null && imagePath!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: SizedBox(
+                  height: height * imageHeightRatio,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    child: Image.asset(
+                      imagePath!,
+                      fit: imageFit,
+                    ),
+                  ),
+                ),
+              ),
+            if (imagePath == null || imagePath!.isEmpty) const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: textAlignment == TextAlignOption.center
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                      height: height * 0.35,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                        child: Image.asset(
-                          imagePath ?? 'lib/Assets/images/camera.png',
-                          fit: imageFit,
-                        ),
+                  Text(
+                    name,
+                    style: name == 'Daily Facts'
+                        ? nameTextStyle.copyWith(
+                            decoration: TextDecoration.underline,
+                          )
+                        : nameTextStyle,
+                    textAlign: textAlignment == TextAlignOption.center
+                        ? TextAlign.center
+                        : TextAlign.start,
+                  ),
+                  if (description != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        description!,
+                        style: descriptionTextStyle,
+                        textAlign: textAlignment == TextAlignOption.center
+                            ? TextAlign.center
+                            : TextAlign.start,
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            textAlignment == TextAlignOption.center
-                                ? CrossAxisAlignment.center
-                                : CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: nameTextStyle,
-                          ),
-                          if (description != null)
-                            Text(
-                              description!,
-                              style: descriptionTextStyle,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'entrance_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
@@ -47,7 +47,6 @@ class SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Future.delayed(const Duration(seconds: 3), () {
-      // Total 5 seconds for animation and pause
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const EntranceScreen()),
@@ -68,9 +67,9 @@ class SplashScreenState extends State<SplashScreen>
       body: LayoutBuilder(
         builder: (context, constraints) {
           double logoHeight =
-              constraints.maxHeight * 0.2; // 20% of the screen height
+              constraints.maxHeight * 0.25;
           double fontSizeTitle =
-              constraints.maxWidth * 0.1; // 10% of the screen width
+              constraints.maxWidth * 0.1;
 
           return Stack(
             children: [
@@ -81,12 +80,11 @@ class SplashScreenState extends State<SplashScreen>
                   child: Padding(
                     padding: EdgeInsets.only(
                       bottom: constraints.maxHeight * 0.44,
-                    ), // Adjust to match entrance screen position
+                    ),
                     child: Text(
                       'Terra Tutor',
                       style: TextStyle(
-                        fontSize:
-                            fontSizeTitle, // Match the EntranceScreen font size
+                        fontSize: fontSizeTitle,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -97,16 +95,12 @@ class SplashScreenState extends State<SplashScreen>
                 alignment: Alignment.topCenter,
                 child: Padding(
                   padding: EdgeInsets.only(
-                      top: constraints.maxHeight *
-                          0.2), // Lower the logo slightly
+                    top: constraints.maxHeight * 0.2 - 4.0,
+                  ),
                   child: ScaleTransition(
                     scale: _logoAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.uiTile,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
                       child: Image.asset(
                         'lib/Assets/images/placeholderlogo.png',
                         height: logoHeight,

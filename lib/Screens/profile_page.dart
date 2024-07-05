@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/widgets.dart';
 import '/Global_Elements/colors.dart';
 import '/Global_Elements/top_navigation.dart';
 import 'entrance_screen.dart';
@@ -116,9 +115,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var username = _username;    
-
+  Widget build(BuildContext context) { 
     Future<void> _handleAvatarTap() async {
         bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
         if (permissionGranted) {
