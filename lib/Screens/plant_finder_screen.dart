@@ -20,7 +20,7 @@ class PlantFinderScreen extends StatefulWidget {
   PlantFinderPageState createState() => PlantFinderPageState();
 }
 
-class _PlantFinderPageState extends State<PlantFinderScreen> {
+class PlantFinderPageState extends State<PlantFinderScreen> {
   List plants = [];
   int currentPlantIndex = 0;
   List<Map<String, dynamic>> plantHistory = [];
