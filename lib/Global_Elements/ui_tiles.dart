@@ -24,7 +24,6 @@ class UiTile extends StatelessWidget {
   final BoxFit imageFit;
   final TextAlignOption textAlignment;
   final bool hasPhotos;
-  final Widget? child;
 
   UiTile({
     super.key,
@@ -34,8 +33,8 @@ class UiTile extends StatelessWidget {
     required this.name,
     this.description,
     required this.textAlignment,
-    this.width = 160,
-    this.height = 180,
+    this.width = 300,
+    this.height = 200,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.backgroundColor = AppColors.uiTile,
@@ -54,7 +53,6 @@ class UiTile extends StatelessWidget {
     ),
     this.imageFit = BoxFit.cover,
     this.hasPhotos = false,
-    this.child,
   }) {
     assert(textAlignment == TextAlignOption.center ||
         textAlignment == TextAlignOption.topLeft);
@@ -63,7 +61,7 @@ class UiTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Container(
         width: width,
         height: height,
@@ -124,14 +122,14 @@ class UiTile extends StatelessWidget {
                               description!,
                               style: descriptionTextStyle,
                             ),
-                            if (child != null)
-                            child!,
                         ],
                       ),
                     ),
-                  ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

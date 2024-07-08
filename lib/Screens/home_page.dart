@@ -58,35 +58,35 @@ class HomePageState extends State<HomePage> {
                   name: 'Daily Facts',
                   imagePath: 'lib/Assets/images/facts.png',
                   onTap: () {
-                    _addWidgetToHome(DailyFactsWidget());
+                    _addWidgetToHome(const DailyFactsWidget());
                   },
                 ),
                 AddWidgetButton(
                   name: 'Fertilizer Reminder',
                   imagePath: 'lib/Assets/images/fertilizer.png',
                   onTap: () {
-                    _addWidgetToHome(FertilizerReminderWidget());
+                    _addWidgetToHome(const FertilizerReminderWidget());
                   },
                 ),
                 AddWidgetButton(
                   name: 'Plant Photos',
                   imagePath: 'lib/Assets/images/camera.png',
                   onTap: () {
-                    _addWidgetToHome(PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png'));
+                    _addWidgetToHome(const PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png'));
                   },
                 ),
                 AddWidgetButton(
                   name: 'Water Reminder',
                   imagePath: 'lib/Assets/images/watering.png',
                   onTap: () {
-                    _addWidgetToHome(WaterReminderWidget());
+                    _addWidgetToHome(const WaterReminderWidget());
                   },
                 ),
                 AddWidgetButton(
                   name: 'Weather Alerts',
                   imagePath: 'lib/Assets/images/weather.png',
                   onTap: () {
-                    _addWidgetToHome(WeatherAlertsWidget());
+                    _addWidgetToHome(const WeatherAlertsWidget());
                   },
                 ),
               ],
