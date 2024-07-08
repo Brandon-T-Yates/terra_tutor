@@ -5,14 +5,29 @@ import '/Global_Elements/user_input_text_field.dart';
 import '/Global_Elements/colors.dart';
 import 'home_page.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  SignUpPage({super.key});
+
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  SignUpPage({super.key});
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +188,7 @@ class SignUpPage extends StatelessWidget {
                             final String confirmPassword = confirmPasswordController.text;
 
                             if (password != confirmPassword) {
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Passwords do not match'),
@@ -194,6 +210,7 @@ class SignUpPage extends StatelessWidget {
                                 'email': email,
                               });
 
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Successfully signed up!'),
@@ -201,6 +218,7 @@ class SignUpPage extends StatelessWidget {
                               );
 
                               // Navigate to the home page
+                              if (!mounted) return;
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -208,6 +226,7 @@ class SignUpPage extends StatelessWidget {
                                 ),
                               );
                             } on FirebaseAuthException catch (e) {
+                              if (!mounted) return;
                               String message;
                               switch (e.code) {
                                 case 'email-already-in-use':
