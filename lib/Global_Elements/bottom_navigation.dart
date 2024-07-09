@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'colors.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
-  final Color selectedItemColor;
-  final Color backgroundColor;
 
   const BottomNavigation({
     required this.selectedIndex,
     required this.onTap,
-    this.selectedItemColor = const Color.fromARGB(255, 242, 233, 216),
-    this.backgroundColor = AppColors.navBar,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -33,9 +33,10 @@ class BottomNavigation extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: selectedItemColor,
+      selectedItemColor: theme.cardColor,
+      unselectedItemColor: Colors.black,
+      backgroundColor: theme.appBarTheme.backgroundColor,
       onTap: onTap,
-      backgroundColor: backgroundColor,
     );
   }
 }

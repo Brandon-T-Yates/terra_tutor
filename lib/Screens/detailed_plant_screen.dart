@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
 import 'package:http/io_client.dart';
+import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/top_navigation.dart';
 import '/Global_Elements/colors.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 class PlantDetailsScreen extends StatefulWidget {
   final String scientificName;
@@ -95,7 +97,8 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
               Colors.transparent, // Make the dialog background transparent
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.uiTile, // Set the background color to uiTile
+              color: Theme.of(context)
+                  .cardColor, // Set the background color to uiTile
               borderRadius:
                   BorderRadius.circular(16.0), // Optional: Rounded corners
               border: Border.all(
@@ -169,14 +172,14 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return Scaffold(
       appBar: const TopNavigation(
         title: 'Plant Details',
         backButton: true,
         showMenuIcon: true,
       ),
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : plantDetails == null
@@ -189,7 +192,7 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.uiTile,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(16.0),
                           border: Border.all(color: AppColors.fontColor),
                         ),
@@ -247,7 +250,7 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: AppColors.uiTile,
+                            color: theme.cardColor,
                             borderRadius: BorderRadius.circular(16.0),
                             border: Border.all(color: AppColors.fontColor),
                           ),
