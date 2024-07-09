@@ -37,7 +37,7 @@ class WeatherService {
   static const String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 
   Future<Weather> fetchWeather(String city) async {
-    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric'));
+    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(json.decode(response.body));
