@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:terra_tutor/Screens/splash_screen.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'package:terra_tutor/Data/plant_image_provider.dart';
+import 'package:terra_tutor/Screens/add_flower_box_dialog.dart';
+import 'package:terra_tutor/Screens/flower_box.dart';
+import 'package:terra_tutor/Screens/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

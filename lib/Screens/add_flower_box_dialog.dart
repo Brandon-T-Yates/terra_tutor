@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:terra_tutor/Screens/flower_box.dart';
+
+class AddFlowerBoxDialog extends StatefulWidget {
+  final Function(FlowerBox) onAddFlowerBox;
+  final FlowerBox? initialFlowerBox;
+
+  AddFlowerBoxDialog({required this.onAddFlowerBox, this.initialFlowerBox});
+
+  @override
+  _AddFlowerBoxDialogState createState() => _AddFlowerBoxDialogState();
+}
+
+class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late int _length;
+  late int _width;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController =
+        TextEditingController(text: widget.initialFlowerBox?.name ?? '');
+    _length = widget.initialFlowerBox?.length ?? 1;
+    _width = widget.initialFlowerBox?.width ?? 1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.initialFlowerBox == null
+          ? 'Add Flower Box'
+          : 'Edit Flower Box'),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: 'Flower Box Name'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
+            ),
+            DropdownButtonFormField<int>(
+              value: _length,
+              decoration: InputDecoration(labelText: 'Length'),
+              items: List.generate(6, (index) => index + 1)
+                  .map((value) => DropdownMenuItem<int>(
+                      value: value, child: Text('$value')))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _length = value!;
+                });
+              },
+            ),
+            DropdownButtonFormField<int>(
+              value: _width,
+              decoration: InputDecoration(labelText: 'Width'),
+              items: List.generate(6, (index) => index + 1)
+                  .map((value) => DropdownMenuItem<int>(
+                      value: value, child: Text('$value')))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _width = value!;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              widget.onAddFlowerBox(
+                FlowerBox(
+                  name: _nameController.text,
+                  length: _length,
+                  width: _width,
+                ),
+              );
+            }
+          },
+          child: Text('Save'),
+        ),
+      ],
+    );
+  }
+}
