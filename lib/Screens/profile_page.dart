@@ -116,7 +116,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) { 
-    Future<void> _handleAvatarTap() async {
+    Future<void> handleAvatarTap() async {
         bool permissionGranted = await PermissionHandler.showMediaFilePermissionPrompt(context);
         if (permissionGranted) {
             _pickImage();

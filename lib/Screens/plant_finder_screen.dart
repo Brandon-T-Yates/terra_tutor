@@ -8,10 +8,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:http/io_client.dart';
 import '/Global_Elements/colors.dart';
-import '/Global_Elements/top_navigation.dart';
-import '/Global_Elements/bottom_navigation.dart';
 import '/Screens/detailed_plant_screen.dart';
-import '/Screens/home_page.dart'; // Add this import for HomePage
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -29,18 +26,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   String plantDescription =
       'Roses are one of the oldest flowers on Earth. Fossil evidence suggests that roses are at least 35 million years old!';
   String plantImage = 'lib/Assets/images/rose_placeholder.jpg';
-
-  void _onItemTapped(int index) {
-    if (index == 1) {
-      // Navigate to home page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else {
-      setState(() {});
-    }
-  }
 
   void onBackButtonPressed() {
     if (plantHistory.isNotEmpty) {
@@ -176,7 +161,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Center(
                 child: Container(
