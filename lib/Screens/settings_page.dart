@@ -1,11 +1,12 @@
-// ignore_for_file: unrelated_type_equality_checks
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Global_Elements/colors.dart';
 import '/Screens/profile_page.dart';
 import '/Global_Elements/top_navigation.dart';
-import 'entrance_screen.dart'; // Make sure to import your entrance screen
+import 'entrance_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -17,48 +18,57 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   String selectedTheme = 'Default';
 
-  void setSelectedTheme(String theme) {
-    setState(() {
-      selectedTheme = theme;
-    });
-    themeSelectionFunctionality(theme);
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedTheme();
   }
 
-  void themeSelectionFunctionality(String theme) {
+  Future<void> _loadSelectedTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedTheme = prefs.getString('selectedTheme') ?? 'Default';
+    });
+  }
+
+  Future<void> _setSelectedTheme(String theme) async {
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+
+    setState(() {
+      selectedTheme = theme; // Update the selected theme state
+    });
+
     switch (theme) {
       case 'Default':
-        // Functionality for Default theme
-        print('Default theme selected');
+        themeNotifier.setTheme(ThemeNotifier.defaultTheme);
         break;
       case 'Tropical Garden':
-        // Functionality for Tropical Garden theme
-        print('Tropical Garden theme selected');
+        themeNotifier.setTheme(ThemeNotifier.tropicalGardenTheme);
         break;
       case 'Woodland Forest':
-        // Functionality for Woodland Forest theme
-        print('Woodland Forest theme selected');
+        themeNotifier.setTheme(ThemeNotifier.woodlandForestTheme);
         break;
       case 'High Desert':
-        // Functionality for High Desert theme
-        print('High Desert theme selected');
+        themeNotifier.setTheme(ThemeNotifier.highDesertTheme);
         break;
       case 'Redwood Forest':
-        // Functionality for Redwood Forest theme
-        print('Redwood Forest theme selected');
+        themeNotifier.setTheme(ThemeNotifier.redwoodForestTheme);
         break;
       case 'Arctic Garden':
-        // Functionality for Arctic Garden theme
-        print('Arctic Garden theme selected');
+        themeNotifier.setTheme(ThemeNotifier.arcticGardenTheme);
         break;
-      default:
-        print('Unknown theme selected');
     }
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('selectedTheme', theme);
+
+    // Navigate back to the home screen
+    Navigator.of(context).pop();
   }
 
-  //When theme is selected this builds the output.
   Widget buildThemeOption(String theme) {
     return GestureDetector(
-      onTap: () => setSelectedTheme(theme),
+      onTap: () => _setSelectedTheme(theme),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

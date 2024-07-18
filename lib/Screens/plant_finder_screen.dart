@@ -9,6 +9,9 @@ import 'dart:math';
 import 'package:http/io_client.dart';
 import '/Global_Elements/colors.dart';
 import '/Screens/detailed_plant_screen.dart';
+import '/Screens/home_page.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
+import 'package:provider/provider.dart';
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -122,9 +125,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
         plantName = selectedPlant['common_name'] ?? 'Unknown Plant';
         plantDescription =
             selectedPlant['scientific_name'] ?? 'No description available';
-        plantImage = imageUrl.isEmpty
-            ? 'lib/Assets/images/rose_placeholder.jpg'
-            : imageUrl;
+        plantImage = imageUrl.isNotEmpty
+            ? imageUrl
+            : 'lib/Assets/images/rose_placeholder.jpg';
       });
     }
   }
@@ -155,8 +158,10 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    //For themes
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -167,7 +172,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                 child: Container(
                   width: screenWidth * 0.7,
                   decoration: BoxDecoration(
-                    color: AppColors.uiTile,
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: TextField(
@@ -212,7 +217,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.fontColor),
                     borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.uiTile,
+                    color: theme.cardColor,
                   ),
                   child: IconButton(
                     icon:
@@ -227,7 +232,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.fontColor),
                     borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.uiTile,
+                    color: theme.cardColor,
                   ),
                   child: IconButton(
                     icon: Image.asset('lib/Assets/images/shuffle_final.png'),
@@ -241,7 +246,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.fontColor),
                     borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.uiTile,
+                    color: theme.cardColor,
                   ),
                   child: IconButton(
                     icon:
@@ -259,7 +264,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.fontColor),
                     borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.uiTile,
+                    color: theme.cardColor,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

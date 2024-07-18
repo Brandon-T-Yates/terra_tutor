@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import '../Screens/settings_page.dart';
-import 'colors.dart';
 
 class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
-  final Color backgroundColor;
-  final Color iconColor;
+  final String title;
   final bool backButton;
   final bool showMenuIcon;
-  final String title;
 
   const TopNavigation({
     required this.title,
-    this.backgroundColor = AppColors.navBar,
-    this.iconColor = Colors.black,
     this.backButton = false,
     required this.showMenuIcon,
     super.key,
@@ -20,23 +15,29 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Directly use the primary color of the theme
+    Color backgroundColor = Theme.of(context).primaryColor;
+    // Use the icon theme color, falling back to black if not specified
+    Color iconColor = Theme.of(context).iconTheme.color ?? Colors.black;
+
     return AppBar(
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24.0,
-
+          color:
+              Theme.of(context).textTheme.headlineLarge?.color ?? Colors.black,
         ),
       ),
       backgroundColor: backgroundColor,
+      iconTheme: IconThemeData(color: iconColor),
       centerTitle: true,
       automaticallyImplyLeading: backButton,
       actions: showMenuIcon
           ? [
               IconButton(
                 icon: const Icon(Icons.menu),
-                color: iconColor,
                 onPressed: () {
                   Navigator.push(
                     context,
