@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'colors.dart';
-import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 enum TextAlignOption { center, topLeft }
 
-class UiTile extends StatelessWidget {
+class UiTile2 extends StatelessWidget {
   final String? imagePath;
   final File? image;
   final NetworkImage? networkImage;
@@ -16,7 +14,7 @@ class UiTile extends StatelessWidget {
   final double height;
   final EdgeInsetsGeometry margin;
   final BorderRadius borderRadius;
-  final Color? backgroundColor;
+  final Color backgroundColor;
   final Color shadowColor;
   final double spreadRadius;
   final double blurRadius;
@@ -29,7 +27,7 @@ class UiTile extends StatelessWidget {
   final double imageHeightRatio;
   final Widget? child;
 
-  UiTile({
+  UiTile2({
     super.key,
     this.imagePath,
     this.image,
@@ -41,7 +39,7 @@ class UiTile extends StatelessWidget {
     this.height = 200,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
-    this.backgroundColor,
+    this.backgroundColor = AppColors.uiTile,
     this.shadowColor = Colors.grey,
     this.spreadRadius = 1,
     this.blurRadius = 7,
@@ -66,15 +64,13 @@ class UiTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeNotifier>(context).getTheme();
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: backgroundColor ?? theme.cardColor,
+          color: backgroundColor,
           borderRadius: borderRadius,
           boxShadow: [
             BoxShadow(
@@ -90,7 +86,7 @@ class UiTile extends StatelessWidget {
           children: [
             if (imagePath != null && imagePath!.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: height * imageHeightRatio,
                   child: ClipRRect(
@@ -105,7 +101,7 @@ class UiTile extends StatelessWidget {
                   ),
                 ),
               ),
-            if (imagePath == null || imagePath!.isEmpty) const SizedBox(height: 20),
+            if (imagePath == null || imagePath!.isEmpty) const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -127,7 +123,7 @@ class UiTile extends StatelessWidget {
                   ),
                   if (description != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
                         description!,
                         style: descriptionTextStyle,
@@ -138,7 +134,7 @@ class UiTile extends StatelessWidget {
                     ),
                     if (child != null)
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: 0),
                       child: child!,
                     ),
                 ],

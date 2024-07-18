@@ -3,7 +3,7 @@ import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'entrance_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key});
+  const SplashScreen({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
