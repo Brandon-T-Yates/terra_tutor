@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:geolocator/geolocator.dart';
 import 'package:terra_tutor/Global_Elements/ui_tile2.0.dart';
 import '/Data/weather_api.dart';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 class WeatherAlertsWidget extends StatefulWidget {
   const WeatherAlertsWidget({super.key});
