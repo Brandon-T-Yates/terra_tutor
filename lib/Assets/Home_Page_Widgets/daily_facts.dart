@@ -14,7 +14,7 @@ class DailyFactsWidget extends StatefulWidget {
 class DailyFactsWidgetState extends State<DailyFactsWidget> {
   late Future<List<String>> plantFacts;
   late Timer timer;
-  late List<String> facts;
+  List<String> facts = [];
   int currentIndex = 0;
 
   @override
@@ -31,10 +31,16 @@ class DailyFactsWidgetState extends State<DailyFactsWidget> {
 
   void loadFactsAndStartTimer() {
     plantFacts = loadPlantFacts();
-    timer = Timer.periodic(const Duration(seconds: 10), (Timer t) {
+    plantFacts.then((loadedFacts) {
       setState(() {
-        currentIndex = (currentIndex + 1) % facts.length;
-        //TODO: update time to be a full day
+        facts = loadedFacts;
+        if (facts.isNotEmpty) {
+          timer = Timer.periodic(const Duration(seconds: 10), (Timer t) {
+            setState(() {
+              currentIndex = (currentIndex + 1) % facts.length;
+            });
+          });
+        }
       });
     });
   }
@@ -49,8 +55,11 @@ class DailyFactsWidgetState extends State<DailyFactsWidget> {
         } else if (snapshot.hasError) {
           return const Center(child: Text('Error loading plant facts'));
         } else {
-          facts = snapshot.data!;
-          final currentFact = facts[currentIndex];
+          if (facts.isEmpty) {
+            facts = snapshot.data!;
+          }
+          final currentFact =
+              facts.isNotEmpty ? facts[currentIndex] : 'No facts available';
           return UiTile(
             name: 'Daily Facts',
             description: currentFact,
@@ -68,7 +77,8 @@ class DailyFactsWidgetState extends State<DailyFactsWidget> {
 }
 
 Future<List<String>> loadPlantFacts() async {
-  final String response = await rootBundle.loadString('lib/Assets/plant_facts.json');
+  final String response =
+      await rootBundle.loadString('lib/Assets/plant_facts.json');
   final List<dynamic> data = json.decode(response);
   return data.map((fact) => fact['fact'] as String).toList();
 }
