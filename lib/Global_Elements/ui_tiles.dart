@@ -27,6 +27,7 @@ class UiTile extends StatelessWidget {
   final TextAlignOption textAlignment;
   final bool hasPhotos;
   final double imageHeightRatio;
+  final Widget? child;
 
   UiTile({
     super.key,
@@ -57,6 +58,7 @@ class UiTile extends StatelessWidget {
     this.imageFit = BoxFit.cover,
     this.hasPhotos = false,
     this.imageHeightRatio = .37,
+    this.child,
   }) {
     assert(textAlignment == TextAlignOption.center ||
         textAlignment == TextAlignOption.topLeft);
@@ -133,6 +135,11 @@ class UiTile extends StatelessWidget {
                             ? TextAlign.center
                             : TextAlign.start,
                       ),
+                    ),
+                    if (child != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: child!,
                     ),
                 ],
               ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
@@ -14,13 +13,13 @@ class PlantDetailsScreen extends StatefulWidget {
   final String scientificName;
 
 //Requires plant's scientific name to be sent to this class
-  PlantDetailsScreen({required this.scientificName});
+  const PlantDetailsScreen({super.key, required this.scientificName});
 
   @override
-  _PlantDetailsScreenState createState() => _PlantDetailsScreenState();
+  PlantDetailsScreenState createState() => PlantDetailsScreenState();
 }
 
-class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
+class PlantDetailsScreenState extends State<PlantDetailsScreen> {
   Map<String, dynamic>? plantDetails;
   bool isLoading = true;
 
@@ -76,13 +75,13 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
 //IF plant doesn't have any data, exclude from results.
   Widget buildPlantDetail(String title, dynamic value) {
     if (value == null || value.toString().isEmpty || value == 'N/A') {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Text(
         '$title: ${value.toString()}',
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
     );
   }
@@ -104,7 +103,7 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
               border: Border.all(
                   color: AppColors.fontColor), // Optional: Add border
             ),
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
@@ -124,7 +123,7 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
   // Places common name inside of box
   Widget buildCommonNameDetail(String value) {
     if (value.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -170,9 +169,10 @@ class _PlantDetailsScreenState extends State<PlantDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    //final screenWidth = MediaQuery.of(context).size.width;
+    //final screenHeight = MediaQuery.of(context).size.height;
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return Scaffold(
       appBar: const TopNavigation(
         title: 'Plant Details',

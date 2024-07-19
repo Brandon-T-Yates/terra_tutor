@@ -92,7 +92,7 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
               ),
               child: const Text('Cancel', style: TextStyle(fontSize: 16)),
             ),
-            const SizedBox(width: 5), // Adjusted the spacing here
+            const SizedBox(width: 5),
             Padding(
               padding: const EdgeInsets.only(left: 5.0),
               child: ElevatedButton(
@@ -143,7 +143,7 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
               ),
               child: const Text('Cancel', style: TextStyle(fontSize: 16)),
             ),
-            const SizedBox(width: 5), // Adjusted the spacing here
+            const SizedBox(width: 5),
             Padding(
               padding: const EdgeInsets.only(left: 5.0),
               child: ElevatedButton(
@@ -189,9 +189,11 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
           _imageUrl = downloadURL;
           hasPhotos = true;
         });
-        // ignore: empty_catches
-        } catch (e) {
+      } catch (e) {
+        // Handle error
+        print('Error uploading image: $e');
       }
     }
   }
 }
+
