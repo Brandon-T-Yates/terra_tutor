@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Screens/flower_box.dart';
+import 'package:terra_tutor/Screens/flower_box_detail.dart';
 
 class AddFlowerBoxDialog extends StatefulWidget {
   final Function(FlowerBox) onAddFlowerBox;
@@ -48,19 +49,6 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
               },
             ),
             DropdownButtonFormField<int>(
-              value: _length,
-              decoration: InputDecoration(labelText: 'Length'),
-              items: List.generate(6, (index) => index + 1)
-                  .map((value) => DropdownMenuItem<int>(
-                      value: value, child: Text('$value')))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _length = value!;
-                });
-              },
-            ),
-            DropdownButtonFormField<int>(
               value: _width,
               decoration: InputDecoration(labelText: 'Width'),
               items: List.generate(6, (index) => index + 1)
@@ -70,6 +58,19 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
               onChanged: (value) {
                 setState(() {
                   _width = value!;
+                });
+              },
+            ),
+            DropdownButtonFormField<int>(
+              value: _length,
+              decoration: InputDecoration(labelText: 'Length'),
+              items: List.generate(6, (index) => index + 1)
+                  .map((value) => DropdownMenuItem<int>(
+                      value: value, child: Text('$value')))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _length = value!;
                 });
               },
             ),
@@ -84,13 +85,12 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
         TextButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              widget.onAddFlowerBox(
-                FlowerBox(
-                  name: _nameController.text,
-                  length: _length,
-                  width: _width,
-                ),
+              final newFlowerBox = FlowerBox(
+                name: _nameController.text,
+                length: _length,
+                width: _width,
               );
+              widget.onAddFlowerBox(newFlowerBox);
             }
           },
           child: Text('Save'),

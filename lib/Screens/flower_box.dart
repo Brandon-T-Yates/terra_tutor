@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'package:terra_tutor/Screens/add_flower_box_dialog.dart';
 import 'package:terra_tutor/Screens/flower_box_detail.dart';
+import 'package:terra_tutor/Screens/all_plants_page.dart';
+import 'package:terra_tutor/Screens/reorder_flower_box.dart';
 
 class FlowerBox {
   String name;
@@ -20,14 +21,16 @@ class FlowerBox {
     required this.width,
   }) : plants = List.generate(length, (index) => List.filled(width, null));
 
-  //Maping json list of current flowers
   factory FlowerBox.fromJson(Map<String, dynamic> json) {
-    return FlowerBox(
+    FlowerBox flowerBox = FlowerBox(
       name: json['name'],
       length: json['length'],
       width: json['width'],
-    )..plants = List<List<String?>>.from(
-        json['plants'].map((x) => List<String?>.from(x)));
+    );
+    flowerBox.plants = List<List<String?>>.from(
+      json['plants'].map((x) => List<String?>.from(x)),
+    );
+    return flowerBox;
   }
 
   Map<String, dynamic> toJson() => {
@@ -53,7 +56,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     loadFlowerBoxes();
   }
 
-  //Load the current flower boxes from shared prefs
   Future<void> loadFlowerBoxes() async {
     final prefs = await SharedPreferences.getInstance();
     final savedData = prefs.getString('flower_boxes');
@@ -65,13 +67,11 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     }
   }
 
-  // Save current flower to shared prefs
   Future<void> saveFlowerBoxes() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('flower_boxes', json.encode(flowerBoxes));
   }
 
-  //Addds a flowerbox to the home page/ main garden
   void addFlowerBox(FlowerBox flowerBox) {
     setState(() {
       flowerBoxes.add(flowerBox);
@@ -79,7 +79,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     saveFlowerBoxes();
   }
 
-  //Edit flower boxes in case of mistake
   void editFlowerBox(int index, FlowerBox flowerBox) {
     setState(() {
       flowerBoxes[index] = flowerBox;
@@ -87,7 +86,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     saveFlowerBoxes();
   }
 
-  //Remove flower boxes
   void deleteFlowerBox(int index) {
     setState(() {
       flowerBoxes.removeAt(index);
@@ -95,7 +93,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     saveFlowerBoxes();
   }
 
-  //Change order of current flower boxes
   void reorderFlowerBox(int oldIndex, int newIndex) {
     setState(() {
       if (newIndex > oldIndex) {
@@ -103,11 +100,10 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
       }
       final FlowerBox item = flowerBoxes.removeAt(oldIndex);
       flowerBoxes.insert(newIndex, item);
-      saveFlowerBoxes();
     });
+    saveFlowerBoxes();
   }
 
-  //Seperate into lists so that four boxes can be displayed on each page.
   List<FlowerBox> getCurrentPageItems() {
     final startIndex = _currentPage * 4;
     final endIndex = (_currentPage + 1) * 4;
@@ -115,7 +111,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
         endIndex > flowerBoxes.length ? flowerBoxes.length : endIndex);
   }
 
-  //Flips to the next page of flower boxes
   void nextPage() {
     setState(() {
       if ((_currentPage + 1) * 4 < flowerBoxes.length) {
@@ -124,13 +119,26 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     });
   }
 
-  //Returns to the previous page of flower boxes
   void previousPage() {
     setState(() {
       if (_currentPage > 0) {
         _currentPage--;
       }
     });
+  }
+
+  List<String> getAllPlants() {
+    List<String> allPlants = [];
+    for (var flowerBox in flowerBoxes) {
+      for (var row in flowerBox.plants) {
+        for (var plant in row) {
+          if (plant != null && plant.isNotEmpty) {
+            allPlants.add(plant);
+          }
+        }
+      }
+    }
+    return allPlants;
   }
 
   @override
@@ -156,41 +164,56 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                       color: theme.textTheme.bodyMedium?.color,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0), // Adding horizontal padding
-                    width:
-                        160.0, // Adjusting width to accommodate the icons and padding
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (_currentPage > 0)
-                          IconButton(
-                            icon: Icon(Icons.arrow_back),
-                            onPressed: previousPage,
-                            color: Colors.black,
-                          ),
-                        IconButton(
-                          icon: Icon(Icons.list),
-                          onPressed: () => Navigator.push(
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.local_florist),
+                        onPressed: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReorderFlowerBoxesPage(
-                                flowerBoxes: flowerBoxes,
-                                onReorder: reorderFlowerBox,
-                              ),
+                              builder: (context) =>
+                                  AllPlantsPage(allPlants: getAllPlants()),
                             ),
-                          ),
-                          color: Colors.black,
+                          );
+                        },
+                        color: theme.primaryColor,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        width: 160.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (_currentPage > 0)
+                              IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: previousPage,
+                                color: Colors.black,
+                              ),
+                            IconButton(
+                              icon: Icon(Icons.list),
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReorderFlowerBoxesPage(
+                                    flowerBoxes: flowerBoxes,
+                                    onReorder: reorderFlowerBox,
+                                  ),
+                                ),
+                              ),
+                              color: Colors.black,
+                            ),
+                            if ((_currentPage + 1) * 4 < flowerBoxes.length)
+                              IconButton(
+                                icon: Icon(Icons.arrow_forward),
+                                onPressed: nextPage,
+                                color: Colors.black,
+                              ),
+                          ],
                         ),
-                        if ((_currentPage + 1) * 4 < flowerBoxes.length)
-                          IconButton(
-                            icon: Icon(Icons.arrow_forward),
-                            onPressed: nextPage,
-                            color: Colors.black,
-                          ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -206,8 +229,7 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: Icon(Icons.drag_handle,
-                              color: theme.primaryColor),
+                          leading: Icon(Icons.drag_handle, color: Colors.white),
                           title: Column(
                             children: [
                               Text(
@@ -220,7 +242,7 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                                 ),
                               ),
                               Text(
-                                'Size: ${flowerBox.length} x ${flowerBox.width}',
+                                'Size: ${flowerBox.width} x ${flowerBox.length}',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14,
@@ -250,22 +272,24 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: Row(
+                          child: Column(
                             children: [
                               for (int row = 0; row < flowerBox.length; row++)
-                                Column(
+                                Row(
                                   children: [
                                     for (int col = 0;
                                         col < flowerBox.width;
                                         col++)
                                       Container(
-                                        width:
-                                            100, // Set a fixed width for each cell
-                                        height:
-                                            60, // Set a fixed height for each cell
+                                        width: 100,
+                                        height: 60,
                                         margin: EdgeInsets.all(4.0),
                                         padding: EdgeInsets.all(16.0),
-                                        color: theme.cardColor,
+                                        decoration: BoxDecoration(
+                                          color: theme.cardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                        ),
                                         child: Center(
                                           child: AutoSizeText(
                                             flowerBox.plants[row][col] ?? '',
@@ -305,17 +329,30 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     );
   }
 
-  //Shows the dialog to add a new flower box
   void showAddFlowerBoxDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        return AddFlowerBoxDialog(onAddFlowerBox: navigateToFlowerBoxDetail);
+        return AddFlowerBoxDialog(
+          onAddFlowerBox: (newFlowerBox) {
+            Navigator.of(context).pop(); // Close the dialog
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    FlowerBoxDetailPage(flowerBox: newFlowerBox),
+              ),
+            ).then((result) {
+              if (result != null && result is FlowerBox) {
+                addFlowerBox(result);
+              }
+            });
+          },
+        );
       },
     );
   }
 
-  //Go back to the edit page with current flower box details
   void navigateToEditFlowerBoxDetail(BuildContext context, int index) {
     Navigator.push(
       context,
@@ -324,78 +361,22 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
             FlowerBoxDetailPage(flowerBox: flowerBoxes[index]),
       ),
     ).then((result) {
-      if (result != null) {
+      if (result != null && result is FlowerBox) {
         editFlowerBox(index, result);
       }
     });
   }
 
-  // Navigates to the edit page of the flower box
   void navigateToFlowerBoxDetail(FlowerBox flowerBox) {
-    Navigator.of(context).pop(); // Close the dialog first
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FlowerBoxDetailPage(flowerBox: flowerBox),
       ),
     ).then((result) {
-      if (result != null) {
+      if (result != null && result is FlowerBox) {
         addFlowerBox(result);
       }
     });
-  }
-}
-
-//REORDER class that changes the position of each flower box
-class ReorderFlowerBoxesPage extends StatefulWidget {
-  final List<FlowerBox> flowerBoxes;
-  final void Function(int oldIndex, int newIndex) onReorder;
-
-  ReorderFlowerBoxesPage({
-    required this.flowerBoxes,
-    required this.onReorder,
-  });
-
-  @override
-  _ReorderFlowerBoxesPageState createState() => _ReorderFlowerBoxesPageState();
-}
-
-class _ReorderFlowerBoxesPageState extends State<ReorderFlowerBoxesPage> {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeNotifier>(context).getTheme();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Reorder Flower Boxes'),
-        backgroundColor: theme.primaryColor,
-      ),
-      body: ReorderableListView(
-        onReorder: (oldIndex, newIndex) {
-          setState(() {
-            widget.onReorder(oldIndex, newIndex);
-          });
-        },
-        children: [
-          for (int index = 0; index < widget.flowerBoxes.length; index++)
-            ListTile(
-              key: ValueKey(widget.flowerBoxes[index]),
-              leading: Icon(Icons.drag_handle, color: theme.primaryColor),
-              title: Text(
-                widget.flowerBoxes[index].name,
-                style: TextStyle(
-                  color: theme.textTheme.bodyMedium?.color,
-                ),
-              ),
-              subtitle: Text(
-                'Size: ${widget.flowerBoxes[index].length} x ${widget.flowerBoxes[index].width}',
-                style: TextStyle(
-                  color: theme.textTheme.bodyMedium?.color,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
   }
 }
