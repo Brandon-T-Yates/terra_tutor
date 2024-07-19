@@ -27,8 +27,8 @@ class ThemeNotifier extends ChangeNotifier {
       bodyLarge: TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
       headlineLarge: TextStyle(color: Colors.black, fontSize: 24),
     ),
-    cardColor: AppColors.navBar,
-  );
+    cardColor: AppColors.menuIconHighLight, // Needs to stay menuIconHighLight variable
+  );                                          // Set ui tiles to proper color
 
   static final ThemeData tropicalGardenTheme = ThemeData(
     primaryColor: AppColorsAlternativeTropicalGarden.navBar,
