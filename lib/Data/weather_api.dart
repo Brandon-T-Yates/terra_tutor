@@ -1,5 +1,3 @@
-import 'package:weather/weather.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,7 +23,7 @@ class Weather {
       tempature: json['main']['temp'],
       feelsLike: json['main']['feels_like'],
       humidity: json['main']['humidity'],
-      windSpeed: json['wind']['speed'], 
+      windSpeed: json['wind']['speed'],
     );
   }
 }
@@ -34,10 +32,23 @@ class WeatherService {
   static String get apiKey {
     return dotenv.env['OPEN_WEATHER_MAP'] ?? '';
   }
-  static const String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
+
+  static const String baseUrl =
+      'http://api.openweathermap.org/data/2.5/weather';
+
+  // Future<Weather> fetchWeather(double latitude, double longitude) async {
+  //   final response = await http.get(Uri.parse('$baseUrl?lat=$latitude&lon=$longitude&appid=$apiKey&units=imperial'));
+
+  //   if (response.statusCode == 200) {
+  //     return Weather.fromJson(json.decode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load weather data');
+  //   }
+  // }
 
   Future<Weather> fetchWeather(String city) async {
-    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric'));
+    final response = await http
+        .get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(json.decode(response.body));
