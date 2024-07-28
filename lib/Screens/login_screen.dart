@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/Global_Elements/user_input_text_field.dart';
-import '/Global_Elements/colors.dart';
+import 'package:provider/provider.dart';
+import '/Global_Elements/theme_data.dart';
 import 'home_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -49,7 +50,8 @@ class LoginScreenState extends State<LoginScreen> {
       final String password = passwordController.text.trim();
 
       if (email.isNotEmpty && password.isNotEmpty) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
         // Save email if "Remember me" is checked
         await _saveEmail(email);
         Navigator.pushReplacement(
@@ -79,42 +81,44 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.navBar,
+        backgroundColor: theme.primaryColor,
         elevation: 0,
-        title: const Text('Sign in', style: TextStyle(color: Colors.transparent)),
+        title:
+            const Text('Sign in', style: TextStyle(color: Colors.transparent)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
       body: Container(
-        color: AppColors.navBar,
+        color: theme.primaryColor,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Login',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.headlineLarge
+                      ?.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 32.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         'Email',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style:
+                            theme.textTheme.bodyLarge?.copyWith(fontSize: 16),
                       ),
                     ),
                     const SizedBox(height: 8.0),
@@ -134,11 +138,12 @@ class LoginScreenState extends State<LoginScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         'Password',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style:
+                            theme.textTheme.bodyLarge?.copyWith(fontSize: 16),
                       ),
                     ),
                     const SizedBox(height: 8.0),
@@ -158,7 +163,10 @@ class LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: CheckboxListTile(
-                    title: const Text('Remember me'),
+                    title: Text(
+                      'Remember me',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                     value: rememberMe,
                     onChanged: (bool? value) {
                       setState(() {
@@ -166,7 +174,9 @@ class LoginScreenState extends State<LoginScreen> {
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
-                    activeColor: Colors.black,
+                    activeColor: theme.checkboxTheme.fillColor
+                            ?.resolve({MaterialState.selected}) ??
+                        theme.colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 2.0),
@@ -181,23 +191,22 @@ class LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: () => signIn(context),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.uiTile,
+                          backgroundColor: theme.cardColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(17.0),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               'Log in',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
+                              style: theme.textTheme.bodyLarge
+                                  ?.copyWith(fontSize: 16),
                             ),
-                            SizedBox(width: 8),
-                            Icon(Icons.arrow_forward, color: Colors.black),
+                            const SizedBox(width: 8),
+                            Icon(Icons.arrow_forward,
+                                color: theme.textTheme.bodyLarge?.color),
                           ],
                         ),
                       ),

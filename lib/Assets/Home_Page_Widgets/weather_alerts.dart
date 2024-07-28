@@ -5,7 +5,6 @@ import 'package:terra_tutor/Global_Elements/ui_tile2.0.dart';
 import '/Data/weather_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 class WeatherAlertsWidget extends StatefulWidget {
   const WeatherAlertsWidget({super.key});
 
@@ -51,14 +50,12 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
   //     futureWeather = WeatherService().fetchWeather(position.latitude, position.longitude);
   //   });
   // }
-
->>>>>>> 777ae08ff9864ab725425fd0b0960b5ef9b40f10
   @override
   void initState() {
     super.initState();
     futureWeather = WeatherService().fetchWeather('Fort Worth');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return UiTile2(
@@ -91,4 +88,3 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
     );
   }
 }
-

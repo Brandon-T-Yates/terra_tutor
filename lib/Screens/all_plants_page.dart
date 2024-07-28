@@ -414,7 +414,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               elevation: 2,
               child: ExpansionTile(
-                leading: Icon(Icons.drag_handle, color: theme.primaryColor),
+                leading: Icon(Icons.drag_handle, color: theme.cardColor),
                 title: Text(
                   plants[index],
                   style: TextStyle(
@@ -422,8 +422,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                trailing:
-                    Icon(Icons.arrow_drop_down, color: theme.primaryColor),
+                trailing: Icon(Icons.arrow_drop_down, color: theme.cardColor),
                 children: <Widget>[
                   if (plantCareInfo[plants[index]] != null)
                     Padding(
@@ -434,7 +433,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.water, color: theme.primaryColor),
+                              Icon(Icons.water, color: theme.cardColor),
                               SizedBox(width: 10),
                               Text(
                                 'Watering:',
@@ -457,7 +456,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.grass, color: theme.primaryColor),
+                              Icon(Icons.grass, color: theme.cardColor),
                               SizedBox(width: 10),
                               Text(
                                 'Fertilizing:',
@@ -480,7 +479,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.wb_sunny, color: theme.primaryColor),
+                              Icon(Icons.wb_sunny, color: theme.cardColor),
                               SizedBox(width: 10),
                               Text(
                                 'Sunlight:',

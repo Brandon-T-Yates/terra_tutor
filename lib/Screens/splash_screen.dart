@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'entrance_screen.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -62,14 +64,13 @@ class SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return Scaffold(
-      backgroundColor: AppColors.navBar,
+      backgroundColor: theme.primaryColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          double logoHeight =
-              constraints.maxHeight * 0.25;
-          double fontSizeTitle =
-              constraints.maxWidth * 0.1;
+          double logoHeight = constraints.maxHeight * 0.25;
+          double fontSizeTitle = constraints.maxWidth * 0.1;
 
           return Stack(
             children: [
@@ -86,6 +87,7 @@ class SplashScreenState extends State<SplashScreen>
                       style: TextStyle(
                         fontSize: fontSizeTitle,
                         fontWeight: FontWeight.bold,
+                        color: theme.textTheme.headlineLarge?.color,
                       ),
                     ),
                   ),
