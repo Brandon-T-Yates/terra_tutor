@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
 
 class Weather {
   final String description;
@@ -49,5 +50,41 @@ class WeatherService {
     } else {
       throw Exception('Failed to load weather data');
     }
+  }
+}
+
+class CityInputDialog {
+  static Future<String?> show(BuildContext context) async {
+    String? cityName;
+
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController textController = TextEditingController();
+
+        return AlertDialog(
+          title: const Text('Enter City Name'),
+          content: TextField(
+            controller: textController,
+            decoration: const InputDecoration(hintText: "City Name"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(null);
+              },
+            ),
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                cityName = textController.text;
+                Navigator.of(context).pop(cityName);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

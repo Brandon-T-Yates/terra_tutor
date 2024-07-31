@@ -11,12 +11,20 @@ class WeatherAlertsWidget extends StatefulWidget {
 
 class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
   Future<Weather>? futureWeather;
-  final TextEditingController _cityController = TextEditingController();
 
-  void _fetchWeather() {
-    setState(() {
-      futureWeather = WeatherService().fetchWeather(_cityController.text);
-    });
+  @override
+  void initState() {
+    super.initState();
+    _promptCityAndFetchWeather();
+  }
+
+  Future<void> _promptCityAndFetchWeather() async {
+    String? cityName = await CityInputDialog.show(context);
+    if (cityName != null) {
+      setState(() {
+        futureWeather = WeatherService().fetchWeather(cityName);
+      });
+    }
   }
 
   @override
@@ -25,48 +33,28 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
       name: 'Weather Alerts',
       textAlignment: TextAlignOption.center,
       description: '',
-      child: Column(
-        children: [
-          TextField(
-            controller: _cityController,
-            decoration: InputDecoration(
-              labelText: 'Enter city name',
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _fetchWeather,
-              ),
-            ),
-          ),
-          FutureBuilder<Weather>(
-            future: futureWeather,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                Weather weather = snapshot.data!;
-                return Column(
-                  children: [
-                    Text('Description: ${weather.description}'),
-                    Text('Temperature: ${weather.tempature}°F'),
-                    Text('Feels Like: ${weather.feelsLike}°F'),
-                    Text('Chance of Rain: ${weather.chanceOfRain}%'),
-                  ],
-                );
-              } else {
-                return const Text('No data');
-              }
-            },
-          ),
-        ],
+      child: FutureBuilder<Weather>(
+        future: futureWeather,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            Weather weather = snapshot.data!;
+            return Column(
+              children: [
+                Text('Description: ${weather.description}'),
+                Text('Temperature: ${weather.tempature}°F'),
+                Text('Feels Like: ${weather.feelsLike}°F'),
+                Text('Chance of Rain: ${weather.chanceOfRain}%'),
+              ],
+            );
+          } else {
+            return const Text('No data');
+          }
+        },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _cityController.dispose();
-    super.dispose();
   }
 }
