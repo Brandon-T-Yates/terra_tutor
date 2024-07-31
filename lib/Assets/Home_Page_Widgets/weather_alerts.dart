@@ -32,7 +32,7 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
             decoration: InputDecoration(
               labelText: 'Enter city name',
               suffixIcon: IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: _fetchWeather,
               ),
             ),
