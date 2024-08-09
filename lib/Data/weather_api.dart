@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class Weather {
   final String description;
-  final double tempature;
+  final double temperature;
   final double feelsLike;
   final double chanceOfRain;
 
   Weather({
     required this.description,
-    required this.tempature,
+    required this.temperature,
     required this.feelsLike,
     required this.chanceOfRain,
   });
@@ -29,7 +29,7 @@ class Weather {
 
     return Weather(
       description: json['weather'][0]['description'],
-      tempature: json['main']['temp'],
+      temperature: json['main']['temp'],
       feelsLike: json['main']['feels_like'],
       chanceOfRain: calculateChanceOfRain(json),
     );
@@ -42,7 +42,7 @@ class WeatherService {
   }
   static const String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 
-   Future<Weather> fetchWeather(String city) async {
+  Future<Weather> fetchWeather(String city) async {
     final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
 
     if (response.statusCode == 200) {

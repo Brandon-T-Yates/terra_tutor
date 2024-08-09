@@ -15,7 +15,6 @@ import '/Assets/Home_Page_Widgets/weather_alerts.dart';
 import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 import '/Global_Elements/ui_tiles.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
-import 'package:terra_tutor/Data/weather_api.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -118,18 +117,8 @@ class HomePageState extends State<HomePage> {
                 AddWidgetButton(
                   name: 'Weather Alerts',
                   imagePath: 'lib/Assets/images/weather.png',
-                  onTap: () async {
-                    String? cityName = await CityInputDialog.show(context);
-                    if (cityName != null) {
-                      try {
-                        WeatherService weatherService = WeatherService();
-                        Weather weather = await weatherService.fetchWeather(cityName);
-                        print('Weather in $cityName: ${weather.description}, ${weather.tempature}°F');
-                        _addWidgetToHome('WeatherAlertsWidget');
-                      } catch (e) {
-                        print('Error fetching Weather: $e');
-                      }
-                    }                    
+                  onTap: () {
+                    _addWidgetToHome('WeatherAlertsWidget');
                   },
                 ),
               ],
