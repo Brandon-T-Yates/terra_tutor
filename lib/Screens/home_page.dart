@@ -189,7 +189,7 @@ class HomePageState extends State<HomePage> {
           widget = const PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png');
           break;
         case 'WaterReminderWidget':
-          widget = const WaterReminderWidget();
+          widget = WaterReminderWidget();
           break;
         case 'WeatherAlertsWidget':
           widget = const WeatherAlertsWidget();
