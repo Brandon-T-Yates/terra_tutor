@@ -36,7 +36,7 @@ class UiTile2 extends StatelessWidget {
     this.description,
     required this.textAlignment,
     this.width = 300,
-    this.height = 233,
+    this.height = 200,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.backgroundColor = AppColors.uiTile,

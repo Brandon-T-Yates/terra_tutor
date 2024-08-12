@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
 
 class Weather {
   final String description;
-  final double tempature;
+  final double temperature;
   final double feelsLike;
   final double chanceOfRain;
 
   Weather({
     required this.description,
-    required this.tempature,
+    required this.temperature,
     required this.feelsLike,
     required this.chanceOfRain,
   });
@@ -28,7 +29,7 @@ class Weather {
 
     return Weather(
       description: json['weather'][0]['description'],
-      tempature: json['main']['temp'],
+      temperature: json['main']['temp'],
       feelsLike: json['main']['feels_like'],
       chanceOfRain: calculateChanceOfRain(json),
     );
@@ -41,7 +42,7 @@ class WeatherService {
   }
   static const String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 
-   Future<Weather> fetchWeather(String city) async {
+  Future<Weather> fetchWeather(String city) async {
     final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
 
     if (response.statusCode == 200) {
@@ -49,5 +50,41 @@ class WeatherService {
     } else {
       throw Exception('Failed to load weather data');
     }
+  }
+}
+
+class CityInputDialog {
+  static Future<String?> show(BuildContext context) async {
+    String? cityName;
+
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController textController = TextEditingController();
+
+        return AlertDialog(
+          title: const Text('Enter City Name'),
+          content: TextField(
+            controller: textController,
+            decoration: const InputDecoration(hintText: "City Name"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(null);
+              },
+            ),
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                cityName = textController.text;
+                Navigator.of(context).pop(cityName);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
