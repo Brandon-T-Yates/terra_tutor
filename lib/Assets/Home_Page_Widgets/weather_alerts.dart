@@ -16,7 +16,7 @@ class WeatherAlertsWidget extends StatefulWidget {
 class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
   Future<Weather>? futureWeather;
   User? user;
-  String? cityName;  // Store the city name
+  String? cityName;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
   }
 
   Future<void> _loadCityAndFetchWeather() async {
-    cityName = await _getCityFromFirebase();  // Retrieve and store the city name
+    cityName = await _getCityFromFirebase();
     if (cityName != null && cityName!.isNotEmpty) {
       setState(() {
         futureWeather = WeatherService().fetchWeather(cityName!);
@@ -79,6 +79,19 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
     return null;
   }
 
+  Future<void> _removeCityFromFirebase () async {
+    if (user != null) {
+      final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid);
+      await userDoc.update({'city': FieldValue.delete()});
+    }
+  }
+
+  @override
+  void dispose() {
+    _removeCityFromFirebase();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return UiTile2(
@@ -97,7 +110,7 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
             return Column(
               children: [
                 if (cityName != null)
-                  Text('City: $cityName', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),  // Display the city name
+                  Text('City: $cityName', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Text('Description: ${weather.description}'),
                 Text('Temperature: ${weather.temperature}°F'),
                 Text('Feels Like: ${weather.feelsLike}°F'),
