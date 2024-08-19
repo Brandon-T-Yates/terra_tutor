@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +15,6 @@ import '/Assets/Home_Page_Widgets/weather_alerts.dart';
 import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 import '/Global_Elements/ui_tiles.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
-import 'package:terra_tutor/Screens/flower_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,8 +28,8 @@ class HomePageState extends State<HomePage> {
   List<String> _addedWidgetTypes = [];
   SharedPreferences? _prefs;
 
-  static List<Widget> _pages = <Widget>[
-    FlowerBoxHomePage(),
+  static const List<Widget> _pages = <Widget>[
+    Center(child: Text('Flower Box Page')),
     Center(child: Text('')),
     PlantFinderScreen(),
   ];
@@ -173,7 +174,7 @@ class HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildAddedWidgets() {
-    // final theme = Provider.of<ThemeNotifier>(context).getTheme();
+    //final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return _addedWidgetTypes.asMap().entries.map((entry) {
       int index = entry.key;
       String widgetType = entry.value;
@@ -181,22 +182,23 @@ class HomePageState extends State<HomePage> {
       Widget widget;
       switch (widgetType) {
         case 'DailyFactsWidget':
-          widget = DailyFactsWidget();
+          widget = const DailyFactsWidget();
           break;
         case 'FertilizerReminderWidget':
-          widget = FertilizerReminderWidget();
+          widget = const FertilizerReminderWidget();
           break;
         case 'PlantPhotosWidget':
-          widget = PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png');
+          widget = const PlantPhotosWidget(
+              imagePath: 'lib/Assets/images/camera.png');
           break;
         case 'WaterReminderWidget':
-          widget = WaterReminderWidget();
+          widget = const WaterReminderWidget();
           break;
         case 'WeatherAlertsWidget':
-          widget = WeatherAlertsWidget();
+          widget = const WeatherAlertsWidget();
           break;
         case 'RandomFactWidget':
-          widget = DailyFactsWidget();
+          widget = const DailyFactsWidget();
           break;
         default:
           widget = UiTile(

@@ -14,24 +14,22 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   static final ThemeData defaultTheme = ThemeData(
-      primaryColor: AppColors.navBar,
-      scaffoldBackgroundColor: AppColors.primaryColor,
-      appBarTheme: const AppBarTheme(
-        color: AppColors.navBar,
-        iconTheme: IconThemeData(color: AppColors.menuIconClicked),
-      ),
-      buttonTheme: const ButtonThemeData(
-        buttonColor: AppColors.deleteButton,
-      ),
-      textTheme: const TextTheme(
-        bodyLarge:
-            TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
-        headlineLarge: TextStyle(color: Colors.black, fontSize: 24),
-      ),
-      cardColor: AppColors.uiTile,
-      checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
-      ));
+    primaryColor: AppColors.navBar,
+    scaffoldBackgroundColor: AppColors.primaryColor,
+    appBarTheme: const AppBarTheme(
+      color: AppColors.navBar,
+      iconTheme: IconThemeData(color: AppColors.menuIconClicked),
+    ),
+    buttonTheme: const ButtonThemeData(
+      buttonColor: AppColors.deleteButton,
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
+      headlineLarge: TextStyle(color: Colors.black, fontSize: 24),
+    ),
+    cardColor:
+        AppColors.menuIconHighLight, // Needs to stay menuIconHighLight variable
+  ); // Set ui tiles to proper color
 
   static final ThemeData tropicalGardenTheme = ThemeData(
       primaryColor: AppColorsAlternativeTropicalGarden.navBar,

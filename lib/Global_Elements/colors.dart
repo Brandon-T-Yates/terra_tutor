@@ -11,8 +11,7 @@ class AppColors {
   static const Color navBar = Color.fromARGB(255, 194, 209, 97);
 
   // Menu icon highlight box color
-  static const Color menuIconHighLight = Color.fromARGB(
-      255, 255, 255, 255); // Transparency will be ajusted upon icon tsting
+  static const Color menuIconHighLight = Color.fromARGB(155, 255, 255, 255); // Transparency will be ajusted upon icon tsting
 
   // Menu icon colors
   static const Color menuIconClicked = Color.fromARGB(255, 0, 0, 0);

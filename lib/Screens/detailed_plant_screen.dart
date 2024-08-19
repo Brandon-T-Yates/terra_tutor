@@ -169,6 +169,8 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //final screenWidth = MediaQuery.of(context).size.width;
+    //final screenHeight = MediaQuery.of(context).size.height;
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
 
     return Scaffold(

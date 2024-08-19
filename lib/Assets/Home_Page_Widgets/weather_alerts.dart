@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print
 
-//import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:terra_tutor/Global_Elements/ui_tile2.0.dart';
 import '/Data/weather_api.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class WeatherAlertsWidget extends StatefulWidget {
   const WeatherAlertsWidget({super.key});
@@ -13,47 +14,72 @@ class WeatherAlertsWidget extends StatefulWidget {
 }
 
 class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
-  late Future<Weather> futureWeather;
+  Future<Weather>? futureWeather;
+  User? user;
+  String? cityName; // Store the city name
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _getLocationAndFetchWeather();
-  // }
-
-  // Future<void> _getLocationAndFetchWeather() async {
-  //   // Check if location services are enabled.
-  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     return Future.error('Location services are disabled.');
-  //   }
-
-  //   // Check location permission status.
-  //   PermissionStatus permission = await Permission.location.status;
-  //   if (permission.isDenied) {
-  //     permission = await Permission.location.request();
-  //     if (permission.isDenied) {
-  //       return Future.error('Location permissions are denied');
-  //     }
-  //   }
-
-  //   if (permission.isPermanentlyDenied) {
-  //     return Future.error(
-  //         'Location permissions are permanently denied, we cannot request permissions.');
-  //   }
-
-  //   // Fetch the current position of the device.
-  //   final position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-
-  //   setState(() {
-  //     futureWeather = WeatherService().fetchWeather(position.latitude, position.longitude);
-  //   });
-  // }
   @override
   void initState() {
     super.initState();
-    futureWeather = WeatherService().fetchWeather('Fort Worth');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthAndLoadData();
+    });
+  }
+
+  Future<void> _checkAuthAndLoadData() async {
+    user = FirebaseAuth.instance.currentUser;
+    user ??= await _signInAnonymously();
+    _loadCityAndFetchWeather();
+  }
+
+  Future<User?> _signInAnonymously() async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInAnonymously();
+      return userCredential.user;
+    } catch (e) {
+      print('Error signing in anonymously: $e');
+      return null;
+    }
+  }
+
+  Future<void> _loadCityAndFetchWeather() async {
+    cityName = await _getCityFromFirebase(); // Retrieve and store the city name
+    if (cityName != null && cityName!.isNotEmpty) {
+      setState(() {
+        futureWeather = WeatherService().fetchWeather(cityName!);
+      });
+    } else {
+      _promptCityAndFetchWeather();
+    }
+  }
+
+  Future<void> _promptCityAndFetchWeather() async {
+    cityName = await CityInputDialog.show(context);
+    if (cityName != null && cityName!.isNotEmpty) {
+      await _saveCityToFirebase(cityName!);
+      setState(() {
+        futureWeather = WeatherService().fetchWeather(cityName!);
+      });
+    }
+  }
+
+  Future<void> _saveCityToFirebase(String cityName) async {
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
+      await userDoc.set({'city': cityName}, SetOptions(merge: true));
+    }
+  }
+
+  Future<String?> _getCityFromFirebase() async {
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
+      final docSnapshot = await userDoc.get();
+      return docSnapshot.data()?['city'] as String?;
+    }
+    return null;
   }
 
   @override
@@ -73,15 +99,20 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
             Weather weather = snapshot.data!;
             return Column(
               children: [
+                if (cityName != null)
+                  Text('City: $cityName',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight:
+                              FontWeight.bold)), // Display the city name
                 Text('Description: ${weather.description}'),
-                Text('Temperature: ${weather.tempature}°F'),
+                Text('Temperature: ${weather.temperature}°F'),
                 Text('Feels Like: ${weather.feelsLike}°F'),
-                Text('Humidity: ${weather.humidity}%'),
-                Text('Wind Speed: ${weather.windSpeed} MPH'),
+                Text('Chance of Rain: ${weather.chanceOfRain}%'),
               ],
             );
           } else {
-            return const Text('No data');
+            return const Text('No data available');
           }
         },
       ),
