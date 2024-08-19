@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:terra_tutor/Global_Elements/colors.dart';
 import '/Global_Elements/ui_tiles.dart';
-import '/Provider/notification_service.dart';
 
 class Reminder {
   final String id;
@@ -14,11 +13,12 @@ class Reminder {
   final int days;
   final Timestamp timestamp;
 
-  Reminder(
-      {required this.id,
-      required this.name,
-      required this.days,
-      required this.timestamp});
+  Reminder({
+    required this.id,
+    required this.name,
+    required this.days,
+    required this.timestamp,
+  });
 
   factory Reminder.fromDocument(DocumentSnapshot doc) {
     return Reminder(
@@ -39,7 +39,9 @@ class Reminder {
 }
 
 class WaterReminderWidget extends StatefulWidget {
-  const WaterReminderWidget({super.key});
+  final VoidCallback onWidgetUpdated;
+
+  const WaterReminderWidget({super.key, required this.onWidgetUpdated});
 
   @override
   _WaterReminderWidgetState createState() => _WaterReminderWidgetState();
@@ -47,14 +49,12 @@ class WaterReminderWidget extends StatefulWidget {
 
 class _WaterReminderWidgetState extends State<WaterReminderWidget> {
   late Stream<List<Reminder>> _reminderStream;
-  late NotificationService _notificationService;
   late User? _currentUser;
 
   @override
   void initState() {
     super.initState();
     _initializeFirebase();
-    _notificationService = NotificationService();
     _currentUser = FirebaseAuth.instance.currentUser;
     if (_currentUser != null) {
       _reminderStream = getReminders();
@@ -285,40 +285,111 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
     );
   }
 
-  void checkReminders() {
-    final userId = _currentUser?.uid;
-    if (userId != null) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('reminders')
-          .get()
-          .then((snapshot) {
-        for (var doc in snapshot.docs) {
-          final reminder = Reminder.fromDocument(doc);
-          if (reminder.days <= 0) {
-            _notificationService.sendFCMNotification(reminder.name);
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .collection('reminders')
-                .doc(doc.id)
-                .update({
-              'days': reminder.days,
-            });
-          } else {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .collection('reminders')
-                .doc(doc.id)
-                .update({
-              'days': reminder.days - 1,
-            });
-          }
-        }
-      });
+  void _showDeleteDialog(
+      List<Reminder> reminders, VoidCallback onWidgetUpdated) {
+    Map<String, bool> selectedReminders = {};
+
+    for (var reminder in reminders) {
+      selectedReminders[reminder.id] = false;
     }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              'Select Reminders to Delete',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: reminders.map((reminder) {
+                    return CheckboxListTile(
+                      title: Text(reminder.name),
+                      value: selectedReminders[reminder.id],
+                      onChanged: (bool? value) {
+                        setState(() {
+                          selectedReminders[reminder.id] = value ?? false;
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.uiTile,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                    fixedSize: const Size(90, 25),
+                  ),
+                  child: const Text('Cancel', style: TextStyle(fontSize: 13)),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    List<String> remindersToDelete = selectedReminders.entries
+                        .where((entry) => entry.value)
+                        .map((entry) => entry.key)
+                        .toList();
+
+                    for (var reminderId in remindersToDelete) {
+                      await deleteReminder(reminderId);
+                    }
+
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.uiTile,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                    fixedSize: const Size(90, 25),
+                  ),
+                  child: const Text('Delete', style: TextStyle(fontSize: 13)),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    List<String> remindersToDelete = selectedReminders.entries
+                        .where((entry) => entry.value)
+                        .map((entry) => entry.key)
+                        .toList();
+
+                    for (var reminderId in remindersToDelete) {
+                      await deleteReminder(reminderId);
+                    }
+
+                    Navigator.of(context).pop();
+
+                    onWidgetUpdated();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.uiTile,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                    fixedSize: const Size(90, 25),
+                  ),
+                  child: const Text('Delete Widget',
+                      style: TextStyle(fontSize: 13)),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -338,7 +409,13 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
 
         return GestureDetector(
           onTap: () => _showReminderDialog(),
+          onLongPress: () {
+            _showDeleteDialog(reminders, () {
+              widget.onWidgetUpdated();
+            });
+          },
           child: UiTile(
+            key: ValueKey(reminders.length),
             name: 'Watering Reminder',
             textAlignment: TextAlignOption.center,
             description: reminders.isEmpty
