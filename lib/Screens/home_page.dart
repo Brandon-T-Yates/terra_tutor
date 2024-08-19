@@ -173,7 +173,7 @@ class HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildAddedWidgets() {
-    final theme = Provider.of<ThemeNotifier>(context).getTheme();
+    // final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return _addedWidgetTypes.asMap().entries.map((entry) {
       int index = entry.key;
       String widgetType = entry.value;

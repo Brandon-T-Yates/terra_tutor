@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Screens/flower_box.dart';
-import 'package:terra_tutor/Screens/flower_box_detail.dart';
 
 class AddFlowerBoxDialog extends StatefulWidget {
   final Function(FlowerBox) onAddFlowerBox;

@@ -12,7 +12,7 @@ import 'package:terra_tutor/Global_Elements/theme_data.dart';
 class PlantDetailsScreen extends StatefulWidget {
   final String scientificName;
 
-//Requires plant's scientific name to be sent to this class
+  //Requires plant's scientific name to be sent to this class
   const PlantDetailsScreen({super.key, required this.scientificName});
 
   @override
@@ -29,7 +29,7 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
     fetchPlantDetails();
   }
 
-//Ignores SSL certificates if Certification is down or messed up
+  //Ignores SSL certificates if Certification is down or messed up
   HttpClient createHttpClient(SecurityContext? context) {
     final HttpClient client = HttpClient(context: context);
     client.badCertificateCallback =
@@ -37,23 +37,23 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
     return client;
   }
 
-//Searches for plant that was sent to class.
+  // Searches for plant that was sent to class.
   Future<void> fetchPlantDetails() async {
-    final String? apiKey = dotenv.env['TREFLE_API_KEY'];
+    final String? apiKey = dotenv.env['FLORA_CODEX_API_KEY'];
     if (apiKey == null) {
       print('Error: API key is missing');
       return;
     }
 
     final String apiUrl =
-        'https://trefle.io/api/v1/plants/search?token=$apiKey&q=${widget.scientificName}';
+        'https://api.floracodex.com/v1/plants?key=$apiKey&q=${widget.scientificName}';
 
     final ioClient = IOClient(createHttpClient(null));
 
     try {
-      print('Fetching plant details from API...');
+      print('Fetching plant details from FloraCodex API...');
       final response = await ioClient.get(Uri.parse(apiUrl));
-      //On sucess
+      // On success
       if (response.statusCode == 200) {
         print('API call successful');
         final data = json.decode(response.body);
@@ -72,7 +72,7 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
     }
   }
 
-//IF plant doesn't have any data, exclude from results.
+  // IF plant doesn't have any data, exclude from results.
   Widget buildPlantDetail(String title, dynamic value) {
     if (value == null || value.toString().isEmpty || value == 'N/A') {
       return const SizedBox.shrink();
@@ -86,7 +86,7 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
     );
   }
 
-//Plant's popup image when pressed
+  // Plant's popup image when pressed
   void showImagePopup(BuildContext context, String imageUrl) {
     showDialog(
       context: context,
@@ -158,7 +158,7 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
     );
   }
 
-//Handles lists that get returned in the results.
+  //Handles lists that get returned in the results.
   String joinList(List<dynamic>? list, String key) {
     if (list == null) return '';
     return list
@@ -169,8 +169,6 @@ class PlantDetailsScreenState extends State<PlantDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final screenWidth = MediaQuery.of(context).size.width;
-    //final screenHeight = MediaQuery.of(context).size.height;
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
 
     return Scaffold(

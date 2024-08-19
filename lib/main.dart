@@ -27,6 +27,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static final ValueNotifier<List<Map<String, dynamic>>>
+      favoritedFlowersNotifier = ValueNotifier([]);
 
   @override
   Widget build(BuildContext context) {

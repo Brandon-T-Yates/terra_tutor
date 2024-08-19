@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,6 +14,8 @@ import '/Screens/detailed_plant_screen.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/camera_screen.dart';
+import 'package:terra_tutor/Screens/favorites_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -39,11 +39,40 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   List<Map<String, dynamic>> suggestions = [];
   int currentSuggestionIndex = 0;
   bool showArrows = false;
+  List<Map<String, dynamic>> favoritedFlowers = [];
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> searchResults = [];
 
   @override
   void initState() {
     super.initState();
     initializeCamera();
+    _loadFavorites();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? favoriteFlowersJson = prefs.getStringList('favoritedFlowers');
+    if (favoriteFlowersJson != null) {
+      setState(() {
+        favoritedFlowers = favoriteFlowersJson
+            .map((flower) => json.decode(flower) as Map<String, dynamic>)
+            .toList();
+      });
+    }
+  }
+
+  Future<void> _saveFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteFlowersJson =
+        favoritedFlowers.map((flower) => json.encode(flower)).toList();
+    await prefs.setStringList('favoritedFlowers', favoriteFlowersJson);
   }
 
   Future<void> initializeCamera() async {
@@ -56,12 +85,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
     );
 
     _initializeControllerFuture = _controller!.initialize();
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
   }
 
   void onBackButtonPressed() {
@@ -207,12 +230,13 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
   void updateDisplayedPlant(Map<String, dynamic> suggestion) {
     setState(() {
-      plantName = suggestion['plant_name'] ?? 'Unknown Plant';
-      plantDescription = suggestion['plant_details']['scientific_name'] ??
-          'No description available';
-      probability = (suggestion['probability'] * 100).toStringAsFixed(2);
+      plantName = suggestion['common_name'] ?? 'Unknown Plant';
+      plantDescription =
+          suggestion['scientific_name'] ?? 'No description available';
+      plantImage =
+          suggestion['image_url'] ?? 'lib/Assets/images/rose_placeholder.jpg';
     });
-    fetchWikipediaImage(suggestion['plant_details']['scientific_name']);
+    fetchWikipediaImage(suggestion['scientific_name']);
   }
 
   Future<void> fetchPlantImage(String plantName) async {
@@ -395,209 +419,436 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
     }
   }
 
+  void toggleFavorite() {
+    final currentPlant = {
+      'name': plantName,
+      'description': plantDescription,
+      'image': plantImage,
+    };
+
+    if (favoritedFlowers.any((plant) => plant['name'] == plantName)) {
+      favoritedFlowers.removeWhere((plant) => plant['name'] == plantName);
+    } else {
+      favoritedFlowers.add(currentPlant);
+    }
+    _saveFavorites();
+    setState(() {});
+  }
+
+  void navigateToFavorites() {
+    if (favoritedFlowers.isEmpty) {
+      showNoFavoritesAlert();
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const FavoritesScreen(),
+        ),
+      );
+    }
+  }
+
+  void showNoFavoritesAlert() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('No Favorites'),
+        content:
+            const Text('You have not added any flowers to your favorites.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> fetchFloraCodexSearchResults(String query) async {
+    final String? apikeyFlora = dotenv.env['FLORA_CODEX_API_KEY'];
+    final String apiUrl =
+        'https://api.floracodex.com/v1/plants?key=$apikeyFlora&q=$query';
+
+    try {
+      print('Fetching data from FloraCodex API with query: $query');
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // Make sure this path is correct according to the API response.
+        if (data['data'] != null && data['data'] is List) {
+          setState(() {
+            searchResults = List<Map<String, dynamic>>.from(data['data']);
+          });
+        } else {
+          setState(() {
+            searchResults.clear();
+          });
+          print('No results found for query: $query');
+        }
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  void onSearchChanged(String query) {
+    if (query.isNotEmpty) {
+      print('Search query: $query');
+      fetchFloraCodexSearchResults(query);
+    } else {
+      setState(() {
+        searchResults.clear();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: Center(
-                child: Container(
-                  width: screenWidth * 0.7,
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon:
-                          const Icon(Icons.search, color: AppColors.fontColor),
-                      suffixIcon: IconButton(
-                        icon: SizedBox(
-                          width: 40.0,
-                          height: 40.0,
-                          child:
-                              Image.asset('lib/Assets/images/camera_100.png'),
-                        ),
-                        onPressed: onCameraButtonPressed,
-                      ),
-                      hintText: 'Search',
-                      hintStyle: const TextStyle(color: AppColors.fontColor),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                    ),
-                    style: const TextStyle(color: AppColors.fontColor),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Try hitting the random button for a new plant :)',
-              style: TextStyle(fontSize: 16.0, color: AppColors.fontColor),
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                if (isRandomSelected)
-                  Container(
-                    width: screenWidth * 0.15,
-                    height: screenWidth * 0.15,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.fontColor),
-                      borderRadius: BorderRadius.circular(16.0),
-                      color: theme.cardColor,
+                // Search bar and controls
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: screenWidth * 0.7,
+                      decoration: BoxDecoration(
+                        color: theme.cardColor,
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: onSearchChanged,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search,
+                              color: AppColors.fontColor),
+                          suffixIcon: IconButton(
+                            icon: SizedBox(
+                              width: 40.0,
+                              height: 40.0,
+                              child: Image.asset(
+                                  'lib/Assets/images/camera_100.png'),
+                            ),
+                            onPressed: onCameraButtonPressed,
+                          ),
+                          hintText: 'Search',
+                          hintStyle:
+                              const TextStyle(color: AppColors.fontColor),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                        ),
+                        style: const TextStyle(color: AppColors.fontColor),
+                      ),
                     ),
-                    child: IconButton(
-                      icon: Image.asset(
-                          'lib/Assets/images/reverse_arrow_100.png'),
-                      onPressed: onBackButtonPressed,
+                    IconButton(
+                      icon: Icon(Icons.bookmark, color: AppColors.fontColor),
+                      onPressed: navigateToFavorites,
                     ),
-                  ),
-                const SizedBox(width: 8.0),
-                Container(
-                  width: screenWidth * 0.15,
-                  height: screenWidth * 0.15,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.fontColor),
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: theme.cardColor,
-                  ),
-                  child: IconButton(
-                    icon: Image.asset('lib/Assets/images/shuffle_final.png'),
-                    onPressed: onShuffleButtonPressed,
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Try hitting the random button for a new plant :)',
+                  style: TextStyle(fontSize: 16.0, color: AppColors.fontColor),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: screenWidth * 0.15,
+                      height: screenWidth * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.fontColor),
+                        borderRadius: BorderRadius.circular(16.0),
+                        color: theme.cardColor,
+                      ),
+                      child: IconButton(
+                        icon: Image.asset(
+                            'lib/Assets/images/reverse_arrow_100.png'),
+                        onPressed:
+                            isRandomSelected ? onBackButtonPressed : null,
+                        color: isRandomSelected ? null : Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Container(
+                      width: screenWidth * 0.15,
+                      height: screenWidth * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.fontColor),
+                        borderRadius: BorderRadius.circular(16.0),
+                        color: theme.cardColor,
+                      ),
+                      child: IconButton(
+                        icon:
+                            Image.asset('lib/Assets/images/shuffle_final.png'),
+                        onPressed: onShuffleButtonPressed,
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Container(
+                      width: screenWidth * 0.15,
+                      height: screenWidth * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.fontColor),
+                        borderRadius: BorderRadius.circular(16.0),
+                        color: theme.cardColor,
+                      ),
+                      child: IconButton(
+                        icon: Image.asset(
+                            'lib/Assets/images/forward_arrow_100.png'),
+                        onPressed:
+                            isRandomSelected ? onForwardButtonPressed : null,
+                        color: isRandomSelected ? null : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.fontColor),
+                        borderRadius: BorderRadius.circular(16.0),
+                        color: theme.cardColor,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Flexible(
+                              child: GestureDetector(
+                                onTap: navigateToPlantDetails,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: screenHeight * 0.4,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.fontColor),
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        child: plantImage.startsWith('http')
+                                            ? FadeInImage.assetNetwork(
+                                                placeholder:
+                                                    'lib/Assets/images/rose_placeholder.jpg',
+                                                image: plantImage,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                plantImage,
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 10,
+                                      right: 10,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          favoritedFlowers.any((plant) =>
+                                                  plant['name'] == plantName)
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: favoritedFlowers.any((plant) =>
+                                                  plant['name'] == plantName)
+                                              ? Colors.red
+                                              : Colors.white,
+                                          size: 30,
+                                        ),
+                                        onPressed: toggleFavorite,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+                            Text(
+                              plantName,
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.fontColor,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              plantDescription,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: AppColors.fontColor,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            if (probability.isNotEmpty)
+                              Text(
+                                'Probability: $probability%',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: AppColors.fontColor,
+                                ),
+                              ),
+                            if (showArrows)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_left,
+                                        color: AppColors.fontColor),
+                                    onPressed: onLeftArrowPressed,
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_right,
+                                        color: AppColors.fontColor),
+                                    onPressed: onRightArrowPressed,
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                if (isRandomSelected) const SizedBox(width: 8.0),
-                if (isRandomSelected)
-                  Container(
-                    width: screenWidth * 0.15,
-                    height: screenWidth * 0.15,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.fontColor),
-                      borderRadius: BorderRadius.circular(16.0),
-                      color: theme.cardColor,
-                    ),
-                    child: IconButton(
-                      icon: Image.asset(
-                          'lib/Assets/images/forward_arrow_100.png'),
-                      onPressed: onForwardButtonPressed,
-                    ),
-                  ),
               ],
             ),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.fontColor),
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: theme.cardColor,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Flexible(
-                          child: GestureDetector(
-                            onTap: navigateToPlantDetails,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: screenHeight * 0.4,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: AppColors.fontColor),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: plantImage.startsWith('http')
-                                        ? FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'lib/Assets/images/rose_placeholder.jpg',
-                                            image: plantImage,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.asset(
-                                            plantImage,
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                ),
-                                const Positioned(
-                                  bottom: 10,
-                                  right: 10,
-                                  child: Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                    size: 30,
-                                  ),
-                                ),
-                              ],
+            // Overlay for search results
+            if (searchController.text.isNotEmpty && searchResults.isNotEmpty)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      searchController.clear();
+                      searchResults.clear();
+                    });
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: Center(
+                      child: Container(
+                        width: screenWidth * 0.8,
+                        height: screenHeight * 0.6,
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(16.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 10,
+                              offset: Offset(0, 3),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 16.0),
-                        Text(
-                          plantName,
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.fontColor,
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          plantDescription,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 16.0, color: AppColors.fontColor),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          'Probability: $probability%',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 16.0, color: AppColors.fontColor),
-                        ),
-                        if (showArrows)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_left,
-                                    color: AppColors.fontColor),
-                                onPressed: onLeftArrowPressed,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Searching: ${searchController.text}',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.fontColor,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close,
+                                        color: AppColors.fontColor),
+                                    onPressed: () {
+                                      setState(() {
+                                        searchController.clear();
+                                        searchResults.clear();
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.arrow_right,
-                                    color: AppColors.fontColor),
-                                onPressed: onRightArrowPressed,
+                            ),
+                            Divider(),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: searchResults.length,
+                                itemBuilder: (context, index) {
+                                  var plant = searchResults[index];
+                                  // Extract common name if available
+                                  String commonName =
+                                      plant['common_name'] ?? 'Unknown';
+                                  return ListTile(
+                                    leading: plant['image_url'] != null
+                                        ? Image.network(
+                                            plant['image_url'],
+                                            width: 50,
+                                            height: 50,
+                                          )
+                                        : Container(
+                                            width: 50,
+                                            height: 50,
+                                            color: Colors.grey,
+                                            child: Center(
+                                              child: Icon(Icons.image,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                    title: Text(commonName),
+                                    subtitle:
+                                        Text(plant['scientific_name'] ?? ''),
+                                    onTap: () {
+                                      updateDisplayedPlant(plant);
+                                      setState(() {
+                                        searchController.clear();
+                                        searchResults.clear();
+                                      });
+                                    },
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                      ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

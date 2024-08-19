@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'colors.dart';
+//import 'colors.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 enum TextAlignOption { center, topLeft }
@@ -105,7 +105,8 @@ class UiTile extends StatelessWidget {
                   ),
                 ),
               ),
-            if (imagePath == null || imagePath!.isEmpty) const SizedBox(height: 20),
+            if (imagePath == null || imagePath!.isEmpty)
+              const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -136,7 +137,7 @@ class UiTile extends StatelessWidget {
                             : TextAlign.start,
                       ),
                     ),
-                    if (child != null)
+                  if (child != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: child!,

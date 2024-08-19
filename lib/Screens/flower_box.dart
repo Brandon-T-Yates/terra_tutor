@@ -49,6 +49,7 @@ class FlowerBoxHomePage extends StatefulWidget {
 class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
   List<FlowerBox> flowerBoxes = [];
   int _currentPage = 0;
+  bool _isImageView = false;
 
   @override
   void initState() {
@@ -156,13 +157,26 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Gardens',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: theme.textTheme.bodyMedium?.color,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.swap_horiz),
+                        onPressed: () {
+                          setState(() {
+                            _isImageView = !_isImageView;
+                          });
+                        },
+                        color: theme.primaryColor,
+                      ),
+                      Text(
+                        'Gardens',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: theme.textTheme.bodyMedium?.color,
+                        ),
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -291,13 +305,17 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                                               BorderRadius.circular(16.0),
                                         ),
                                         child: Center(
-                                          child: AutoSizeText(
-                                            flowerBox.plants[row][col] ?? '',
-                                            style: TextStyle(
-                                              color: theme
-                                                  .textTheme.bodyMedium?.color,
-                                            ),
-                                          ),
+                                          child: _isImageView
+                                              ? _getImageForPlant(
+                                                  flowerBox.plants[row][col])
+                                              : AutoSizeText(
+                                                  flowerBox.plants[row][col] ??
+                                                      '',
+                                                  style: TextStyle(
+                                                    color: theme.textTheme
+                                                        .bodyMedium?.color,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                   ],
@@ -378,5 +396,108 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
         addFlowerBox(result);
       }
     });
+  }
+
+  Widget _getImageForPlant(String? plant) {
+    if (plant == null) {
+      return Container();
+    }
+
+    final plantImageMap = {
+      'Artichoke': 'lib/Assets/images/artichoke.png',
+      'Asparagus': 'lib/Assets/images/asperagus.png',
+      'Beans': 'lib/Assets/images/beans.png',
+      'Beetroot': 'lib/Assets/images/beet.png',
+      'Bell Pepper': 'lib/Assets/images/bell_pepper.png',
+      'Blueberry': 'lib/Assets/images/blueberry.png',
+      'Strawberry': 'lib/Assets/images/strawberry.png',
+      'Broccoli': 'lib/Assets/images/broccoli.png',
+      'Brussels Sprouts': 'lib/Assets/images/brussel_sprouts.png',
+      'Carrot': 'lib/Assets/images/Carrot(1).png',
+      'Cauliflower': 'lib/Assets/images/cauliflower.png',
+      'Celery': 'lib/Assets/images/celery.png',
+      'Sweet Corn': 'lib/Assets/images/corn.png',
+      'Cucumber': 'lib/Assets/images/cucumber.png',
+      'Eggplant': 'lib/Assets/images/eggplant.png',
+      'Watermelon': 'lib/Assets/images/watermelon.png',
+      'Garlic': 'lib/Assets/images/garlic.png',
+      'Kale': 'lib/Assets/images/kale.png',
+      'Lettuce': 'lib/Assets/images/lettuce.png',
+      'Okra': 'lib/Assets/images/okra.png',
+      'Onion': 'lib/Assets/images/onion.png',
+      'Peas': 'lib/Assets/images/peas.png',
+      'Pepper': 'lib/Assets/images/pepper.png',
+      'Pumpkin': 'lib/Assets/images/pumpkin.png',
+      'Potato': 'lib/Assets/images/potato.png',
+      'Spinach': 'lib/Assets/images/spinach.png',
+      'Squash': 'lib/Assets/images/squash.png',
+      'Radish': 'lib/Assets/images/radish(1).png',
+      'Tomato': 'lib/Assets/images/tomato.png',
+      'Zucchini': 'lib/Assets/images/zucchini.png',
+
+      'Violet': 'lib/Assets/images/violet.png',
+      'Hibiscus': 'lib/Assets/images/hibiscus.png',
+      'Lavender': 'lib/Assets/images/lavender.png',
+      'Orchid': 'lib/Assets/images/orchid.png',
+      'Lotus': 'lib/Assets/images/lotus.png',
+      'Sunflower': 'lib/Assets/images/sunflower.png',
+      'Tulip': 'lib/Assets/images/tulip.png',
+      'Rose': 'lib/Assets/images/rose.png',
+
+      'Kiwi': 'lib/Assets/images/kiwi.png',
+      'Pomegranate': 'lib/Assets/images/pomegranate.png',
+      'Fig': 'lib/Assets/images/fig.png',
+      'Blackberry': 'lib/Assets/images/blackberry(2).png',
+      'Raspberry': 'lib/Assets/images/raspberry.png',
+      'Pear': 'lib/Assets/images/pear.png',
+      'Cherry': 'lib/Assets/images/cherry.png',
+      'Plum': 'lib/Assets/images/plum.png',
+      'Peach': 'lib/Assets/images/peach.png',
+      'Mango': 'lib/Assets/images/mango.png',
+      'Pineapple': 'lib/Assets/images/pineapple.png',
+      'Lemon': 'lib/Assets/images/lemon.png',
+      'Grape': 'lib/Assets/images/grapes.png',
+      'Banana': 'lib/Assets/images/banana.png',
+      'Apple': 'lib/Assets/images/apple.png',
+      'Orange': 'lib/Assets/images/orange.png',
+      'Avocado': 'lib/Assets/images/avocado.png',
+      //Without images
+      'Leek': 'lib/Assets/images/veggigeneral.png',
+      'Parsnip': 'lib/Assets/images/veggigeneral.png',
+      'Rhubarb': 'lib/Assets/images/veggigeneral.png',
+      'Turnip': 'lib/Assets/images/veggigeneral.png',
+
+      'Daisy': 'lib/Assets/images/flowergeneral.png',
+      'Lily': 'lib/Assets/images/flowergeneral.png',
+      'Marigold': 'lib/Assets/images/flowergeneral.png',
+      'Carnation': 'lib/Assets/images/flowergeneral.png',
+      'Chrysanthemum': 'lib/Assets/images/flowergeneral.png',
+      'Iris': 'lib/Assets/images/flowergeneral.png',
+      'Peony': 'lib/Assets/images/flowergeneral.png',
+      'Begonia': 'lib/Assets/images/flowergeneral.png',
+      'Jasmine': 'lib/Assets/images/flowergeneral.png',
+      'Poppy': 'lib/Assets/images/flowergeneral.png',
+      'Petunia': 'lib/Assets/images/flowergeneral.png',
+      'Dahlia': 'lib/Assets/images/flowergeneral.png',
+      'Azalea': 'lib/Assets/images/flowergeneral.png',
+    };
+
+    if (plantImageMap.containsKey(plant)) {
+      return Image.asset(
+        plantImageMap[plant]!,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return AutoSizeText(
+        plant,
+        style: TextStyle(
+          color: Provider.of<ThemeNotifier>(context)
+              .getTheme()
+              .textTheme
+              .bodyMedium
+              ?.color,
+        ),
+      );
+    }
   }
 }
