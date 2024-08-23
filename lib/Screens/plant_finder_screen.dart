@@ -16,6 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/camera_screen.dart';
 import 'package:terra_tutor/Screens/favorites_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'package:camera/camera.dart';
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -42,7 +44,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   List<Map<String, dynamic>> favoritedFlowers = [];
   TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> searchResults = [];
-
+  Timer? _debounce;
   @override
   void initState() {
     super.initState();
@@ -53,6 +55,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   @override
   void dispose() {
     searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -230,13 +233,12 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
   void updateDisplayedPlant(Map<String, dynamic> suggestion) {
     setState(() {
-      plantName = suggestion['common_name'] ?? 'Unknown Plant';
+      plantName = suggestion['scientific_name'] ?? 'Unknown Plant';
       plantDescription =
-          suggestion['scientific_name'] ?? 'No description available';
+          suggestion['common_name'] ?? 'No description available';
       plantImage =
           suggestion['image_url'] ?? 'lib/Assets/images/rose_placeholder.jpg';
     });
-    fetchWikipediaImage(suggestion['scientific_name']);
   }
 
   Future<void> fetchPlantImage(String plantName) async {
@@ -479,7 +481,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
-        // Make sure this path is correct according to the API response.
         if (data['data'] != null && data['data'] is List) {
           setState(() {
             searchResults = List<Map<String, dynamic>>.from(data['data']);
@@ -500,14 +501,17 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   }
 
   void onSearchChanged(String query) {
-    if (query.isNotEmpty) {
-      print('Search query: $query');
-      fetchFloraCodexSearchResults(query);
-    } else {
-      setState(() {
-        searchResults.clear();
-      });
-    }
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (query.isNotEmpty) {
+        fetchFloraCodexSearchResults(query);
+      } else {
+        setState(() {
+          searchResults
+              .clear(); // Clear the search results if the query is empty
+        });
+      }
+    });
   }
 
   @override
@@ -521,13 +525,13 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Stack(
-          children: [
+          children: <Widget>[
             Column(
-              children: [
+              children: <Widget>[
                 // Search bar and controls
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     Container(
                       width: screenWidth * 0.7,
                       decoration: BoxDecoration(
@@ -536,7 +540,10 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                       ),
                       child: TextField(
                         controller: searchController,
-                        onChanged: onSearchChanged,
+                        onChanged: (query) {
+                          onSearchChanged(query);
+                          setState(() {}); // Trigger rebuild to show overlay
+                        },
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.search,
                               color: AppColors.fontColor),
@@ -557,7 +564,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.transparent,
+                          fillColor: theme.cardColor,
                         ),
                         style: const TextStyle(color: AppColors.fontColor),
                       ),
@@ -576,7 +583,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                 const SizedBox(height: 16.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     Container(
                       width: screenWidth * 0.15,
                       height: screenWidth * 0.15,
@@ -641,12 +648,12 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          children: [
+                          children: <Widget>[
                             Flexible(
                               child: GestureDetector(
                                 onTap: navigateToPlantDetails,
                                 child: Stack(
-                                  children: [
+                                  children: <Widget>[
                                     Container(
                                       height: screenHeight * 0.4,
                                       width: double.infinity,
@@ -725,7 +732,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                             if (showArrows)
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
+                                children: <Widget>[
                                   IconButton(
                                     icon: Icon(Icons.arrow_left,
                                         color: AppColors.fontColor),
@@ -757,7 +764,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                     });
                   },
                   child: Container(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withOpacity(0.6),
                     child: Center(
                       child: Container(
                         width: screenWidth * 0.8,
@@ -775,7 +782,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                           ],
                         ),
                         child: Column(
-                          children: [
+                          children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
@@ -809,9 +816,14 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                 itemCount: searchResults.length,
                                 itemBuilder: (context, index) {
                                   var plant = searchResults[index];
-                                  // Extract common name if available
                                   String commonName =
                                       plant['common_name'] ?? 'Unknown';
+
+                                  // Filter out plants with an 'Unknown' common name
+                                  if (commonName == 'Unknown') {
+                                    return SizedBox.shrink(); // Skip this item
+                                  }
+
                                   return ListTile(
                                     leading: plant['image_url'] != null
                                         ? Image.network(
@@ -828,9 +840,8 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                                   color: Colors.white),
                                             ),
                                           ),
-                                    title: Text(commonName),
-                                    subtitle:
-                                        Text(plant['scientific_name'] ?? ''),
+                                    title: Text(plant['scientific_name'] ?? ''),
+                                    subtitle: Text(commonName),
                                     onTap: () {
                                       updateDisplayedPlant(plant);
                                       setState(() {

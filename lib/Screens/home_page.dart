@@ -15,6 +15,7 @@ import '/Assets/Home_Page_Widgets/weather_alerts.dart';
 import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 import '/Global_Elements/ui_tiles.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
+import 'package:terra_tutor/Screens/flower_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,8 +29,8 @@ class HomePageState extends State<HomePage> {
   List<String> _addedWidgetTypes = [];
   SharedPreferences? _prefs;
 
-  static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Flower Box Page')),
+  final List<Widget> _pages = <Widget>[
+    FlowerBoxHomePage(), // Without the const keyword
     Center(child: Text('')),
     PlantFinderScreen(),
   ];

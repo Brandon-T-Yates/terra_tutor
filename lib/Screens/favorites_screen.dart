@@ -11,11 +11,13 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   List<Map<String, dynamic>> _favoritedFlowers = [];
+  List<String> _allPlants = [];
 
   @override
   void initState() {
     super.initState();
     _loadFavorites();
+    _loadAllPlants();
   }
 
   Future<void> _loadFavorites() async {
@@ -32,6 +34,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
   }
 
+  Future<void> _loadAllPlants() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? allPlantsJson = prefs.getStringList('allPlants');
+    if (allPlantsJson != null) {
+      setState(() {
+        _allPlants = allPlantsJson;
+      });
+    }
+  }
+
+  Future<void> _saveAllPlants() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('allPlants', _allPlants);
+  }
+
   Future<void> _saveFavorites() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> favoriteFlowersJson =
@@ -39,7 +56,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     await prefs.setStringList('favoritedFlowers', favoriteFlowersJson);
   }
 
-  // Add new favorite to the top
   void _addToFavorites(Map<String, dynamic> flower) {
     setState(() {
       _favoritedFlowers.insert(0, flower);
@@ -54,6 +70,26 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _saveFavorites();
   }
 
+  void _addToAllPlants(Map<String, dynamic> flower) {
+    setState(() {
+      if (!_allPlants.contains(flower['name'])) {
+        _allPlants.add(flower['name']);
+        _saveAllPlants();
+      }
+    });
+  }
+
+  bool _isInAllPlants(String plantName) {
+    return _allPlants.contains(plantName);
+  }
+
+  void _removeFromAllPlants(String plantName) {
+    setState(() {
+      _allPlants.remove(plantName);
+      _saveAllPlants();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +100,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         itemCount: _favoritedFlowers.length,
         itemBuilder: (context, index) {
           final flower = _favoritedFlowers[index];
+          final isFavorited =
+              _favoritedFlowers.any((fav) => fav['name'] == flower['name']);
+          final isInAllPlants = _isInAllPlants(flower['name']);
+
           return Card(
             margin: EdgeInsets.all(8.0),
             color: Colors.white,
@@ -105,8 +145,31 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.favorite, color: Colors.red),
-                    onPressed: () => _removeFromFavorites(index),
+                    icon: Icon(
+                      isFavorited ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorited ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      if (isFavorited) {
+                        _removeFromFavorites(index);
+                      } else {
+                        _addToFavorites(flower);
+                      }
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.local_florist,
+                      color: isInAllPlants ? Colors.green : Colors.grey,
+                    ),
+                    onPressed: () {
+                      if (isInAllPlants) {
+                        _removeFromAllPlants(flower['name']);
+                      } else {
+                        _addToAllPlants(flower);
+                      }
+                      setState(() {});
+                    },
                   ),
                 ],
               ),

@@ -49,7 +49,9 @@ dependencies:
   weather: ^3.1.1
   shared_preferences: ^2.2.3
   geocoding: ^3.0.0
-
+  camera: ^0.9.4+5
+  path_provider: ^2.0.12
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

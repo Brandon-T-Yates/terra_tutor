@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class AllPlantsPage extends StatefulWidget {
   final List<String> allPlants;
@@ -13,6 +15,7 @@ class AllPlantsPage extends StatefulWidget {
 
 class _AllPlantsPageState extends State<AllPlantsPage> {
   late List<String> plants;
+  List<Map<String, dynamic>> _favoritedFlowers = [];
 
   final Map<String, Map<String, String>> plantCareInfo = {
     // Vegetables
@@ -386,6 +389,99 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
   void initState() {
     super.initState();
     plants = widget.allPlants.toSet().toList(); // Remove duplicates
+    _loadAllPlants();
+    _loadFavorites();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAllPlants();
+  }
+
+  Future<void> _loadAllPlants() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? sharedPrefsPlants = prefs.getStringList('allPlants');
+
+    if (sharedPrefsPlants != null) {
+      setState(() {
+        plants = widget.allPlants + sharedPrefsPlants;
+        plants = plants.toSet().toList(); // Remove duplicates
+        plants = plants.reversed.toList();
+      });
+    } else {
+      setState(() {
+        plants = widget.allPlants.toSet().toList(); // Remove duplicates
+        plants = plants.reversed.toList();
+      });
+    }
+  }
+
+  Future<void> _loadFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? favoriteFlowersJson = prefs.getStringList('favoritedFlowers');
+    if (favoriteFlowersJson != null) {
+      setState(() {
+        _favoritedFlowers = favoriteFlowersJson
+            .map((flower) => json.decode(flower) as Map<String, dynamic>)
+            .toList();
+      });
+    }
+  }
+
+  Future<void> _saveFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteFlowersJson =
+        _favoritedFlowers.map((flower) => json.encode(flower)).toList();
+    await prefs.setStringList('favoritedFlowers', favoriteFlowersJson);
+  }
+
+  void _toggleFavorite(String plantName) {
+    final plant = {
+      'name': plantName,
+      'description': plantCareInfo[plantName]?['sunlight'] ?? '',
+      'image':
+          'lib/Assets/images/flowergeneral.png', // Add actual image path or URL
+    };
+
+    setState(() {
+      if (_favoritedFlowers.any((flower) => flower['name'] == plantName)) {
+        _favoritedFlowers.removeWhere((flower) => flower['name'] == plantName);
+      } else {
+        _favoritedFlowers.add(plant);
+      }
+      _saveFavorites();
+    });
+  }
+
+  bool _isFavorited(String plantName) {
+    return _favoritedFlowers.any((flower) => flower['name'] == plantName);
+  }
+
+  Future<void> _refreshPlantList() async {
+    // Simulate a network call or database query
+    await Future.delayed(Duration(seconds: 2));
+
+    // Reload the plants from shared preferences and update the state
+    await _loadAllPlants();
+  }
+
+  Future<void> refreshLoadAllPlants() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? sharedPrefsPlants = prefs.getStringList('allPlants');
+
+    if (sharedPrefsPlants != null) {
+      setState(() {
+        plants = widget.allPlants + sharedPrefsPlants;
+        plants = plants.toSet().toList(); // Remove duplicates
+        plants = plants.reversed.toList();
+      });
+    } else {
+      setState(() {
+        plants = widget.allPlants.toSet().toList(); // Remove duplicates
+        plants = plants.reversed.toList();
+      });
+    }
   }
 
   @override
@@ -397,115 +493,136 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
         title: Text('All Plants'),
         backgroundColor: theme.primaryColor,
       ),
-      body: ReorderableListView(
-        onReorder: (int oldIndex, int newIndex) {
-          setState(() {
-            if (newIndex > oldIndex) {
-              newIndex -= 1;
-            }
-            final String item = plants.removeAt(oldIndex);
-            plants.insert(newIndex, item);
-          });
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await refreshLoadAllPlants();
         },
-        children: [
-          for (int index = 0; index < plants.length; index++)
-            Card(
-              key: ValueKey('$index-${plants[index]}'),
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              elevation: 2,
-              child: ExpansionTile(
-                leading: Icon(Icons.drag_handle, color: theme.cardColor),
-                title: Text(
-                  plants[index],
-                  style: TextStyle(
-                    color: theme.textTheme.bodyMedium?.color,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                trailing: Icon(Icons.arrow_drop_down, color: theme.cardColor),
-                children: <Widget>[
-                  if (plantCareInfo[plants[index]] != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.water, color: theme.cardColor),
-                              SizedBox(width: 10),
-                              Text(
-                                'Watering:',
-                                style: TextStyle(
-                                  color: theme.textTheme.bodyMedium?.color,
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  plantCareInfo[plants[index]]!['water']!,
-                                  style: TextStyle(
-                                    color: theme.textTheme.bodyMedium?.color,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Icons.grass, color: theme.cardColor),
-                              SizedBox(width: 10),
-                              Text(
-                                'Fertilizing:',
-                                style: TextStyle(
-                                  color: theme.textTheme.bodyMedium?.color,
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  plantCareInfo[plants[index]]!['fertilize']!,
-                                  style: TextStyle(
-                                    color: theme.textTheme.bodyMedium?.color,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Icons.wb_sunny, color: theme.cardColor),
-                              SizedBox(width: 10),
-                              Text(
-                                'Sunlight:',
-                                style: TextStyle(
-                                  color: theme.textTheme.bodyMedium?.color,
-                                ),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  plantCareInfo[plants[index]]!['sunlight']!,
-                                  style: TextStyle(
-                                    color: theme.textTheme.bodyMedium?.color,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+        child: ReorderableListView(
+          onReorder: (int oldIndex, int newIndex) {
+            setState(() {
+              if (newIndex > oldIndex) {
+                newIndex -= 1;
+              }
+              final String item = plants.removeAt(oldIndex);
+              plants.insert(newIndex, item);
+            });
+          },
+          children: [
+            for (int index = 0; index < plants.length; index++)
+              Card(
+                key: ValueKey('$index-${plants[index]}'),
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                elevation: 2,
+                child: ExpansionTile(
+                  leading: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.drag_handle, color: theme.cardColor),
+                      IconButton(
+                        icon: Icon(
+                          _isFavorited(plants[index])
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: _isFavorited(plants[index])
+                              ? Colors.red
+                              : Colors.grey,
+                        ),
+                        onPressed: () => _toggleFavorite(plants[index]),
                       ),
+                    ],
+                  ),
+                  title: Text(
+                    plants[index],
+                    style: TextStyle(
+                      color: theme.textTheme.bodyMedium?.color,
+                      fontWeight: FontWeight.bold,
                     ),
-                ],
+                  ),
+                  trailing: Icon(Icons.arrow_drop_down, color: theme.cardColor),
+                  children: <Widget>[
+                    if (plantCareInfo[plants[index]] != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.water, color: theme.cardColor),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Watering:',
+                                  style: TextStyle(
+                                    color: theme.textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    plantCareInfo[plants[index]]!['water']!,
+                                    style: TextStyle(
+                                      color: theme.textTheme.bodyMedium?.color,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(Icons.grass, color: theme.cardColor),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Fertilizing:',
+                                  style: TextStyle(
+                                    color: theme.textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    plantCareInfo[plants[index]]!['fertilize']!,
+                                    style: TextStyle(
+                                      color: theme.textTheme.bodyMedium?.color,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(Icons.wb_sunny, color: theme.cardColor),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Sunlight:',
+                                  style: TextStyle(
+                                    color: theme.textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    plantCareInfo[plants[index]]!['sunlight']!,
+                                    style: TextStyle(
+                                      color: theme.textTheme.bodyMedium?.color,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

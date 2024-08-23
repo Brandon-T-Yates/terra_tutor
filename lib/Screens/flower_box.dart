@@ -46,15 +46,22 @@ class FlowerBoxHomePage extends StatefulWidget {
   FlowerBoxHomePageState createState() => FlowerBoxHomePageState();
 }
 
-class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
+class FlowerBoxHomePageState extends State<FlowerBoxHomePage> with RouteAware {
   List<FlowerBox> flowerBoxes = [];
   int _currentPage = 0;
   bool _isImageView = false;
+  List<String> _allPlants = [];
 
   @override
   void initState() {
     super.initState();
     loadFlowerBoxes();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAllPlants(); // Load the plants whenever the page is accessed
   }
 
   Future<void> loadFlowerBoxes() async {
@@ -68,9 +75,47 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     }
   }
 
+  Future<void> _loadAllPlants() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? allPlantsJson = prefs.getStringList('allPlants');
+    if (allPlantsJson != null) {
+      setState(() {
+        _allPlants = allPlantsJson;
+      });
+    }
+  }
+
   Future<void> saveFlowerBoxes() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('flower_boxes', json.encode(flowerBoxes));
+  }
+
+  List<String> getAllPlants() {
+    List<String> allPlants = [];
+    for (var flowerBox in flowerBoxes) {
+      for (var row in flowerBox.plants) {
+        for (var plant in row) {
+          if (plant != null && plant.isNotEmpty) {
+            allPlants.add(plant);
+          }
+        }
+      }
+    }
+    allPlants.addAll(_allPlants); // Add the plants from SharedPreferences
+    return allPlants;
+  }
+
+  Future<void> _navigateToAllPlantsPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AllPlantsPage(allPlants: getAllPlants()),
+      ),
+    );
+
+    if (result == true) {
+      _loadAllPlants(); // Reload plants if data was updated
+    }
   }
 
   void addFlowerBox(FlowerBox flowerBox) {
@@ -128,20 +173,6 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
     });
   }
 
-  List<String> getAllPlants() {
-    List<String> allPlants = [];
-    for (var flowerBox in flowerBoxes) {
-      for (var row in flowerBox.plants) {
-        for (var plant in row) {
-          if (plant != null && plant.isNotEmpty) {
-            allPlants.add(plant);
-          }
-        }
-      }
-    }
-    return allPlants;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
@@ -182,15 +213,7 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.local_florist),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  AllPlantsPage(allPlants: getAllPlants()),
-                            ),
-                          );
-                        },
+                        onPressed: _navigateToAllPlantsPage,
                         color: theme.primaryColor,
                       ),
                       Container(

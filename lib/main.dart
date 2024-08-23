@@ -33,10 +33,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
-
+    final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
     return ChangeNotifierProvider(
       create: (context) => PlantImageProvider(),
       child: MaterialApp(
+        navigatorObservers: [routeObserver],
         theme: theme,
         home: const SplashScreen(),
       ),
