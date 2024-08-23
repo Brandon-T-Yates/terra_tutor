@@ -138,7 +138,6 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  // Delete widget dialog
   void showDeleteDialog(int index) {
     showDialog(
       context: context,
@@ -174,8 +173,14 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  void _onWidgetUpdated() {
+    setState(() {
+      // Refresh the list of widgets
+      _addedWidgetTypes = _prefs?.getStringList('addedWidgets') ?? [];
+    });
+  }
+
   List<Widget> _buildAddedWidgets() {
-    //final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return _addedWidgetTypes.asMap().entries.map((entry) {
       int index = entry.key;
       String widgetType = entry.value;
@@ -193,13 +198,12 @@ class HomePageState extends State<HomePage> {
               imagePath: 'lib/Assets/images/camera.png');
           break;
         case 'WaterReminderWidget':
-          widget = const WaterReminderWidget();
+          widget = WaterReminderWidget(
+            onWidgetUpdated: _onWidgetUpdated,
+          );
           break;
         case 'WeatherAlertsWidget':
           widget = const WeatherAlertsWidget();
-          break;
-        case 'RandomFactWidget':
-          widget = const DailyFactsWidget();
           break;
         default:
           widget = UiTile(
@@ -210,7 +214,6 @@ class HomePageState extends State<HomePage> {
           );
       }
 
-      // Long press to bring up dialog to delete widget
       return GestureDetector(
         onLongPress: () => showDeleteDialog(index),
         child: widget,
