@@ -145,7 +145,7 @@ class HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return Theme(
           data: Theme.of(context).copyWith(
-            dialogBackgroundColor: Theme.of(context).cardColor,
+            dialogBackgroundColor: Theme.of(context).primaryColor,
           ),
           child: AlertDialog(
             title: const Text('Delete Widget'),
@@ -163,8 +163,6 @@ class HomePageState extends State<HomePage> {
                     String widgetType = _addedWidgetTypes[index];
                     _addedWidgetTypes.removeAt(index);
                     saveWidgets();
-
-                    // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
                     if (widgetType == 'WeatherAlertsWidget') {
                       _removeCityFromFirebase();
                     }
