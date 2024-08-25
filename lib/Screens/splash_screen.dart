@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'entrance_screen.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 

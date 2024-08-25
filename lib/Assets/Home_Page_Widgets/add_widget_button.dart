@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/Global_Elements/colors.dart';
 
 class AddWidgetButton extends StatelessWidget {
   final String name;
@@ -22,7 +21,7 @@ class AddWidgetButton extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: AppColors.uiTile,
+          color: Theme.of(context).cardColor,
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           boxShadow: [
             BoxShadow(

@@ -50,7 +50,8 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       cardColor: AppColorsAlternativeTropicalGarden.uiTile,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+        fillColor:
+            WidgetStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
       ));
 
   static final ThemeData woodlandForestTheme = ThemeData(
@@ -73,7 +74,8 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       cardColor: AppColorsAlternativeWoodlandForest.uiTile,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+        fillColor:
+            WidgetStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
       ));
 
   static final ThemeData highDesertTheme = ThemeData(
@@ -95,7 +97,8 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       cardColor: AppColorsAlternativeHighDesert.uiTile,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+        fillColor:
+            WidgetStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
       ));
 
   static final ThemeData redwoodForestTheme = ThemeData(
@@ -118,7 +121,8 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       cardColor: AppColorsAlternativeRedwoodForest.uiTile,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+        fillColor:
+            WidgetStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
       ));
 
   static final ThemeData arcticGardenTheme = ThemeData(
@@ -140,6 +144,7 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       cardColor: AppColorsAlternativeArcticGarden.uiTile,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+        fillColor:
+            WidgetStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
       ));
 }

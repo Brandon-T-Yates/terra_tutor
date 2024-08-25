@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, empty_catches
+
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -16,8 +18,6 @@ import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/camera_screen.dart';
 import 'package:terra_tutor/Screens/favorites_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import 'package:camera/camera.dart';
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});
@@ -171,7 +171,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           controller: _controller!,
           initializeControllerFuture: _initializeControllerFuture,
           onPictureTaken: (File imageFile) {
-            print('Picture taken callback received.');
             identifyPlant(imageFile);
           },
         ),
@@ -185,16 +184,13 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
     if (pickedFile != null) {
       final File imageFile = File(pickedFile.path);
-      print('Image picked from gallery: ${pickedFile.path}');
       identifyPlant(imageFile);
     }
   }
 
   Future<void> identifyPlant(File imageFile) async {
     final String apiKey = dotenv.env['PLANT_ID_API_KEY']!;
-    final String apiUrl = 'https://api.plant.id/v2/identify';
-
-    print('Identifying plant with image: ${imageFile.path}');
+    const String apiUrl = 'https://api.plant.id/v2/identify';
 
     try {
       final request = http.MultipartRequest('POST', Uri.parse(apiUrl))
@@ -207,7 +203,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(responseData.body);
-        print('API response: $data');
 
         if (data['suggestions'] != null && data['suggestions'].isNotEmpty) {
           suggestions = List<Map<String, dynamic>>.from(data['suggestions']);
@@ -215,7 +210,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           showArrows = true;
           updateDisplayedPlant(suggestions[currentSuggestionIndex]);
         } else {
-          print('No suggestions found');
           setState(() {
             plantName = 'Unknown Plant';
             plantDescription = 'No description available';
@@ -223,12 +217,8 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
             showArrows = false;
           });
         }
-      } else {
-        print('Failed to identify plant: ${responseData.body}');
-      }
-    } catch (e) {
-      print('Error identifying plant: $e');
-    }
+      } else {}
+    } catch (e) {}
   }
 
   void updateDisplayedPlant(Map<String, dynamic> suggestion) {
@@ -251,7 +241,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('Plant image API response: $data');
 
         if (data['plants'] != null && data['plants'].isNotEmpty) {
           final plants = data['plants'] as List;
@@ -264,19 +253,16 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
             plantImage = plantImageUrl;
           });
         } else {
-          print('No plant image found');
           setState(() {
             plantImage = 'lib/Assets/images/rose_placeholder.jpg';
           });
         }
       } else {
-        print('Failed to fetch plant image: ${response.body}');
         setState(() {
           plantImage = 'lib/Assets/images/rose_placeholder.jpg';
         });
       }
     } catch (e) {
-      print('Error fetching plant image: $e');
       setState(() {
         plantImage = 'lib/Assets/images/rose_placeholder.jpg';
       });
@@ -286,7 +272,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   Future<void> fetchRandomPlant() async {
     final String? apiKey = dotenv.env['TREFLE_API_KEY'];
     if (apiKey == null) {
-      print('Error: API key is missing');
       return;
     }
 
@@ -297,7 +282,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
     final ioClient = IOClient(createHttpClient(null));
 
     try {
-      print('Fetching data from API...');
       final response = await retry(
         () => ioClient
             .get(Uri.parse(apiUrl))
@@ -307,7 +291,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
       );
 
       if (response.statusCode == 200) {
-        print('API call successful');
         final data = json.decode(response.body);
         setState(() {
           plants = data['data'] as List;
@@ -316,11 +299,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           updatePlantFromIndex();
           isRandomSelected = true;
         });
-      } else {
-        print('Failed to load plant data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching plant data: $e');
+      } else {}
     } finally {
       ioClient.close();
     }
@@ -408,13 +387,11 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           });
         }
       } else {
-        print('Failed to fetch image from Wikipedia: ${response.body}');
         setState(() {
           plantImage = 'lib/Assets/images/rose_placeholder.jpg';
         });
       }
     } catch (e) {
-      print('Error fetching image from Wikipedia: $e');
       setState(() {
         plantImage = 'lib/Assets/images/rose_placeholder.jpg';
       });
@@ -475,7 +452,6 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
         'https://api.floracodex.com/v1/plants?key=$apikeyFlora&q=$query';
 
     try {
-      print('Fetching data from FloraCodex API with query: $query');
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
@@ -489,15 +465,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           setState(() {
             searchResults.clear();
           });
-          print('No results found for query: $query');
         }
-      } else {
-        print('Failed to load data: ${response.statusCode}');
-        print('Response body: ${response.body}');
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
+      } else {}
+    } catch (e) {}
   }
 
   void onSearchChanged(String query) {
@@ -570,7 +540,8 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.bookmark, color: AppColors.fontColor),
+                      icon: const Icon(Icons.bookmark,
+                          color: AppColors.fontColor),
                       onPressed: navigateToFavorites,
                     ),
                   ],
@@ -734,12 +705,12 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   IconButton(
-                                    icon: Icon(Icons.arrow_left,
+                                    icon: const Icon(Icons.arrow_left,
                                         color: AppColors.fontColor),
                                     onPressed: onLeftArrowPressed,
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.arrow_right,
+                                    icon: const Icon(Icons.arrow_right,
                                         color: AppColors.fontColor),
                                     onPressed: onRightArrowPressed,
                                   ),
@@ -777,7 +748,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                               color: Colors.black.withOpacity(0.2),
                               spreadRadius: 5,
                               blurRadius: 10,
-                              offset: Offset(0, 3),
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
@@ -791,14 +762,14 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                 children: [
                                   Text(
                                     'Searching: ${searchController.text}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.fontColor,
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.close,
+                                    icon: const Icon(Icons.close,
                                         color: AppColors.fontColor),
                                     onPressed: () {
                                       setState(() {
@@ -810,7 +781,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                 ],
                               ),
                             ),
-                            Divider(),
+                            const Divider(),
                             Expanded(
                               child: ListView.builder(
                                 itemCount: searchResults.length,
@@ -821,7 +792,8 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
                                   // Filter out plants with an 'Unknown' common name
                                   if (commonName == 'Unknown') {
-                                    return SizedBox.shrink(); // Skip this item
+                                    return const SizedBox
+                                        .shrink(); // Skip this item
                                   }
 
                                   return ListTile(
@@ -835,7 +807,7 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
                                             width: 50,
                                             height: 50,
                                             color: Colors.grey,
-                                            child: Center(
+                                            child: const Center(
                                               child: Icon(Icons.image,
                                                   color: Colors.white),
                                             ),

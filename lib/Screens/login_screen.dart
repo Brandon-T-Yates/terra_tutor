@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,7 +177,7 @@ class LoginScreenState extends State<LoginScreen> {
                     },
                     controlAffinity: ListTileControlAffinity.leading,
                     activeColor: theme.checkboxTheme.fillColor
-                            ?.resolve({MaterialState.selected}) ??
+                            ?.resolve({WidgetState.selected}) ??
                         theme.colorScheme.primary,
                   ),
                 ),

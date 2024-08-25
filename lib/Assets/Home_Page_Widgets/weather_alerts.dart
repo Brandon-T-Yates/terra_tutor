@@ -82,17 +82,8 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
     return null;
   }
 
-  Future<void> _removeCityFromFirebase() async {
-    if (user != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(user!.uid);
-      await userDoc.update({'city': FieldValue.delete()});
-    }
-  }
-
   @override
   void dispose() {
-    _removeCityFromFirebase();
     super.dispose();
   }
 

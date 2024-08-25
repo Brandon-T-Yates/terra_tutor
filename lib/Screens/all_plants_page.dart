@@ -7,13 +7,13 @@ import 'dart:convert';
 class AllPlantsPage extends StatefulWidget {
   final List<String> allPlants;
 
-  AllPlantsPage({required this.allPlants});
+  const AllPlantsPage({super.key, required this.allPlants});
 
   @override
-  _AllPlantsPageState createState() => _AllPlantsPageState();
+  AllPlantsPageState createState() => AllPlantsPageState();
 }
 
-class _AllPlantsPageState extends State<AllPlantsPage> {
+class AllPlantsPageState extends State<AllPlantsPage> {
   late List<String> plants;
   List<Map<String, dynamic>> _favoritedFlowers = [];
 
@@ -458,14 +458,6 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
     return _favoritedFlowers.any((flower) => flower['name'] == plantName);
   }
 
-  Future<void> _refreshPlantList() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 2));
-
-    // Reload the plants from shared preferences and update the state
-    await _loadAllPlants();
-  }
-
   Future<void> refreshLoadAllPlants() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? sharedPrefsPlants = prefs.getStringList('allPlants');
@@ -490,7 +482,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Plants'),
+        title: const Text('All Plants'),
         backgroundColor: theme.primaryColor,
       ),
       body: RefreshIndicator(
@@ -511,7 +503,7 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
             for (int index = 0; index < plants.length; index++)
               Card(
                 key: ValueKey('$index-${plants[index]}'),
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 elevation: 2,
                 child: ExpansionTile(
                   leading: Row(
@@ -550,14 +542,14 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                             Row(
                               children: [
                                 Icon(Icons.water, color: theme.cardColor),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                   'Watering:',
                                   style: TextStyle(
                                     color: theme.textTheme.bodyMedium?.color,
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
@@ -569,18 +561,18 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 Icon(Icons.grass, color: theme.cardColor),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                   'Fertilizing:',
                                   style: TextStyle(
                                     color: theme.textTheme.bodyMedium?.color,
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
@@ -592,18 +584,18 @@ class _AllPlantsPageState extends State<AllPlantsPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 Icon(Icons.wb_sunny, color: theme.cardColor),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                   'Sunlight:',
                                   style: TextStyle(
                                     color: theme.textTheme.bodyMedium?.color,
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(

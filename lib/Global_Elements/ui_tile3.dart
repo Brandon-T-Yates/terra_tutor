@@ -1,11 +1,13 @@
+// ignore: file_names
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+//import 'colors.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 enum TextAlignOption { center, topLeft }
 
-class UiTile2 extends StatelessWidget {
+class UiTile extends StatelessWidget {
   final String? imagePath;
   final File? image;
   final NetworkImage? networkImage;
@@ -28,7 +30,7 @@ class UiTile2 extends StatelessWidget {
   final double imageHeightRatio;
   final Widget? child;
 
-  UiTile2({
+  UiTile({
     super.key,
     this.imagePath,
     this.image,
@@ -66,6 +68,7 @@ class UiTile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -88,7 +91,7 @@ class UiTile2 extends StatelessWidget {
           children: [
             if (imagePath != null && imagePath!.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 10),
                 child: SizedBox(
                   height: height * imageHeightRatio,
                   child: ClipRRect(
@@ -104,7 +107,7 @@ class UiTile2 extends StatelessWidget {
                 ),
               ),
             if (imagePath == null || imagePath!.isEmpty)
-              const SizedBox(height: 5),
+              const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -126,7 +129,7 @@ class UiTile2 extends StatelessWidget {
                   ),
                   if (description != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         description!,
                         style: descriptionTextStyle,
@@ -137,7 +140,7 @@ class UiTile2 extends StatelessWidget {
                     ),
                   if (child != null)
                     Padding(
-                      padding: const EdgeInsets.only(top: 0),
+                      padding: const EdgeInsets.only(top: 10),
                       child: child!,
                     ),
                 ],

@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,7 +47,7 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
         setState(() {
           _imageUrl = latestPhoto['imageUrl'];
           hasPhotos = _imageUrl != null && _imageUrl!.isNotEmpty;
-          print('Loaded image URL: $_imageUrl'); // Debug print
+          // Debug print
         });
       }
     }
@@ -220,9 +222,7 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
           _imageUrl = downloadURL;
           hasPhotos = true;
         });
-      } catch (e) {
-        print('Error uploading image: $e');
-      }
+      } catch (e) {}
     }
   }
 
@@ -253,8 +253,6 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
           hasPhotos = false;
         });
       }
-    } catch (e) {
-      print('Error deleting photo: $e');
-    }
+    } catch (e) {}
   }
 }

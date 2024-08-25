@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +31,9 @@ class HomePageState extends State<HomePage> {
   SharedPreferences? _prefs;
 
   final List<Widget> _pages = <Widget>[
-    FlowerBoxHomePage(), // Without the const keyword
-    Center(child: Text('')),
-    PlantFinderScreen(),
+    const FlowerBoxHomePage(),
+    const Center(child: Text('')),
+    const PlantFinderScreen(),
   ];
 
   @override
@@ -71,7 +72,7 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: Theme.of(context).primaryColor,
           title: const Center(
             child: Text(
               'Add Widgets',
@@ -159,8 +160,14 @@ class HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () {
                   setState(() {
+                    String widgetType = _addedWidgetTypes[index];
                     _addedWidgetTypes.removeAt(index);
                     saveWidgets();
+
+                    // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
+                    if (widgetType == 'WeatherAlertsWidget') {
+                      _removeCityFromFirebase();
+                    }
                   });
                   Navigator.of(context).pop();
                 },
@@ -171,6 +178,15 @@ class HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  Future<void> _removeCityFromFirebase() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      await userDoc.update({'city': FieldValue.delete()});
+    }
   }
 
   void _onWidgetUpdated() {

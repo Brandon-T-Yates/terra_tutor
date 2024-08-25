@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,7 +51,7 @@ class CameraService {
   Future<void> identifyPlant(
       File imageFile, Function(Map<String, dynamic>) onPlantIdentified) async {
     final String apiKey = dotenv.env['PLANT_ID_API_KEY']!;
-    final String apiUrl = 'https://api.plant.id/v2/identify';
+    const String apiUrl = 'https://api.plant.id/v2/identify';
 
     try {
       final request = http.MultipartRequest('POST', Uri.parse(apiUrl))

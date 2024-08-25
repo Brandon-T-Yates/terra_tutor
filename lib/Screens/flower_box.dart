@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,8 @@ class FlowerBox {
 }
 
 class FlowerBoxHomePage extends StatefulWidget {
+  const FlowerBoxHomePage({super.key});
+
   @override
   FlowerBoxHomePageState createState() => FlowerBoxHomePageState();
 }

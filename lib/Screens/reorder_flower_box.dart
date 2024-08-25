@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
@@ -7,7 +9,8 @@ class ReorderFlowerBoxesPage extends StatefulWidget {
   final List<FlowerBox> flowerBoxes;
   final void Function(int oldIndex, int newIndex) onReorder;
 
-  ReorderFlowerBoxesPage({
+  const ReorderFlowerBoxesPage({
+    super.key,
     required this.flowerBoxes,
     required this.onReorder,
   });
@@ -23,7 +26,7 @@ class _ReorderFlowerBoxesPageState extends State<ReorderFlowerBoxesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reorder Flower Boxes'),
+        title: const Text('Reorder Flower Boxes'),
         backgroundColor: theme.primaryColor,
       ),
       body: ReorderableListView(

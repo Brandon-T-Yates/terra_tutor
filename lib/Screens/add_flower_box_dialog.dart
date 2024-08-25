@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Screens/flower_box.dart';
 
@@ -5,7 +7,8 @@ class AddFlowerBoxDialog extends StatefulWidget {
   final Function(FlowerBox) onAddFlowerBox;
   final FlowerBox? initialFlowerBox;
 
-  AddFlowerBoxDialog({required this.onAddFlowerBox, this.initialFlowerBox});
+  const AddFlowerBoxDialog(
+      {super.key, required this.onAddFlowerBox, this.initialFlowerBox});
 
   @override
   _AddFlowerBoxDialogState createState() => _AddFlowerBoxDialogState();
@@ -39,7 +42,7 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Flower Box Name'),
+              decoration: const InputDecoration(labelText: 'Flower Box Name'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a name';
@@ -49,7 +52,7 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
             ),
             DropdownButtonFormField<int>(
               value: _width,
-              decoration: InputDecoration(labelText: 'Width'),
+              decoration: const InputDecoration(labelText: 'Width'),
               items: List.generate(6, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
                       value: value, child: Text('$value')))
@@ -62,7 +65,7 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
             ),
             DropdownButtonFormField<int>(
               value: _length,
-              decoration: InputDecoration(labelText: 'Length'),
+              decoration: const InputDecoration(labelText: 'Length'),
               items: List.generate(6, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
                       value: value, child: Text('$value')))
@@ -79,7 +82,7 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
@@ -92,7 +95,7 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
               widget.onAddFlowerBox(newFlowerBox);
             }
           },
-          child: Text('Save'),
+          child: const Text('Save'),
         ),
       ],
     );

@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, avoid_print
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -13,8 +15,8 @@ class CameraScreen extends StatelessWidget {
     required this.controller,
     required this.initializeControllerFuture,
     required this.onPictureTaken,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class CameraScreen extends StatelessWidget {
 
             print('Picture taken and saved to: $imagePath');
             onPictureTaken(imageFile);
+            // ignore: use_build_context_synchronously
             Navigator.of(context).pop();
           } catch (e) {
             print('Error taking picture: $e');

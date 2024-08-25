@@ -7,7 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 class FlowerBoxDetailPage extends StatefulWidget {
   final FlowerBox flowerBox;
 
-  FlowerBoxDetailPage({required this.flowerBox});
+  const FlowerBoxDetailPage({super.key, required this.flowerBox});
 
   @override
   FlowerBoxDetailPageState createState() => FlowerBoxDetailPageState();
@@ -147,22 +147,22 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
       builder: (context) {
         final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return AlertDialog(
-          title: Text('Incomplete Flower Box'),
-          content: Text(
+          title: const Text('Incomplete Flower Box'),
+          content: const Text(
               'Your flower box is not complete. Are you sure you want to save?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(widget.flowerBox);
               },
-              child: Text('Save Anyway'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Save Anyway'),
             ),
           ],
         );
@@ -184,7 +184,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Garden Details"),
+        title: const Text("Edit Garden Details"),
         backgroundColor: theme.primaryColor,
       ),
       body: Column(
@@ -193,7 +193,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
             flex: 3,
             child: SingleChildScrollView(
               child: Card(
-                margin: EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(16.0),
                 elevation: 8.0,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -227,8 +227,8 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                                           100, // Set a fixed width for each cell
                                       height:
                                           60, // Set a fixed height for each cell
-                                      margin: EdgeInsets.all(4.0),
-                                      padding: EdgeInsets.all(16.0),
+                                      margin: const EdgeInsets.all(4.0),
+                                      padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
                                         color: selectedRow == row &&
                                                 selectedCol == col
@@ -266,7 +266,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
           if (selectedRow != -1 && selectedCol != -1)
             Container(
               height: 250, // Adjusted height to fit within screen
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   horizontal: 8.0), // Padding on left and right
               child: Column(
                 children: [
@@ -295,7 +295,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                               return Container(
                                 width: 120, // Make the buttons wider
                                 height: 40, // Set the original height
-                                margin: EdgeInsets.all(
+                                margin: const EdgeInsets.all(
                                     4.0), // Space between buttons
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -344,14 +344,14 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: saveFlowerBox,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),
@@ -363,7 +363,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
 
   //Shows list of commonly used plants and handles save and cancel actions
   void showCustomPlantDialog(BuildContext context) {
-    final _plantController = TextEditingController();
+    final plantController = TextEditingController();
 
     showDialog<String>(
       context: context,
@@ -371,24 +371,24 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
         final theme = Provider.of<ThemeNotifier>(context).getTheme();
 
         return AlertDialog(
-          title: Text('Type Plant Name'),
+          title: const Text('Type Plant Name'),
           content: TextField(
-            controller: _plantController,
-            decoration: InputDecoration(labelText: 'Plant Name'),
+            controller: plantController,
+            decoration: const InputDecoration(labelText: 'Plant Name'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(_plantController.text);
-                selectVeggie(_plantController.text);
+                Navigator.of(context).pop(plantController.text);
+                selectVeggie(plantController.text);
               },
-              child: Text('Save'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Save'),
             ),
           ],
         );
