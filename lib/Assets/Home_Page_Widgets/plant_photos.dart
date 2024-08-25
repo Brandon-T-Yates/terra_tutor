@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,12 +34,20 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
   Future<void> _loadImage() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot userSnapshot = await firestore.collection('users').doc(user.uid).get();
-      if (userSnapshot.exists) {
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+      // Reference to the user's plant_photos subcollection
+      QuerySnapshot plantPhotosSnapshot = await firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('plant_photos')
+          .get();
+
+      if (plantPhotosSnapshot.docs.isNotEmpty) {
+        // Assuming you only want the latest photo, or you can adjust as needed
+        DocumentSnapshot latestPhoto = plantPhotosSnapshot.docs.first;
         setState(() {
-          _imageUrl = userData['plantPhoto'];
-          hasPhotos = _imageUrl != null;
+          _imageUrl = latestPhoto['imageUrl'];
+          hasPhotos = _imageUrl != null && _imageUrl!.isNotEmpty;
+          // Debug print
         });
       }
     }
@@ -46,7 +56,7 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () {
+      onTap: () {
         if (hasPhotos) {
           _showUpdateDialog();
         } else {
@@ -160,6 +170,23 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
                 child: const Text('Update', style: TextStyle(fontSize: 16)),
               ),
             ),
+            if (hasPhotos)
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await _deletePhoto();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.uiTile,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                    fixedSize: const Size(100, 25),
+                  ),
+                  child: const Text('Delete', style: TextStyle(fontSize: 16)),
+                ),
+              ),
           ],
         );
       },
@@ -179,21 +206,53 @@ class PlantPhotosWidgetState extends State<PlantPhotosWidget> {
         User? user = FirebaseAuth.instance.currentUser;
         if (user == null) return;
 
-        String fileName = 'plant_photos/${user.uid}_${DateTime.now().millisecondsSinceEpoch}.png';
+        String fileName =
+            'plant_photos/${user.uid}_${DateTime.now().millisecondsSinceEpoch}.png';
         TaskSnapshot snapshot = await storage.ref(fileName).putFile(imageFile);
         String downloadURL = await snapshot.ref.getDownloadURL();
 
-        await firestore.collection('users').doc(user.uid).update({'plantPhoto': downloadURL});
+        // Save image URL to the user's plant_photos subcollection
+        await firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('plant_photos')
+            .add({'imageUrl': downloadURL});
 
         setState(() {
           _imageUrl = downloadURL;
           hasPhotos = true;
         });
-      } catch (e) {
-        // Handle error
-        print('Error uploading image: $e');
-      }
+      } catch (e) {}
     }
   }
-}
 
+  Future<void> _deletePhoto() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      // Retrieve the document ID of the photo to delete
+      QuerySnapshot plantPhotosSnapshot = await firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('plant_photos')
+          .where('imageUrl', isEqualTo: _imageUrl)
+          .get();
+
+      if (plantPhotosSnapshot.docs.isNotEmpty) {
+        DocumentSnapshot photoDoc = plantPhotosSnapshot.docs.first;
+
+        // Delete photo from Firebase Storage
+        await FirebaseStorage.instance.refFromURL(_imageUrl!).delete();
+
+        // Delete photo document from Firestore
+        await photoDoc.reference.delete();
+
+        setState(() {
+          _imageUrl = null;
+          hasPhotos = false;
+        });
+      }
+    } catch (e) {}
+  }
+}

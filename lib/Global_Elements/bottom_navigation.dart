@@ -32,8 +32,8 @@ class BottomNavigation extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: theme.cardColor,
-      unselectedItemColor: Colors.black,
+      selectedItemColor: Colors.black,
+      unselectedItemColor: const Color.fromARGB(255, 107, 106, 106),
       backgroundColor: theme.appBarTheme.backgroundColor,
       onTap: onTap,
     );

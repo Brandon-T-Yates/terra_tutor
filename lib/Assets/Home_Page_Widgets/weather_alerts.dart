@@ -34,7 +34,8 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
 
   Future<User?> _signInAnonymously() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInAnonymously();
       return userCredential.user;
     } catch (e) {
       print('Error signing in anonymously: $e');
@@ -65,14 +66,16 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
 
   Future<void> _saveCityToFirebase(String cityName) async {
     if (user != null) {
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid);
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
       await userDoc.set({'city': cityName}, SetOptions(merge: true));
     }
   }
 
   Future<String?> _getCityFromFirebase() async {
     if (user != null) {
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid);
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user!.uid);
       final docSnapshot = await userDoc.get();
       return docSnapshot.data()?['city'] as String?;
     }
@@ -102,7 +105,9 @@ class WeatherAlertsWidgetState extends State<WeatherAlertsWidget> {
             return Column(
               children: [
                 if (cityName != null)
-                  Text('City: $cityName', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('City: $cityName',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
                 Text('Description: ${weather.description}'),
                 Text('Temperature: ${weather.temperature}°F'),
                 Text('Feels Like: ${weather.feelsLike}°F'),

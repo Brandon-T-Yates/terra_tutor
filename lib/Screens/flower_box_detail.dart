@@ -7,7 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 class FlowerBoxDetailPage extends StatefulWidget {
   final FlowerBox flowerBox;
 
-  FlowerBoxDetailPage({required this.flowerBox});
+  const FlowerBoxDetailPage({super.key, required this.flowerBox});
 
   @override
   FlowerBoxDetailPageState createState() => FlowerBoxDetailPageState();
@@ -36,11 +36,83 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
     'Sweet Corn',
     'Pumpkin',
     'Squash',
-    'Beetroot'
+    'Beetroot',
+    'Bell Pepper',
+    'Brussels Sprouts',
+    'Kale',
+    'Leek',
+    'Okra',
+    'Parsnip',
+    'Rhubarb',
+    'Turnip',
+    'Artichoke',
+    'Asparagus'
   ];
+
+  List<String> commonFruits = [
+    'Type name',
+    'Apple',
+    'Banana',
+    'Strawberry',
+    'Grapes',
+    'Orange',
+    'Lemon',
+    'Blueberry',
+    'Watermelon',
+    'Pineapple',
+    'Mango',
+    'Peach',
+    'Plum',
+    'Cherry',
+    'Pear',
+    'Raspberry',
+    'Blackberry',
+    'Fig',
+    'Pomegranate',
+    'Kiwi',
+    'Avocado'
+  ];
+
+  List<String> commonFlowers = [
+    'Type name',
+    'Rose',
+    'Tulip',
+    'Daisy',
+    'Sunflower',
+    'Lily',
+    'Daffodil',
+    'Marigold',
+    'Orchid',
+    'Lavender',
+    'Carnation',
+    'Chrysanthemum',
+    'Iris',
+    'Peony',
+    'Begonia',
+    'Jasmine',
+    'Poppy',
+    'Petunia',
+    'Hibiscus',
+    'Dahlia',
+    'Azalea',
+    'Violet'
+  ];
+
+  String selectedType = 'Vegetable';
   String selectedVeggie = '';
   int selectedRow = -1;
   int selectedCol = -1;
+
+  List<String> getCurrentList() {
+    switch (selectedType) {
+      case 'Fruit':
+        return commonFruits;
+      case 'Flower':
+        return commonFlowers;
+      default:
+        return commonVeggies;
+    }
+  }
 
   void addPlant(int row, int col) {
     setState(() {
@@ -73,21 +145,24 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
     showDialog(
       context: context,
       builder: (context) {
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return AlertDialog(
-          title: Text('Incomplete Flower Box'),
-          content: Text(
+          title: const Text('Incomplete Flower Box'),
+          content: const Text(
               'Your flower box is not complete. Are you sure you want to save?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(widget.flowerBox);
               },
-              child: Text('Save Anyway'),
+              style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Save Anyway'),
             ),
           ],
         );
@@ -98,18 +173,27 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
+    final currentList = getCurrentList();
+
+    // Split the list into chunks of 4 for 4 rows
+    List<List<String>> splitList = [];
+    for (var i = 0; i < currentList.length; i += 4) {
+      splitList.add(currentList.sublist(
+          i, i + 4 > currentList.length ? currentList.length : i + 4));
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Garden Details"),
+        title: const Text("Edit Garden Details"),
         backgroundColor: theme.primaryColor,
       ),
       body: Column(
         children: [
           Expanded(
+            flex: 3,
             child: SingleChildScrollView(
               child: Card(
-                margin: EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(16.0),
                 elevation: 8.0,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -143,12 +227,16 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                                           100, // Set a fixed width for each cell
                                       height:
                                           60, // Set a fixed height for each cell
-                                      margin: EdgeInsets.all(4.0),
-                                      padding: EdgeInsets.all(16.0),
-                                      color: selectedRow == row &&
-                                              selectedCol == col
-                                          ? theme.primaryColorLight
-                                          : theme.cardColor,
+                                      margin: const EdgeInsets.all(4.0),
+                                      padding: const EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        color: selectedRow == row &&
+                                                selectedCol == col
+                                            ? theme.primaryColorLight
+                                            : theme.cardColor,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
                                       child: InkWell(
                                         onTap: () => addPlant(row, col),
                                         child: Center(
@@ -177,34 +265,73 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
           ),
           if (selectedRow != -1 && selectedCol != -1)
             Container(
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.transparent,
-              child: Wrap(
-                spacing: 8.0,
-                children: commonVeggies.map((veggie) {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedVeggie == veggie
-                          ? theme.primaryColor
-                          : theme.cardColor,
-                    ),
-                    onPressed: () {
-                      if (veggie == 'Type name') {
-                        showCustomPlantDialog(context);
-                      } else {
-                        selectVeggie(veggie);
-                      }
+              height: 250, // Adjusted height to fit within screen
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0), // Padding on left and right
+              child: Column(
+                children: [
+                  DropdownButton<String>(
+                    value: selectedType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedType = newValue!;
+                      });
                     },
-                    child: Text(
-                      veggie,
-                      style: TextStyle(
-                        color: selectedVeggie == veggie
-                            ? theme.textTheme.bodyMedium?.color
-                            : theme.textTheme.bodyMedium?.color,
+                    items: <String>['Vegetable', 'Fruit', 'Flower']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: splitList.map((chunk) {
+                          return Column(
+                            children: chunk.map((plant) {
+                              return Container(
+                                width: 120, // Make the buttons wider
+                                height: 40, // Set the original height
+                                margin: const EdgeInsets.all(
+                                    4.0), // Space between buttons
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    backgroundColor:
+                                        theme.cardColor, // Use theme.cardColor
+                                  ),
+                                  onPressed: () {
+                                    if (plant == 'Type name') {
+                                      showCustomPlantDialog(context);
+                                    } else {
+                                      selectVeggie(plant);
+                                    }
+                                  },
+                                  child: AutoSizeText(
+                                    plant,
+                                    style: TextStyle(
+                                      color: selectedVeggie == plant
+                                          ? theme.textTheme.bodyMedium?.color
+                                          : theme.textTheme.bodyMedium?.color,
+                                    ),
+                                    maxLines: 1,
+                                    minFontSize: 8,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }).toList(),
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                ],
               ),
             ),
           Padding(
@@ -217,14 +344,14 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: saveFlowerBox,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),
@@ -236,7 +363,7 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
 
   //Shows list of commonly used plants and handles save and cancel actions
   void showCustomPlantDialog(BuildContext context) {
-    final _plantController = TextEditingController();
+    final plantController = TextEditingController();
 
     showDialog<String>(
       context: context,
@@ -244,24 +371,24 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
         final theme = Provider.of<ThemeNotifier>(context).getTheme();
 
         return AlertDialog(
-          title: Text('Type Plant Name'),
+          title: const Text('Type Plant Name'),
           content: TextField(
-            controller: _plantController,
-            decoration: InputDecoration(labelText: 'Plant Name'),
+            controller: plantController,
+            decoration: const InputDecoration(labelText: 'Plant Name'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(_plantController.text);
-                selectVeggie(_plantController.text);
+                Navigator.of(context).pop(plantController.text);
+                selectVeggie(plantController.text);
               },
-              child: Text('Save'),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
+              child: const Text('Save'),
             ),
           ],
         );

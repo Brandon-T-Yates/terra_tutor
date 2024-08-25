@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 enum TextAlignOption { center, topLeft }
 
@@ -14,7 +15,7 @@ class UiTile2 extends StatelessWidget {
   final double height;
   final EdgeInsetsGeometry margin;
   final BorderRadius borderRadius;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color shadowColor;
   final double spreadRadius;
   final double blurRadius;
@@ -39,7 +40,7 @@ class UiTile2 extends StatelessWidget {
     this.height = 200,
     this.margin = const EdgeInsets.only(left: 30),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
-    this.backgroundColor = AppColors.uiTile,
+    this.backgroundColor,
     this.shadowColor = Colors.grey,
     this.spreadRadius = 1,
     this.blurRadius = 7,
@@ -64,13 +65,14 @@ class UiTile2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: backgroundColor ?? theme.cardColor,
           borderRadius: borderRadius,
           boxShadow: [
             BoxShadow(
@@ -101,7 +103,8 @@ class UiTile2 extends StatelessWidget {
                   ),
                 ),
               ),
-            if (imagePath == null || imagePath!.isEmpty) const SizedBox(height: 5),
+            if (imagePath == null || imagePath!.isEmpty)
+              const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -132,7 +135,7 @@ class UiTile2 extends StatelessWidget {
                             : TextAlign.start,
                       ),
                     ),
-                    if (child != null)
+                  if (child != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 0),
                       child: child!,

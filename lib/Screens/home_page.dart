@@ -1,5 +1,8 @@
 // ignore_for_file: avoid_print
+<<<<<<< HEAD
 
+=======
+>>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,7 @@ import '/Assets/Home_Page_Widgets/weather_alerts.dart';
 import '/Assets/Home_Page_Widgets/add_widget_button.dart';
 import '/Global_Elements/ui_tiles.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
+import 'package:terra_tutor/Screens/flower_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,10 +34,10 @@ class HomePageState extends State<HomePage> {
   List<String> _addedWidgetTypes = [];
   SharedPreferences? _prefs;
 
-  static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Flower Box Page')),
-    Center(child: Text('')),
-    PlantFinderScreen(),
+  final List<Widget> _pages = <Widget>[
+    const FlowerBoxHomePage(),
+    const Center(child: Text('')),
+    const PlantFinderScreen(),
   ];
 
   @override
@@ -72,7 +76,7 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: Theme.of(context).primaryColor,
           title: const Center(
             child: Text(
               'Add Widgets',
@@ -139,6 +143,7 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+<<<<<<< HEAD
   // Delete widget dialog
  void showDeleteDialog(int index) {
   showDialog(
@@ -170,6 +175,38 @@ class HomePageState extends State<HomePage> {
                       _removeCityFromFirebase();
                     }
                 });
+=======
+  void showDeleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: Theme.of(context).cardColor,
+          ),
+          child: AlertDialog(
+            title: const Text('Delete Widget'),
+            content: const Text('Do you want to delete this widget?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    String widgetType = _addedWidgetTypes[index];
+                    _addedWidgetTypes.removeAt(index);
+                    saveWidgets();
+
+                    // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
+                    if (widgetType == 'WeatherAlertsWidget') {
+                      _removeCityFromFirebase();
+                    }
+                  });
+>>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
                   Navigator.of(context).pop();
                 },
                 child: const Text('Delete'),
@@ -182,15 +219,31 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _removeCityFromFirebase() async {
+<<<<<<< HEAD
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
     final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
     await userDoc.update({'city': FieldValue.delete()});
   }
 }
+=======
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      await userDoc.update({'city': FieldValue.delete()});
+    }
+  }
+
+  void _onWidgetUpdated() {
+    setState(() {
+      // Refresh the list of widgets
+      _addedWidgetTypes = _prefs?.getStringList('addedWidgets') ?? [];
+    });
+  }
+>>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
 
   List<Widget> _buildAddedWidgets() {
-    //final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return _addedWidgetTypes.asMap().entries.map((entry) {
       int index = entry.key;
       String widgetType = entry.value;
@@ -204,16 +257,16 @@ class HomePageState extends State<HomePage> {
           widget = const FertilizerReminderWidget();
           break;
         case 'PlantPhotosWidget':
-          widget = const PlantPhotosWidget(imagePath: 'lib/Assets/images/camera.png');
+          widget = const PlantPhotosWidget(
+              imagePath: 'lib/Assets/images/camera.png');
           break;
         case 'WaterReminderWidget':
-          widget = const WaterReminderWidget();
+          widget = WaterReminderWidget(
+            onWidgetUpdated: _onWidgetUpdated,
+          );
           break;
         case 'WeatherAlertsWidget':
           widget = const WeatherAlertsWidget();
-          break;
-        case 'RandomFactWidget':
-          widget = const DailyFactsWidget();
           break;
         default:
           widget = UiTile(
@@ -224,7 +277,6 @@ class HomePageState extends State<HomePage> {
           );
       }
 
-      // Long press to bring up dialog to delete widget
       return GestureDetector(
         onLongPress: () => showDeleteDialog(index),
         child: widget,

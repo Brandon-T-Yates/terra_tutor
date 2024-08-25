@@ -1,12 +1,15 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/Global_Elements/user_input_text_field.dart';
-import '/Global_Elements/colors.dart';
+import 'package:provider/provider.dart';
+import '/Global_Elements/theme_data.dart';
 import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({super.key});
+  const SignUpPage({super.key});
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -17,7 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -31,13 +35,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return Scaffold(
-      backgroundColor: AppColors.navBar,
+      backgroundColor: theme.primaryColor,
       appBar: AppBar(
-        backgroundColor: AppColors.navBar,
+        backgroundColor: theme.primaryColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -56,12 +62,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 40),
-                    const Text(
+                    Text(
                       'Create Account',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.headlineLarge
+                          ?.copyWith(fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 40),
                     const Align(
@@ -175,7 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         alignment: Alignment.centerRight,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.uiTile,
+                            backgroundColor: theme.cardColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(17.0),
                             ),
@@ -185,7 +189,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             final String lastName = lastNameController.text;
                             final String email = emailController.text;
                             final String password = passwordController.text;
-                            final String confirmPassword = confirmPasswordController.text;
+                            final String confirmPassword =
+                                confirmPasswordController.text;
 
                             if (password != confirmPassword) {
                               if (!mounted) return;
@@ -198,13 +203,18 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
 
                             try {
-                              UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                              UserCredential userCredential = await FirebaseAuth
+                                  .instance
+                                  .createUserWithEmailAndPassword(
                                 email: email,
                                 password: password,
                               );
 
                               // Store additional user details in Firestore
-                              await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userCredential.user?.uid)
+                                  .set({
                                 'firstName': firstName,
                                 'lastName': lastName,
                                 'email': email,
@@ -222,7 +232,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const HomePage(), // Assuming HomePage is the name of your home page class
+                                  builder: (context) =>
+                                      const HomePage(), // Assuming HomePage is the name of your home page class
                                 ),
                               );
                             } on FirebaseAuthException catch (e) {
@@ -230,7 +241,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               String message;
                               switch (e.code) {
                                 case 'email-already-in-use':
-                                  message = 'The email address is already in use.';
+                                  message =
+                                      'The email address is already in use.';
                                   break;
                                 case 'invalid-email':
                                   message = 'The email address is not valid.';
@@ -252,14 +264,16 @@ class _SignUpPageState extends State<SignUpPage> {
                               );
                             }
                           },
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 'Sign Up',
-                                style: TextStyle(color: Colors.black, fontSize: 16),
+                                style: theme.textTheme.bodyLarge
+                                    ?.copyWith(fontSize: 16),
                               ),
-                              Icon(Icons.arrow_right_alt, color: Colors.black),
+                              const Icon(Icons.arrow_right_alt,
+                                  color: Colors.black),
                             ],
                           ),
                         ),

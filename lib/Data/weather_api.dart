@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
 class Weather {
   final String description;
@@ -40,10 +42,13 @@ class WeatherService {
   static String get apiKey {
     return dotenv.env['OPEN_WEATHER_MAP'] ?? '';
   }
-  static const String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
+
+  static const String baseUrl =
+      'http://api.openweathermap.org/data/2.5/weather';
 
   Future<Weather> fetchWeather(String city) async {
-    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
+    final response = await http
+        .get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=imperial'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(json.decode(response.body));
@@ -62,12 +67,15 @@ class CityInputDialog {
       builder: (BuildContext context) {
         final TextEditingController textController = TextEditingController();
 
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return AlertDialog(
+          backgroundColor: theme.primaryColor,
           title: const Text('Enter City Name'),
           content: TextField(
             controller: textController,
             decoration: const InputDecoration(hintText: "City Name"),
           ),
+          // TODO: Jon make these buttons match the others rounded and colored
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
