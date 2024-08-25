@@ -106,7 +106,7 @@ class UiTile2 extends StatelessWidget {
             if (imagePath == null || imagePath!.isEmpty)
               const SizedBox(height: 5),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: textAlignment == TextAlignOption.center
