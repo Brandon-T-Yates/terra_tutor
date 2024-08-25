@@ -1,10 +1,11 @@
-// ignore_for_file: avoid_print, library_private_types_in_public_api
+// ignore_for_file: avoid_print, library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:terra_tutor/Global_Elements/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import '/Global_Elements/ui_tiles.dart';
 
 class Reminder {
@@ -123,8 +124,9 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return AlertDialog(
-          backgroundColor: AppColors.navBar,
+          backgroundColor: theme.primaryColor,
           title: Center(
             child: Text(
               reminder != null ? 'Edit Reminder' : 'Add Reminder',
@@ -179,7 +181,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                                             "Failed to delete reminder: $error"));
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.uiTile,
+                                    backgroundColor: theme.cardColor,
                                     foregroundColor: Colors.black,
                                     side: const BorderSide(color: Colors.black),
                                     fixedSize: const Size(100, 25),
@@ -192,7 +194,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                                     Navigator.of(context).pop();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.uiTile,
+                                    backgroundColor: theme.cardColor,
                                     foregroundColor: Colors.black,
                                     side: const BorderSide(color: Colors.black),
                                     fixedSize: const Size(100, 25),
@@ -206,7 +208,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.uiTile,
+                        backgroundColor: theme.cardColor,
                         foregroundColor: Colors.black,
                         side: const BorderSide(color: Colors.black),
                         fixedSize: const Size(100, 25),
@@ -225,7 +227,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.uiTile,
+                backgroundColor: theme.cardColor,
                 foregroundColor: Colors.black,
                 side: const BorderSide(color: Colors.black),
                 fixedSize: const Size(100, 25),
@@ -270,7 +272,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.uiTile,
+                  backgroundColor: theme.cardColor,
                   foregroundColor: Colors.black,
                   side: const BorderSide(color: Colors.black),
                   fixedSize: const Size(100, 25),
@@ -296,7 +298,9 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return AlertDialog(
+          backgroundColor: theme.primaryColor,
           title: const Center(
             child: Text(
               'Select Reminders to Delete',
@@ -332,7 +336,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.uiTile,
+                    backgroundColor: theme.cardColor,
                     foregroundColor: Colors.black,
                     side: const BorderSide(color: Colors.black),
                     fixedSize: const Size(90, 25),
@@ -353,7 +357,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.uiTile,
+                    backgroundColor: theme.cardColor,
                     foregroundColor: Colors.black,
                     side: const BorderSide(color: Colors.black),
                     fixedSize: const Size(90, 25),
@@ -376,7 +380,7 @@ class _WaterReminderWidgetState extends State<WaterReminderWidget> {
                     onWidgetUpdated();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.uiTile,
+                    backgroundColor: theme.cardColor,
                     foregroundColor: Colors.black,
                     side: const BorderSide(color: Colors.black),
                     fixedSize: const Size(90, 25),

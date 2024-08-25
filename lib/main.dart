@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-  
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -27,14 +27,17 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static final ValueNotifier<List<Map<String, dynamic>>>
+      favoritedFlowersNotifier = ValueNotifier([]);
 
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).getTheme();
-
+    final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
     return ChangeNotifierProvider(
       create: (context) => PlantImageProvider(),
       child: MaterialApp(
+        navigatorObservers: [routeObserver],
         theme: theme,
         home: const SplashScreen(),
       ),

@@ -30,13 +30,8 @@ class NotificationService {
       );
 
       if (response.statusCode == 200) {
-        print('FCM notification sent successfully.');
-      } else {
-        print(
-            'Failed to send FCM notification. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending FCM notification: $e');
-    }
+      } else {}
+      // ignore: empty_catches
+    } catch (e) {}
   }
 }

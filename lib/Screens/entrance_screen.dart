@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:terra_tutor/Global_Elements/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'login_screen.dart';
 import 'sign_up_screen.dart';
 
@@ -8,8 +9,9 @@ class EntranceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return Scaffold(
-      backgroundColor: AppColors.navBar,
+      backgroundColor: theme.primaryColor,
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -48,6 +50,7 @@ class EntranceScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: fontSizeTitle,
                     fontWeight: FontWeight.bold,
+                    color: theme.textTheme.headlineLarge?.color,
                   ),
                 ),
                 const SizedBox(
@@ -57,6 +60,7 @@ class EntranceScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: fontSizeSubtitle,
                     fontStyle: FontStyle.italic,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 const Spacer(),
@@ -72,18 +76,18 @@ class EntranceScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: AppColors.uiTile,
+                      foregroundColor: theme.textTheme.bodyLarge?.color,
+                      backgroundColor: theme.cardColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17.0),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Log in',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                   ),
@@ -96,22 +100,23 @@ class EntranceScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: AppColors.uiTile,
+                      foregroundColor: theme.textTheme.bodyLarge?.color,
+                      backgroundColor: theme.cardColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17.0),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Sign up',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                   ),

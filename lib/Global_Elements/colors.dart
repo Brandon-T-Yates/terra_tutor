@@ -4,6 +4,7 @@ class AppColors {
   // Background color
   static const Color primaryColor = Color.fromARGB(255, 226, 217, 199);
 
+  static const Color buttonColor = Color.fromARGB(255, 251, 241, 108);
   // Widget tile color
   static const Color uiTile = Color.fromARGB(255, 251, 241, 108);
 
@@ -11,7 +12,7 @@ class AppColors {
   static const Color navBar = Color.fromARGB(255, 194, 209, 97);
 
   // Menu icon highlight box color
-  static const Color menuIconHighLight = Color.fromARGB(155, 255, 255, 255); // Transparency will be ajusted upon icon tsting
+  static const Color menuIconHighLight = Color.fromARGB(255, 251, 241, 108);
 
   // Menu icon colors
   static const Color menuIconClicked = Color.fromARGB(255, 0, 0, 0);
