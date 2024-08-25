@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -138,30 +140,36 @@ class HomePageState extends State<HomePage> {
   }
 
   // Delete widget dialog
-  void showDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            dialogBackgroundColor: Theme.of(context).cardColor,
-          ),
-          child: AlertDialog(
-            title: const Text('Delete Widget'),
-            content: const Text('Do you want to delete this widget?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _addedWidgetTypes.removeAt(index);
-                    saveWidgets();
-                  });
+ void showDeleteDialog(int index) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          dialogBackgroundColor: Theme.of(context).cardColor,
+        ),
+        child: AlertDialog(
+          title: const Text('Delete Widget'),
+          content: const Text('Do you want to delete this widget?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  String widgetType = _addedWidgetTypes[index];
+                  _addedWidgetTypes.removeAt(index);
+                  saveWidgets();
+
+                  // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
+                    if (widgetType == 'WeatherAlertsWidget') {
+                      _removeCityFromFirebase();
+                    }
+                });
                   Navigator.of(context).pop();
                 },
                 child: const Text('Delete'),
@@ -172,6 +180,14 @@ class HomePageState extends State<HomePage> {
       },
     );
   }
+
+  Future<void> _removeCityFromFirebase() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    await userDoc.update({'city': FieldValue.delete()});
+  }
+}
 
   List<Widget> _buildAddedWidgets() {
     //final theme = Provider.of<ThemeNotifier>(context).getTheme();
