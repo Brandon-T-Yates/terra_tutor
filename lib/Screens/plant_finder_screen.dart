@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously, empty_catches
-
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
@@ -171,6 +170,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           controller: _controller!,
           initializeControllerFuture: _initializeControllerFuture,
           onPictureTaken: (File imageFile) {
+            if (kDebugMode) {
+              print('Picture taken callback received.');
+            }
             identifyPlant(imageFile);
           },
         ),
@@ -184,6 +186,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
     if (pickedFile != null) {
       final File imageFile = File(pickedFile.path);
+      if (kDebugMode) {
+        print('Image picked from gallery: ${pickedFile.path}');
+      }
       identifyPlant(imageFile);
     }
   }
@@ -191,6 +196,10 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   Future<void> identifyPlant(File imageFile) async {
     final String apiKey = dotenv.env['PLANT_ID_API_KEY']!;
     const String apiUrl = 'https://api.plant.id/v2/identify';
+
+    if (kDebugMode) {
+      print('Identifying plant with image: ${imageFile.path}');
+    }
 
     try {
       final request = http.MultipartRequest('POST', Uri.parse(apiUrl))
@@ -203,6 +212,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(responseData.body);
+        if (kDebugMode) {
+          print('API response: $data');
+        }
 
         if (data['suggestions'] != null && data['suggestions'].isNotEmpty) {
           suggestions = List<Map<String, dynamic>>.from(data['suggestions']);
@@ -210,6 +222,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           showArrows = true;
           updateDisplayedPlant(suggestions[currentSuggestionIndex]);
         } else {
+          if (kDebugMode) {
+            print('No suggestions found');
+          }
           setState(() {
             plantName = 'Unknown Plant';
             plantDescription = 'No description available';
@@ -217,8 +232,16 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
             showArrows = false;
           });
         }
-      } else {}
-    } catch (e) {}
+      } else {
+        if (kDebugMode) {
+          print('Failed to identify plant: ${responseData.body}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error identifying plant: $e');
+      }
+    }
   }
 
   void updateDisplayedPlant(Map<String, dynamic> suggestion) {
@@ -241,6 +264,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        if (kDebugMode) {
+          print('Plant image API response: $data');
+        }
 
         if (data['plants'] != null && data['plants'].isNotEmpty) {
           final plants = data['plants'] as List;
@@ -253,11 +279,17 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
             plantImage = plantImageUrl;
           });
         } else {
+          if (kDebugMode) {
+            print('No plant image found');
+          }
           setState(() {
             plantImage = 'lib/Assets/images/rose_placeholder.jpg';
           });
         }
       } else {
+        if (kDebugMode) {
+          print('Failed to fetch plant image: ${response.body}');
+        }
         setState(() {
           plantImage = 'lib/Assets/images/rose_placeholder.jpg';
         });
@@ -272,6 +304,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
   Future<void> fetchRandomPlant() async {
     final String? apiKey = dotenv.env['TREFLE_API_KEY'];
     if (apiKey == null) {
+      if (kDebugMode) {
+        print('Error: API key is missing');
+      }
       return;
     }
 
@@ -282,6 +317,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
     final ioClient = IOClient(createHttpClient(null));
 
     try {
+      if (kDebugMode) {
+        print('Fetching data from API...');
+      }
       final response = await retry(
         () => ioClient
             .get(Uri.parse(apiUrl))
@@ -291,6 +329,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
       );
 
       if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('API call successful');
+        }
         final data = json.decode(response.body);
         setState(() {
           plants = data['data'] as List;
@@ -299,7 +340,15 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           updatePlantFromIndex();
           isRandomSelected = true;
         });
-      } else {}
+      } else {
+        if (kDebugMode) {
+          print('Failed to load plant data: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching plant data: $e');
+      }
     } finally {
       ioClient.close();
     }
@@ -387,11 +436,17 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
           });
         }
       } else {
+        if (kDebugMode) {
+          print('Failed to fetch image from Wikipedia: ${response.body}');
+        }
         setState(() {
           plantImage = 'lib/Assets/images/rose_placeholder.jpg';
         });
       }
     } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching image from Wikipedia: $e');
+      }
       setState(() {
         plantImage = 'lib/Assets/images/rose_placeholder.jpg';
       });
@@ -452,6 +507,9 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
         'https://api.floracodex.com/v1/plants?key=$apikeyFlora&q=$query';
 
     try {
+      if (kDebugMode) {
+        print('Fetching data from FloraCodex API with query: $query');
+      }
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
@@ -466,8 +524,19 @@ class PlantFinderPageState extends State<PlantFinderScreen> {
             searchResults.clear();
           });
         }
-      } else {}
-    } catch (e) {}
+      } else {
+        if (kDebugMode) {
+          print('Failed to load data: ${response.statusCode}');
+        }
+        if (kDebugMode) {
+          print('Response body: ${response.body}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching data: $e');
+      }
+    }
   }
 
   void onSearchChanged(String query) {

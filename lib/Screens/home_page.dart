@@ -259,9 +259,12 @@ class HomePageState extends State<HomePage> {
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: _buildAddedWidgets().map((widget) {
-                      return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 32.0,
-                        child: widget,
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2 - 32.0,
+                          child: widget,
+                        ),
                       );
                     }).toList(),
                   ),
@@ -280,6 +283,7 @@ class HomePageState extends State<HomePage> {
               onPressed: _onAddButtonPressed,
               tooltip: 'Add',
               backgroundColor: theme.appBarTheme.backgroundColor,
+              foregroundColor: theme.iconTheme.color,
               shape: const CircleBorder(),
               child: const Icon(Icons.add),
             )

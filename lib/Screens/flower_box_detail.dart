@@ -344,14 +344,22 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: const Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style:
+                        TextStyle(color: theme.textTheme.headlineLarge?.color),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: saveFlowerBox,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                   ),
-                  child: const Text('Save'),
+                  child: Text(
+                    'Save',
+                    style:
+                        TextStyle(color: theme.textTheme.headlineLarge?.color),
+                  ),
                 ),
               ],
             ),
@@ -380,7 +388,10 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: theme.textTheme.headlineLarge?.color),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -388,7 +399,10 @@ class FlowerBoxDetailPageState extends State<FlowerBoxDetailPage> {
                 selectVeggie(plantController.text);
               },
               style: TextButton.styleFrom(foregroundColor: theme.primaryColor),
-              child: const Text('Save'),
+              child: Text(
+                'Save',
+                style: TextStyle(color: theme.textTheme.headlineLarge?.color),
+              ),
             ),
           ],
         );
