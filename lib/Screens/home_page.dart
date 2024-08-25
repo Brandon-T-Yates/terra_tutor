@@ -71,7 +71,7 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: const Center(
             child: Text(
               'Add Widgets',
@@ -230,7 +230,7 @@ class HomePageState extends State<HomePage> {
         showMenuIcon: true,
       ),
       body: Container(
-        color: AppColors.primaryColor,
+        color: theme.scaffoldBackgroundColor,
         child: Stack(
           children: [
             IndexedStack(
@@ -240,14 +240,18 @@ class HomePageState extends State<HomePage> {
             if (_selectedIndex == 1)
               SingleChildScrollView(
                 child: Container(
-                  color: AppColors.primaryColor,
+                  color: theme.scaffoldBackgroundColor,
                   child: Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: _buildAddedWidgets().map((widget) {
-                      return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 32.0,
-                        child: widget,
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20.0), // Add left-hand padding
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2 - 32.0,
+                          child: widget,
+                        ),
                       );
                     }).toList(),
                   ),
@@ -266,6 +270,7 @@ class HomePageState extends State<HomePage> {
               onPressed: _onAddButtonPressed,
               tooltip: 'Add',
               backgroundColor: theme.appBarTheme.backgroundColor,
+              foregroundColor: theme.iconTheme.color,
               shape: const CircleBorder(),
               child: const Icon(Icons.add),
             )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:terra_tutor/Global_Elements/colors.dart';
+
 import 'entrance_screen.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 
@@ -97,7 +97,7 @@ class SplashScreenState extends State<SplashScreen>
                 alignment: Alignment.topCenter,
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: constraints.maxHeight * 0.2 - 4.0,
+                    top: constraints.maxHeight * 0.2 + 5.0,
                   ),
                   child: ScaleTransition(
                     scale: _logoAnimation,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Screens/flower_box.dart';
+import 'package:terra_tutor/Global_Elements/colors.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
+import 'package:provider/provider.dart';
 
 class AddFlowerBoxDialog extends StatefulWidget {
   final Function(FlowerBox) onAddFlowerBox;
@@ -28,10 +31,18 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
+
     return AlertDialog(
-      title: Text(widget.initialFlowerBox == null
-          ? 'Add Flower Box'
-          : 'Edit Flower Box'),
+      backgroundColor: theme.primaryColor, // Use the themed card color
+      title: Center(
+        child: Text(
+          widget.initialFlowerBox == null
+              ? 'Add Flower Box'
+              : 'Edit Flower Box',
+          style: theme.textTheme.headlineLarge, // Use themed text color
+        ),
+      ),
       content: Form(
         key: _formKey,
         child: Column(
@@ -39,7 +50,11 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Flower Box Name'),
+              decoration: InputDecoration(
+                labelText: 'Flower Box Name',
+                labelStyle:
+                    theme.textTheme.headlineLarge, // Use themed text color
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a name';
@@ -49,10 +64,18 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
             ),
             DropdownButtonFormField<int>(
               value: _width,
-              decoration: InputDecoration(labelText: 'Width'),
+              decoration: InputDecoration(
+                labelText: 'Width',
+                labelStyle:
+                    theme.textTheme.headlineLarge, // Use themed text color
+              ),
               items: List.generate(6, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
-                      value: value, child: Text('$value')))
+                        value: value,
+                        child: Text('$value',
+                            style: theme
+                                .textTheme.bodyLarge), // Use themed text color
+                      ))
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -62,10 +85,18 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
             ),
             DropdownButtonFormField<int>(
               value: _length,
-              decoration: InputDecoration(labelText: 'Length'),
+              decoration: InputDecoration(
+                labelText: 'Length',
+                labelStyle:
+                    theme.textTheme.headlineLarge, // Use themed text color
+              ),
               items: List.generate(6, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
-                      value: value, child: Text('$value')))
+                        value: value,
+                        child: Text('$value',
+                            style: theme
+                                .textTheme.bodyLarge), // Use themed text color
+                      ))
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -77,11 +108,18 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
         ),
       ),
       actions: [
-        TextButton(
+        ElevatedButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.cardColor,
+            foregroundColor: theme.textTheme.bodyLarge?.color ?? Colors.black,
+            side: BorderSide(
+                color: theme.textTheme.bodyLarge?.color ?? Colors.black),
+            fixedSize: const Size(100, 25),
+          ),
+          child: Text('Cancel', style: theme.textTheme.bodyLarge),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               final newFlowerBox = FlowerBox(
@@ -92,7 +130,14 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
               widget.onAddFlowerBox(newFlowerBox);
             }
           },
-          child: Text('Save'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.cardColor,
+            foregroundColor: theme.textTheme.bodyLarge?.color ?? Colors.black,
+            side: BorderSide(
+                color: theme.textTheme.bodyLarge?.color ?? Colors.black),
+            fixedSize: const Size(100, 25),
+          ),
+          child: Text('Save', style: theme.textTheme.bodyLarge),
         ),
       ],
     );

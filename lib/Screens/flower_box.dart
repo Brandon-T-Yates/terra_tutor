@@ -190,6 +190,15 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> with RouteAware {
                 children: [
                   Row(
                     children: [
+                      Text(
+                        'Gardens',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: theme.textTheme.bodyMedium?.color,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
                       IconButton(
                         icon: Icon(Icons.swap_horiz),
                         onPressed: () {
@@ -199,57 +208,43 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> with RouteAware {
                         },
                         color: theme.primaryColor,
                       ),
-                      Text(
-                        'Gardens',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: theme.textTheme.bodyMedium?.color,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
+                      const SizedBox(width: 8.0),
                       IconButton(
                         icon: Icon(Icons.local_florist),
                         onPressed: _navigateToAllPlantsPage,
                         color: theme.primaryColor,
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        width: 160.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if (_currentPage > 0)
-                              IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                onPressed: previousPage,
-                                color: Colors.black,
-                              ),
-                            IconButton(
-                              icon: Icon(Icons.list),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ReorderFlowerBoxesPage(
-                                    flowerBoxes: flowerBoxes,
-                                    onReorder: reorderFlowerBox,
-                                  ),
-                                ),
-                              ),
-                              color: Colors.black,
+                      const SizedBox(width: 8.0),
+                      IconButton(
+                        icon: Icon(Icons.list),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReorderFlowerBoxesPage(
+                              flowerBoxes: flowerBoxes,
+                              onReorder: reorderFlowerBox,
                             ),
-                            if ((_currentPage + 1) * 4 < flowerBoxes.length)
-                              IconButton(
-                                icon: Icon(Icons.arrow_forward),
-                                onPressed: nextPage,
-                                color: Colors.black,
-                              ),
-                          ],
+                          ),
                         ),
+                        color: theme.primaryColor, // Updated to use cardColor
                       ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      if (_currentPage > 0)
+                        IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: previousPage,
+                          color: Colors.black,
+                        ),
+                      const SizedBox(width: 8.0),
+                      if ((_currentPage + 1) * 4 < flowerBoxes.length)
+                        IconButton(
+                          icon: Icon(Icons.arrow_forward),
+                          onPressed: nextPage,
+                          color: Colors.black,
+                        ),
                     ],
                   ),
                 ],
@@ -263,90 +258,95 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> with RouteAware {
                   return Card(
                     margin: EdgeInsets.all(8.0),
                     elevation: 8.0,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.drag_handle, color: Colors.white),
-                          title: Column(
-                            children: [
-                              Text(
-                                flowerBox.name,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyMedium?.color,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.drag_handle,
+                                color: Colors.transparent),
+                            title: Column(
+                              children: [
+                                Text(
+                                  flowerBox.name,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.textTheme.bodyMedium?.color,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'Size: ${flowerBox.width} x ${flowerBox.length}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: theme.textTheme.bodyMedium?.color,
+                                Text(
+                                  'Size: ${flowerBox.width} x ${flowerBox.length}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyMedium?.color,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            trailing: PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'Edit') {
+                                  navigateToEditFlowerBoxDetail(
+                                      context, index + (_currentPage * 4));
+                                } else if (value == 'Delete') {
+                                  deleteFlowerBox(index + (_currentPage * 4));
+                                }
+                              },
+                              itemBuilder: (BuildContext context) {
+                                return {'Edit', 'Delete'}.map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: Text(choice),
+                                  );
+                                }).toList();
+                              },
+                            ),
                           ),
-                          trailing: PopupMenuButton<String>(
-                            onSelected: (value) {
-                              if (value == 'Edit') {
-                                navigateToEditFlowerBoxDetail(
-                                    context, index + (_currentPage * 4));
-                              } else if (value == 'Delete') {
-                                deleteFlowerBox(index + (_currentPage * 4));
-                              }
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return {'Edit', 'Delete'}.map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(choice),
-                                );
-                              }).toList();
-                            },
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Column(
-                            children: [
-                              for (int row = 0; row < flowerBox.length; row++)
-                                Row(
-                                  children: [
-                                    for (int col = 0;
-                                        col < flowerBox.width;
-                                        col++)
-                                      Container(
-                                        width: 100,
-                                        height: 60,
-                                        margin: EdgeInsets.all(4.0),
-                                        padding: EdgeInsets.all(16.0),
-                                        decoration: BoxDecoration(
-                                          color: theme.cardColor,
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
-                                        ),
-                                        child: Center(
-                                          child: _isImageView
-                                              ? _getImageForPlant(
-                                                  flowerBox.plants[row][col])
-                                              : AutoSizeText(
-                                                  flowerBox.plants[row][col] ??
-                                                      '',
-                                                  style: TextStyle(
-                                                    color: theme.textTheme
-                                                        .bodyMedium?.color,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Column(
+                              children: [
+                                for (int row = 0; row < flowerBox.length; row++)
+                                  Row(
+                                    children: [
+                                      for (int col = 0;
+                                          col < flowerBox.width;
+                                          col++)
+                                        Container(
+                                          width: 100,
+                                          height: 60,
+                                          margin: EdgeInsets.all(4.0),
+                                          padding: EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            color: theme.cardColor,
+                                            borderRadius:
+                                                BorderRadius.circular(16.0),
+                                          ),
+                                          child: Center(
+                                            child: _isImageView
+                                                ? _getImageForPlant(
+                                                    flowerBox.plants[row][col])
+                                                : AutoSizeText(
+                                                    flowerBox.plants[row]
+                                                            [col] ??
+                                                        '',
+                                                    style: TextStyle(
+                                                      color: theme.textTheme
+                                                          .bodyMedium?.color,
+                                                    ),
                                                   ),
-                                                ),
+                                          ),
                                         ),
-                                      ),
-                                  ],
-                                ),
-                            ],
+                                    ],
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -362,6 +362,7 @@ class FlowerBoxHomePageState extends State<FlowerBoxHomePage> with RouteAware {
             onPressed: () => showAddFlowerBoxDialog(context),
             tooltip: 'Add Flower Box',
             backgroundColor: theme.primaryColor,
+            foregroundColor: theme.iconTheme.color,
             shape: const CircleBorder(),
             child: const Icon(Icons.add),
           ),

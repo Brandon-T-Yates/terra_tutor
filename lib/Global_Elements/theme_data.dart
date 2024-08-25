@@ -27,54 +27,58 @@ class ThemeNotifier extends ChangeNotifier {
       bodyLarge: TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
       headlineLarge: TextStyle(color: Colors.black, fontSize: 24),
     ),
-    cardColor:
-        AppColors.menuIconHighLight, // Needs to stay menuIconHighLight variable
-  ); // Set ui tiles to proper color
+    cardColor: Color(0xFFFBF26C),
+  );
 
   static final ThemeData tropicalGardenTheme = ThemeData(
-      primaryColor: AppColorsAlternativeTropicalGarden.navBar,
-      scaffoldBackgroundColor: AppColorsAlternativeTropicalGarden.primaryColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColorsAlternativeTropicalGarden.navBar,
-        iconTheme: IconThemeData(
-            color: AppColorsAlternativeTropicalGarden.menuIconClicked),
+    primaryColor: AppColorsAlternativeTropicalGarden.navBar,
+    scaffoldBackgroundColor: AppColorsAlternativeTropicalGarden.primaryColor,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColorsAlternativeTropicalGarden.navBar,
+      iconTheme: IconThemeData(
+        color: AppColorsAlternativeTropicalGarden.menuIconClicked,
       ),
-      buttonTheme: const ButtonThemeData(
-        buttonColor: AppColorsAlternativeTropicalGarden.deleteButton,
-      ),
-      textTheme: const TextTheme(
-        bodyLarge:
-            TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
-        headlineLarge:
-            TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
-      ),
-      cardColor: AppColorsAlternativeTropicalGarden.uiTile,
-      checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
-      ));
+    ),
+    buttonTheme: const ButtonThemeData(
+      buttonColor: AppColorsAlternativeTropicalGarden.deleteButton,
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
+      headlineLarge:
+          TextStyle(color: AppColorsAlternativeTropicalGarden.fontColor),
+    ),
+    cardColor: AppColorsAlternativeTropicalGarden.uiTile,
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+    ),
+  );
 
   static final ThemeData woodlandForestTheme = ThemeData(
-      primaryColor: AppColorsAlternativeWoodlandForest.navBar,
-      scaffoldBackgroundColor:
-          AppColorsAlternativeWoodlandForest.scaffoldBackgroundColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColorsAlternativeWoodlandForest.navBar,
-        iconTheme: IconThemeData(
-            color: AppColorsAlternativeWoodlandForest.menuIconClicked),
+    primaryColor: AppColorsAlternativeWoodlandForest.navBar,
+    scaffoldBackgroundColor:
+        AppColorsAlternativeWoodlandForest.scaffoldBackgroundColor,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColorsAlternativeWoodlandForest.navBar,
+      iconTheme: IconThemeData(
+        color: Color(0xFFFFFFFF),
       ),
-      buttonTheme: const ButtonThemeData(
-        buttonColor: AppColorsAlternativeWoodlandForest.deleteButton,
-      ),
-      textTheme: const TextTheme(
-        bodyLarge:
-            TextStyle(color: AppColorsAlternativeWoodlandForest.fontColor),
-        headlineLarge:
-            TextStyle(color: AppColorsAlternativeWoodlandForest.whiteFont),
-      ),
-      cardColor: AppColorsAlternativeWoodlandForest.uiTile,
-      checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
-      ));
+    ),
+    iconTheme: const IconThemeData(
+      color: Color(0xFFFFFFFF), // Ensure the icon color is white
+    ),
+    buttonTheme: const ButtonThemeData(
+      buttonColor: AppColorsAlternativeWoodlandForest.deleteButton,
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: AppColorsAlternativeWoodlandForest.fontColor),
+      headlineLarge:
+          TextStyle(color: AppColorsAlternativeWoodlandForest.whiteFont),
+    ),
+    cardColor: AppColorsAlternativeWoodlandForest.uiTile,
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+    ),
+  );
 
   static final ThemeData highDesertTheme = ThemeData(
       primaryColor: AppColorsAlternativeHighDesert.navBar,
@@ -105,7 +109,11 @@ class ThemeNotifier extends ChangeNotifier {
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColorsAlternativeRedwoodForest.navBar,
         iconTheme: IconThemeData(
-            color: AppColorsAlternativeRedwoodForest.menuIconClicked),
+          color: Color(0xFFFFFFFF),
+        ),
+      ),
+      iconTheme: const IconThemeData(
+        color: Color(0xFFFFFFFF), // Ensure the icon color is white
       ),
       buttonTheme: const ButtonThemeData(
         buttonColor: AppColorsAlternativeRedwoodForest.deleteButton,

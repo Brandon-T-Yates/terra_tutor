@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import '/Global_Elements/colors.dart';
 
 class AddWidgetButton extends StatelessWidget {
@@ -17,12 +19,13 @@ class AddWidgetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).getTheme();
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: AppColors.uiTile,
+          color: theme.cardColor,
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           boxShadow: [
             BoxShadow(

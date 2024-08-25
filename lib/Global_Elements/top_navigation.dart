@@ -37,7 +37,7 @@ class TopNavigation extends StatelessWidget implements PreferredSizeWidget {
       actions: showMenuIcon
           ? [
               IconButton(
-                icon: const Icon(Icons.menu),
+                icon: Icon(Icons.menu, color: iconColor),
                 onPressed: () {
                   Navigator.push(
                     context,
