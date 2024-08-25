@@ -75,20 +75,31 @@ class CityInputDialog {
             controller: textController,
             decoration: const InputDecoration(hintText: "City Name"),
           ),
-          // TODO: Jon make these buttons match the others rounded and colored. Use Ty's fertilizer code.
           actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(null);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.cardColor,
+                foregroundColor: Colors.black,
+                side: const BorderSide(color: Colors.black),
+                fixedSize: const Size(95, 25),
+              ),
+              child: const Text('Cancel'),
             ),
-            TextButton(
-              child: const Text('OK'),
+            ElevatedButton(
               onPressed: () {
                 cityName = textController.text;
                 Navigator.of(context).pop(cityName);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.cardColor,
+                foregroundColor: Colors.black,
+                side: const BorderSide(color: Colors.black),
+                fixedSize: const Size(90, 25),
+              ),
+              child: const Text('OK'),
             ),
           ],
         );

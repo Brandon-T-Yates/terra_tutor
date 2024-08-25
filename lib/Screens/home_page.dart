@@ -143,34 +143,45 @@ class HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return Theme(
           data: Theme.of(context).copyWith(
-            dialogBackgroundColor: Theme.of(context).cardColor,
+            dialogBackgroundColor: Theme.of(context).primaryColor,
           ),
           child: AlertDialog(
             title: const Text('Delete Widget'),
             content: const Text('Do you want to delete this widget?'),
             actions: <Widget>[
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.cardColor,
+                  foregroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.black),
+                  fixedSize: const Size(95, 25),
+                ),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   setState(() {
                     String widgetType = _addedWidgetTypes[index];
                     _addedWidgetTypes.removeAt(index);
                     saveWidgets();
-
-                    // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
                     if (widgetType == 'WeatherAlertsWidget') {
                       _removeCityFromFirebase();
                     }
                   });
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.cardColor,
+                  foregroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.black),
+                  fixedSize: const Size(90, 25),
+                ),
                 child: const Text('Delete'),
               ),
             ],
@@ -261,9 +272,12 @@ class HomePageState extends State<HomePage> {
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: _buildAddedWidgets().map((widget) {
-                      return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 - 32.0,
-                        child: widget,
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2 - 32.0,
+                          child: widget,
+                        ),
                       );
                     }).toList(),
                   ),
@@ -282,6 +296,7 @@ class HomePageState extends State<HomePage> {
               onPressed: _onAddButtonPressed,
               tooltip: 'Add',
               backgroundColor: theme.appBarTheme.backgroundColor,
+              foregroundColor: theme.iconTheme.color,
               shape: const CircleBorder(),
               child: const Icon(Icons.add),
             )
