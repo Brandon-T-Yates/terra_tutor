@@ -143,6 +143,7 @@ class HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Provider.of<ThemeNotifier>(context).getTheme();
         return Theme(
           data: Theme.of(context).copyWith(
             dialogBackgroundColor: Theme.of(context).primaryColor,
@@ -151,13 +152,19 @@ class HomePageState extends State<HomePage> {
             title: const Text('Delete Widget'),
             content: const Text('Do you want to delete this widget?'),
             actions: <Widget>[
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.cardColor,
+                  foregroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.black),
+                  fixedSize: const Size(95, 25),
+                ),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   setState(() {
                     String widgetType = _addedWidgetTypes[index];
@@ -169,6 +176,12 @@ class HomePageState extends State<HomePage> {
                   });
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.cardColor,
+                  foregroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.black),
+                  fixedSize: const Size(90, 25),
+                ),
                 child: const Text('Delete'),
               ),
             ],
