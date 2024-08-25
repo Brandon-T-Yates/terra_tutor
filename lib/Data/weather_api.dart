@@ -75,7 +75,7 @@ class CityInputDialog {
             controller: textController,
             decoration: const InputDecoration(hintText: "City Name"),
           ),
-          // TODO: Jon make these buttons match the others rounded and colored
+          // TODO: Jon make these buttons match the others rounded and colored. Use Ty's fertilizer code.
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),

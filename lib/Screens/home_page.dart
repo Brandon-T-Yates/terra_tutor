@@ -1,8 +1,4 @@
 // ignore_for_file: avoid_print
-<<<<<<< HEAD
-
-=======
->>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -143,39 +139,6 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-<<<<<<< HEAD
-  // Delete widget dialog
- void showDeleteDialog(int index) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          dialogBackgroundColor: Theme.of(context).cardColor,
-        ),
-        child: AlertDialog(
-          title: const Text('Delete Widget'),
-          content: const Text('Do you want to delete this widget?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  String widgetType = _addedWidgetTypes[index];
-                  _addedWidgetTypes.removeAt(index);
-                  saveWidgets();
-
-                  // If the deleted widget is WeatherAlertsWidget, remove city from Firebase
-                    if (widgetType == 'WeatherAlertsWidget') {
-                      _removeCityFromFirebase();
-                    }
-                });
-=======
   void showDeleteDialog(int index) {
     showDialog(
       context: context,
@@ -206,7 +169,6 @@ class HomePageState extends State<HomePage> {
                       _removeCityFromFirebase();
                     }
                   });
->>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
                   Navigator.of(context).pop();
                 },
                 child: const Text('Delete'),
@@ -219,14 +181,6 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _removeCityFromFirebase() async {
-<<<<<<< HEAD
-  final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
-    await userDoc.update({'city': FieldValue.delete()});
-  }
-}
-=======
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userDoc =
@@ -241,7 +195,6 @@ class HomePageState extends State<HomePage> {
       _addedWidgetTypes = _prefs?.getStringList('addedWidgets') ?? [];
     });
   }
->>>>>>> 87162b007a37c3c05a42949333a663295bdb4b56
 
   List<Widget> _buildAddedWidgets() {
     return _addedWidgetTypes.asMap().entries.map((entry) {
