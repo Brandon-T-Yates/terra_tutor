@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
-import '/Global_Elements/colors.dart';
 
 class AddWidgetButton extends StatelessWidget {
   final String name;

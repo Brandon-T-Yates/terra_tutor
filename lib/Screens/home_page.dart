@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/Global_Elements/bottom_navigation.dart';
 import '/Global_Elements/top_navigation.dart';
-import '/Global_Elements/colors.dart';
 import '/Screens/plant_finder_screen.dart';
 import '/Assets/Home_Page_Widgets/daily_facts.dart';
 import '/Assets/Home_Page_Widgets/fertilizer_reminder.dart';

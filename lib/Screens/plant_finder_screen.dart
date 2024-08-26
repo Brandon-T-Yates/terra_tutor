@@ -17,8 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:terra_tutor/Global_Elements/camera_screen.dart';
 import 'package:terra_tutor/Screens/favorites_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import 'package:camera/camera.dart';
 
 class PlantFinderScreen extends StatefulWidget {
   const PlantFinderScreen({super.key});

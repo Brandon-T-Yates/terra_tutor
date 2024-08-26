@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:terra_tutor/Screens/flower_box.dart';
-import 'package:terra_tutor/Global_Elements/colors.dart';
 import 'package:terra_tutor/Global_Elements/theme_data.dart';
 import 'package:provider/provider.dart';
 
@@ -66,15 +65,12 @@ class _AddFlowerBoxDialogState extends State<AddFlowerBoxDialog> {
               value: _width,
               decoration: InputDecoration(
                 labelText: 'Width',
-                labelStyle:
-                    theme.textTheme.headlineLarge, // Use themed text color
+                labelStyle: theme.textTheme.headlineLarge,
               ),
               items: List.generate(6, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
                         value: value,
-                        child: Text('$value',
-                            style: theme
-                                .textTheme.bodyLarge), // Use themed text color
+                        child: Text('$value', style: theme.textTheme.bodyLarge),
                       ))
                   .toList(),
               onChanged: (value) {
